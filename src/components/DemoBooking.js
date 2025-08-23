@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, User, Mail, Phone } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
 const DemoBooking = () => {
   const [selectedDate, setSelectedDate] = useState('');
@@ -13,6 +14,7 @@ const DemoBooking = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingStatus, setBookingStatus] = useState('');
+  const [bookedSlots, setBookedSlots] = useState({});
 
   const timeSlots = [
     { id: 'morning1', time: '9:00 AM - 9:30 AM', label: 'Morning Session 1' },
@@ -46,36 +48,119 @@ const DemoBooking = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const getSlotKey = (date, slotId) => `${date}-${slotId}`;
+  
+  const getRemainingSlots = (date, slotId) => {
+    const slotKey = getSlotKey(date, slotId);
+    const booked = bookedSlots[slotKey] || 0;
+    return Math.max(0, 5 - booked);
+  };
+  
+  const isSlotFull = (date, slotId) => {
+    return getRemainingSlots(date, slotId) === 0;
+  };
+  
+  const isSlotPast = (date, slotId) => {
+    const now = new Date();
+    const selectedDate = new Date(date);
+    const today = new Date().toISOString().split('T')[0];
+    
+    // If not today, allow booking
+    if (date !== today) return false;
+    
+    // Get slot time
+    const slot = timeSlots.find(s => s.id === slotId);
+    if (!slot) return true;
+    
+    const [startTime] = slot.time.split(' - ');
+    const [hour, minute] = startTime.match(/(\d+):(\d+)\s*(AM|PM)/).slice(1, 3);
+    const amPm = startTime.includes('PM') ? 'PM' : 'AM';
+    
+    let hour24 = parseInt(hour);
+    if (amPm === 'PM' && hour24 !== 12) hour24 += 12;
+    if (amPm === 'AM' && hour24 === 12) hour24 = 0;
+    
+    const slotDateTime = new Date();
+    slotDateTime.setHours(hour24, parseInt(minute), 0, 0);
+    
+    return now >= slotDateTime;
+  };
+  
+  const isSlotDisabled = (date, slotId) => {
+    return isSlotFull(date, slotId) || isSlotPast(date, slotId);
+  };
+
+  const createGoogleCalendarLink = (date, timeSlot) => {
+    const selectedDateTime = new Date(date);
+    const [startTime, endTime] = timeSlot.split(' - ');
+    
+    // Parse start time
+    const [startHour, startMinute] = startTime.match(/(\d+):(\d+)\s*(AM|PM)/).slice(1, 3);
+    const startAmPm = startTime.includes('PM') ? 'PM' : 'AM';
+    let startHour24 = parseInt(startHour);
+    if (startAmPm === 'PM' && startHour24 !== 12) startHour24 += 12;
+    if (startAmPm === 'AM' && startHour24 === 12) startHour24 = 0;
+    
+    selectedDateTime.setHours(startHour24, parseInt(startMinute), 0, 0);
+    const startISO = selectedDateTime.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    
+    // Add 30 minutes for end time
+    const endDateTime = new Date(selectedDateTime.getTime() + 30 * 60000);
+    const endISO = endDateTime.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    
+    const title = encodeURIComponent(`Guitar Demo Class - ${formData.instrument}`);
+    const details = encodeURIComponent(`Demo class with ${formData.name}\nInstrument: ${formData.instrument}\nContact: ${formData.phone}\nEmail: ${formData.email}`);
+    
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startISO}/${endISO}&details=${details}&location=Presto Guitar Academy`;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     
     try {
-      const bookingData = {
-        ...formData,
-        date: selectedDate,
-        timeSlot: timeSlots.find(slot => slot.id === selectedSlot)?.time,
-        timestamp: new Date().toISOString()
-      };
+      const selectedTimeSlot = timeSlots.find(slot => slot.id === selectedSlot);
+      const bookingDate = new Date(selectedDate).toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
 
-      // Email service integration (using EmailJS or similar service)
-      const emailData = {
+      // EmailJS configuration
+      emailjs.init('-x6pionKVpG71eDz4'); // Replace with your EmailJS public key
+      
+      const emailParams = {
+        to_name: 'Kaustav Mitra',
         to_email: 'mitrakaustav17@gmail.com',
         cc_email: 'anaybis11@gmail.com',
         student_name: formData.name,
         student_email: formData.email,
         student_phone: formData.phone,
         instrument: formData.instrument,
-        demo_date: new Date(selectedDate).toLocaleDateString(),
-        time_slot: timeSlots.find(slot => slot.id === selectedSlot)?.time,
-        booking_time: new Date().toLocaleString()
+        demo_date: bookingDate,
+        time_slot: selectedTimeSlot?.time,
+        booking_time: new Date().toLocaleString(),
+        calendar_link: createGoogleCalendarLink(selectedDate, selectedTimeSlot?.time)
       };
 
-      // Simulate email sending (replace with actual email service)
-      console.log('Booking Data:', emailData);
+      // Send email using EmailJS
+      await emailjs.send(
+        'service_gkueejb', // Replace with your EmailJS service ID
+        'template_dfxgdcd', // Replace with your EmailJS template ID
+        emailParams
+      );
       
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Update booked slots count
+      const slotKey = getSlotKey(selectedDate, selectedSlot);
+      setBookedSlots(prev => ({
+        ...prev,
+        [slotKey]: (prev[slotKey] || 0) + 1
+      }));
+      
+      // Open Google Calendar for instructor
+      const calendarLink = createGoogleCalendarLink(selectedDate, selectedTimeSlot?.time);
+      window.open(calendarLink, '_blank');
       
       setBookingStatus('success');
       setFormData({ name: '', email: '', phone: '', instrument: 'Guitar' });
@@ -83,6 +168,7 @@ const DemoBooking = () => {
       setSelectedSlot('');
       
     } catch (error) {
+      console.error('Booking error:', error);
       setBookingStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -104,7 +190,16 @@ const DemoBooking = () => {
             {bookingStatus === 'success' && (
               <div className="success-message">
                 <h3>🎉 Demo Class Booked Successfully!</h3>
-                <p>We'll send you a confirmation email shortly. See you soon!</p>
+                <p>✅ Confirmation email sent to instructor<br/>
+                📅 Google Calendar event created<br/>
+                📧 You'll receive a confirmation email shortly</p>
+                <button 
+                  className="btn-primary" 
+                  onClick={() => setBookingStatus('')}
+                  style={{ marginTop: '1rem' }}
+                >
+                  Book Another Class
+                </button>
               </div>
             )}
             
@@ -179,33 +274,51 @@ const DemoBooking = () => {
                     <div className="session-group">
                       <h4>🌅 Morning Sessions (9:00 AM - 12:00 PM)</h4>
                       <div className="slot-grid">
-                        {timeSlots.filter(slot => slot.id.startsWith('morning')).map(slot => (
-                          <button
-                            key={slot.id}
-                            type="button"
-                            className={`slot-btn ${selectedSlot === slot.id ? 'selected' : ''}`}
-                            onClick={() => setSelectedSlot(slot.id)}
-                          >
-                            <div className="slot-time">{slot.time}</div>
-                            <div className="slot-capacity">Max 5 students</div>
-                          </button>
-                        ))}
+                        {timeSlots.filter(slot => slot.id.startsWith('morning')).map(slot => {
+                          const remaining = getRemainingSlots(selectedDate, slot.id);
+                          const isFull = isSlotFull(selectedDate, slot.id);
+                          const isPast = isSlotPast(selectedDate, slot.id);
+                          const isDisabled = isSlotDisabled(selectedDate, slot.id);
+                          return (
+                            <button
+                              key={slot.id}
+                              type="button"
+                              className={`slot-btn ${selectedSlot === slot.id ? 'selected' : ''} ${isFull ? 'full' : ''} ${isPast ? 'past' : ''}`}
+                              onClick={() => !isDisabled && setSelectedSlot(slot.id)}
+                              disabled={isDisabled}
+                            >
+                              <div className="slot-time">{slot.time}</div>
+                              <div className={`slot-capacity ${isFull ? 'full' : isPast ? 'past' : remaining <= 2 ? 'low' : ''}`}>
+                                {isPast ? '⏰ Past' : isFull ? '❌ Full' : `${remaining} spots left`}
+                              </div>
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                     <div className="session-group">
                       <h4>🌆 Evening Sessions (7:00 PM - 9:00 PM)</h4>
                       <div className="slot-grid">
-                        {timeSlots.filter(slot => slot.id.startsWith('evening')).map(slot => (
-                          <button
-                            key={slot.id}
-                            type="button"
-                            className={`slot-btn ${selectedSlot === slot.id ? 'selected' : ''}`}
-                            onClick={() => setSelectedSlot(slot.id)}
-                          >
-                            <div className="slot-time">{slot.time}</div>
-                            <div className="slot-capacity">Max 5 students</div>
-                          </button>
-                        ))}
+                        {timeSlots.filter(slot => slot.id.startsWith('evening')).map(slot => {
+                          const remaining = getRemainingSlots(selectedDate, slot.id);
+                          const isFull = isSlotFull(selectedDate, slot.id);
+                          const isPast = isSlotPast(selectedDate, slot.id);
+                          const isDisabled = isSlotDisabled(selectedDate, slot.id);
+                          return (
+                            <button
+                              key={slot.id}
+                              type="button"
+                              className={`slot-btn ${selectedSlot === slot.id ? 'selected' : ''} ${isFull ? 'full' : ''} ${isPast ? 'past' : ''}`}
+                              onClick={() => !isDisabled && setSelectedSlot(slot.id)}
+                              disabled={isDisabled}
+                            >
+                              <div className="slot-time">{slot.time}</div>
+                              <div className={`slot-capacity ${isFull ? 'full' : isPast ? 'past' : remaining <= 2 ? 'low' : ''}`}>
+                                {isPast ? '⏰ Past' : isFull ? '❌ Full' : `${remaining} spots left`}
+                              </div>
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
@@ -355,6 +468,35 @@ const DemoBooking = () => {
           font-size: 0.8rem;
           color: #22c55e;
           font-weight: 500;
+        }
+        .slot-capacity.low {
+          color: #f59e0b;
+        }
+        .slot-capacity.full {
+          color: #ef4444;
+        }
+        .slot-btn.full {
+          opacity: 0.5;
+          cursor: not-allowed;
+          border-color: #ef4444;
+        }
+        .slot-btn.full:hover {
+          transform: none;
+          border-color: #ef4444;
+          background: rgba(239, 68, 68, 0.1);
+        }
+        .slot-capacity.past {
+          color: #6b7280;
+        }
+        .slot-btn.past {
+          opacity: 0.4;
+          cursor: not-allowed;
+          border-color: #6b7280;
+        }
+        .slot-btn.past:hover {
+          transform: none;
+          border-color: #6b7280;
+          background: rgba(107, 114, 128, 0.1);
         }
         .book-btn {
           width: 100%;
