@@ -98,8 +98,8 @@ const Hero = () => {
         }
         @media (max-width: 768px) {
           .hero {
-            padding: 0 1rem;
-            min-height: 90vh;
+            padding: 80px 1rem 0;
+            min-height: calc(100vh - 80px);
           }
           .hero-content {
             grid-template-columns: 1fr;
