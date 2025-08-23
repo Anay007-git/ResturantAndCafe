@@ -111,7 +111,7 @@ const DemoBooking = () => {
     const title = encodeURIComponent(`Guitar Demo Class - ${formData.instrument}`);
     const details = encodeURIComponent(`Demo class with ${formData.name}\nInstrument: ${formData.instrument}\nContact: ${formData.phone}\nEmail: ${formData.email}`);
     
-    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startISO}/${endISO}&details=${details}&location=Presto Guitar Academy`;
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startISO}/${endISO}&details=${details}&location=Presto Guitar Academy, 85 Road No. 1, H B Town, Sodepur, Kolkata 700110`;
   };
 
   const handleSubmit = async (e) => {

@@ -44,7 +44,8 @@ const Contact = () => {
               <MapPin size={40} />
               <h3>Location</h3>
               <div className="contact-link">
-                Presto Guitar Academy
+                85, Road No. 1, H B Town<br/>
+                Sodepur, Kolkata 700110
               </div>
               <p>Professional music studio with modern equipment</p>
             </div>
