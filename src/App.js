@@ -5,6 +5,7 @@ import AITutor from './components/AITutor';
 import ChordLibrary from './components/ChordLibrary';
 import Classes from './components/Classes';
 import Contact from './components/Contact';
+import FloatingChatBot from './components/FloatingChatBot';
 import './App.css';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
       <ChordLibrary />
       <Classes />
       <Contact />
+      <FloatingChatBot />
     </div>
   );
 }
