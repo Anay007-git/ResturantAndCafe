@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import AITutor from './components/AITutor';
+import StudentZone from './components/StudentZone';
 import ChordLibrary from './components/ChordLibrary';
 import Classes from './components/Classes';
 import Contact from './components/Contact';
@@ -13,7 +13,7 @@ function App() {
     <div className="App">
       <Navbar />
       <Hero />
-      <AITutor />
+      <StudentZone />
       <ChordLibrary />
       <Classes />
       <Contact />

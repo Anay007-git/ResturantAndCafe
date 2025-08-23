@@ -25,7 +25,7 @@ const Navbar = () => {
         </div>
         <ul className="nav-menu">
           <li><a href="#home">Home</a></li>
-          <li><a href="#ai-tutor">AI Tutor</a></li>
+          <li><a href="#student-zone">Student Zone</a></li>
           <li><a href="#chords">Chords</a></li>
           <li><a href="#classes">Classes</a></li>
           <li><a href="#contact">Contact</a></li>

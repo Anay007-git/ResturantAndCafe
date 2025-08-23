@@ -18,9 +18,9 @@ const Hero = () => {
               <Play size={20} />
               Start Learning
             </button>
-            <button className="btn-secondary" onClick={() => document.getElementById('ai-tutor').scrollIntoView({ behavior: 'smooth' })}>
+            <button className="btn-secondary" onClick={() => document.getElementById('student-zone').scrollIntoView({ behavior: 'smooth' })}>
               <Sparkles size={20} />
-              Try AI Tutor
+              Student Zone
             </button>
           </div>
         </motion.div>
