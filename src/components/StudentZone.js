@@ -1,15 +1,46 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Music, Zap, Star, Trophy, Headphones, Guitar } from 'lucide-react';
+import { Music, Zap, Star, Trophy, Headphones } from 'lucide-react';
 
 const StudentZone = () => {
   const [activeTab, setActiveTab] = useState('achievements');
+  const [unlockedAchievements, setUnlockedAchievements] = useState([]);
+  const [taskProgress, setTaskProgress] = useState({});
+  const [showTask, setShowTask] = useState(null);
 
   const achievements = [
-    { icon: <Guitar size={24} />, title: "First Chord Master", desc: "Nailed your first chord!", color: "#22c55e" },
-    { icon: <Music size={24} />, title: "Song Slayer", desc: "Played your first complete song!", color: "#f59e0b" },
-    { icon: <Zap size={24} />, title: "Speed Demon", desc: "Lightning fast chord changes!", color: "#ef4444" },
-    { icon: <Star size={24} />, title: "Practice Warrior", desc: "7 days straight practice!", color: "#8b5cf6" }
+    { 
+      icon: <Music size={24} />, 
+      title: "First Chord Master", 
+      desc: "Nailed your first chord!", 
+      color: "#22c55e",
+      task: "Hold a G major chord for 10 seconds",
+      steps: ["Place finger 3 on 6th string, 3rd fret", "Place finger 2 on 5th string, 2nd fret", "Place finger 4 on 1st string, 3rd fret", "Strum all strings"]
+    },
+    { 
+      icon: <Music size={24} />, 
+      title: "Song Slayer", 
+      desc: "Played your first complete song!", 
+      color: "#f59e0b",
+      task: "Play 'Wonderwall' chorus (G-D-Em-C)",
+      steps: ["Practice G to D transition", "Practice D to Em transition", "Practice Em to C transition", "Play full progression 4 times"]
+    },
+    { 
+      icon: <Zap size={24} />, 
+      title: "Speed Demon", 
+      desc: "Lightning fast chord changes!", 
+      color: "#ef4444",
+      task: "Change between G and C in under 2 seconds",
+      steps: ["Practice G chord shape", "Practice C chord shape", "Switch slowly 10 times", "Increase speed gradually"]
+    },
+    { 
+      icon: <Star size={24} />, 
+      title: "Practice Warrior", 
+      desc: "7 days straight practice!", 
+      color: "#8b5cf6",
+      task: "Practice guitar for 20 minutes daily for 7 days",
+      steps: ["Day 1: Basic chords", "Day 2: Strumming patterns", "Day 3: Chord transitions", "Days 4-7: Song practice"]
+    }
   ];
 
   const funFacts = [
@@ -27,6 +58,27 @@ const StudentZone = () => {
     "One chord at a time, one song at a time! 🎵",
     "Your guitar journey starts with a single strum! 🎸"
   ];
+
+  const startTask = (index) => {
+    setShowTask(index);
+  };
+
+  const completeStep = (achievementIndex, stepIndex) => {
+    const key = `${achievementIndex}-${stepIndex}`;
+    setTaskProgress(prev => ({ ...prev, [key]: true }));
+  };
+
+  const unlockAchievement = (index) => {
+    const achievement = achievements[index];
+    const allStepsCompleted = achievement.steps.every((_, stepIndex) => 
+      taskProgress[`${index}-${stepIndex}`]
+    );
+    
+    if (allStepsCompleted && !unlockedAchievements.includes(index)) {
+      setUnlockedAchievements([...unlockedAchievements, index]);
+      setShowTask(null);
+    }
+  };
 
   return (
     <section id="student-zone" className="section">
@@ -82,7 +134,39 @@ const StudentZone = () => {
                     </div>
                     <h3>{achievement.title}</h3>
                     <p>{achievement.desc}</p>
-                    <div className="unlock-btn">🔓 Unlock This!</div>
+                    <div className="task-info">
+                      <strong>Task:</strong> {achievement.task}
+                    </div>
+                    {showTask === idx && (
+                      <div className="task-steps">
+                        <h4>Complete these steps:</h4>
+                        {achievement.steps.map((step, stepIdx) => (
+                          <div key={stepIdx} className="step-item">
+                            <input 
+                              type="checkbox" 
+                              checked={taskProgress[`${idx}-${stepIdx}`] || false}
+                              onChange={() => completeStep(idx, stepIdx)}
+                            />
+                            <span className={taskProgress[`${idx}-${stepIdx}`] ? 'completed' : ''}>
+                              {step}
+                            </span>
+                          </div>
+                        ))}
+                        <button 
+                          className="complete-btn"
+                          onClick={() => unlockAchievement(idx)}
+                          disabled={!achievement.steps.every((_, stepIndex) => taskProgress[`${idx}-${stepIndex}`])}
+                        >
+                          Complete Achievement
+                        </button>
+                      </div>
+                    )}
+                    <div 
+                      className={`unlock-btn ${unlockedAchievements.includes(idx) ? 'unlocked' : ''}`}
+                      onClick={() => unlockedAchievements.includes(idx) ? null : startTask(idx)}
+                    >
+                      {unlockedAchievements.includes(idx) ? '✅ Unlocked!' : '🎯 Start Task'}
+                    </div>
                   </motion.div>
                 ))}
               </motion.div>
@@ -145,7 +229,7 @@ const StudentZone = () => {
         </motion.div>
       </div>
       
-      <style jsx>{`
+      <style>{`
         h2 {
           text-align: center;
           font-size: 2.5rem;
@@ -214,6 +298,92 @@ const StudentZone = () => {
           margin-top: 1rem;
           font-weight: 600;
           cursor: pointer;
+          transition: all 0.3s ease;
+        }
+        
+        .unlock-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        .unlock-btn.unlocked {
+          background: linear-gradient(45deg, #22c55e, #16a34a);
+          cursor: default;
+        }
+        
+        .unlock-btn.unlocked:hover {
+          transform: none;
+          box-shadow: none;
+        }
+        
+        .task-info {
+          margin: 1rem 0;
+          padding: 0.8rem;
+          background: rgba(102, 126, 234, 0.1);
+          border-radius: 8px;
+          font-size: 0.9rem;
+        }
+        
+        .task-steps {
+          margin: 1rem 0;
+          padding: 1rem;
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .task-steps h4 {
+          margin-bottom: 1rem;
+          color: #667eea;
+        }
+        
+        .step-item {
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
+          margin-bottom: 0.8rem;
+          padding: 0.5rem;
+          border-radius: 5px;
+          transition: background 0.2s ease;
+        }
+        
+        .step-item:hover {
+          background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .step-item input[type="checkbox"] {
+          width: 18px;
+          height: 18px;
+          cursor: pointer;
+        }
+        
+        .step-item span.completed {
+          text-decoration: line-through;
+          color: #22c55e;
+        }
+        
+        .complete-btn {
+          background: linear-gradient(45deg, #22c55e, #16a34a);
+          color: white;
+          border: none;
+          padding: 0.8rem 1.5rem;
+          border-radius: 20px;
+          font-weight: 600;
+          cursor: pointer;
+          margin-top: 1rem;
+          width: 100%;
+          transition: all 0.3s ease;
+        }
+        
+        .complete-btn:disabled {
+          background: #666;
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
+        
+        .complete-btn:not(:disabled):hover {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(34, 197, 94, 0.3);
         }
         
         .fun-facts {
