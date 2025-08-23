@@ -110,6 +110,12 @@ const Hero = () => {
             font-size: 2.2rem;
             line-height: 1.3;
           }
+          .gradient-text {
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline;
+          }
           p {
             font-size: 1rem;
           }
