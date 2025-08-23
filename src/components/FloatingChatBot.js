@@ -239,12 +239,56 @@ const FloatingChatBot = () => {
 
         @media (max-width: 768px) {
           .floating-chat {
-            width: 300px;
-            height: 450px;
+            width: calc(100vw - 2rem);
+            max-width: 350px;
+            height: 70vh;
+            max-height: 500px;
             right: 1rem;
+            bottom: 4rem;
           }
+          
           .chat-toggle {
             right: 1rem;
+            bottom: 1rem;
+            width: 50px;
+            height: 50px;
+          }
+          
+          .chat-header {
+            padding: 0.8rem;
+          }
+          
+          .chat-messages {
+            padding: 0.8rem;
+          }
+          
+          .message {
+            max-width: 90%;
+            padding: 0.6rem;
+            font-size: 0.85rem;
+          }
+          
+          .quick-options {
+            padding: 0.5rem 0.8rem;
+          }
+          
+          .quick-btn {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.75rem;
+          }
+          
+          .chat-input {
+            padding: 0.8rem;
+          }
+          
+          .chat-input input {
+            padding: 0.6rem;
+            font-size: 0.85rem;
+          }
+          
+          .chat-input button {
+            width: 35px;
+            height: 35px;
           }
         }
       `}</style>

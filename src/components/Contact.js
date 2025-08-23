@@ -209,19 +209,54 @@ const Contact = () => {
           color: #b0b0b0;
         }
         @media (max-width: 768px) {
+          h2 {
+            font-size: 2rem;
+          }
+          
           .contact-grid {
             grid-template-columns: 1fr;
+            gap: 1.5rem;
           }
-          .footer-content {
-            grid-template-columns: 1fr;
-            text-align: center;
+          
+          .contact-card {
+            padding: 1.5rem;
           }
-          .footer-links {
-            justify-content: center;
+          
+          .contact-card i {
+            font-size: 1.5rem;
           }
+          
+          .cta-section {
+            padding: 2rem 1rem;
+            margin-bottom: 3rem;
+          }
+          
+          .cta-section h3 {
+            font-size: 1.5rem;
+          }
+          
           .cta-buttons {
             flex-direction: column;
             align-items: center;
+            gap: 1rem;
+          }
+          
+          .btn-primary, .whatsapp-btn {
+            width: 100%;
+            max-width: 250px;
+            justify-content: center;
+          }
+          
+          .footer-content {
+            grid-template-columns: 1fr;
+            text-align: center;
+            gap: 1.5rem;
+          }
+          
+          .footer-links {
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
           }
         }
       `}</style>

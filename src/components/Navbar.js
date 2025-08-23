@@ -76,6 +76,21 @@ const Navbar = () => {
         .nav-menu a:hover {
           color: #667eea;
         }
+        @media (max-width: 768px) {
+          .nav-container {
+            padding: 0 1rem;
+          }
+          .logo {
+            font-size: 1.2rem;
+          }
+          .nav-menu {
+            gap: 1rem;
+            flex-wrap: wrap;
+          }
+          .nav-menu a {
+            font-size: 0.9rem;
+          }
+        }
       `}</style>
     </motion.nav>
   );

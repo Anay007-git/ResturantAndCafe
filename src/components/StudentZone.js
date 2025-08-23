@@ -451,17 +451,63 @@ const StudentZone = () => {
         }
         
         @media (max-width: 768px) {
+          h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+          }
+          
           .zone-tabs {
             flex-direction: column;
             align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+          }
+          
+          .tab-btn {
+            width: 100%;
+            max-width: 250px;
+            justify-content: center;
+            padding: 0.8rem 1.5rem;
           }
           
           .achievements-grid {
             grid-template-columns: 1fr;
+            gap: 1.5rem;
+          }
+          
+          .achievement-card {
+            padding: 1.5rem;
+          }
+          
+          .task-steps {
+            padding: 0.8rem;
+          }
+          
+          .step-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+            text-align: left;
+          }
+          
+          .step-item input[type="checkbox"] {
+            align-self: flex-start;
           }
           
           .motivation-section {
             grid-template-columns: 1fr;
+            gap: 1.5rem;
+          }
+          
+          .fun-facts {
+            max-width: 100%;
+          }
+          
+          .fact-card {
+            padding: 1rem;
+            flex-direction: column;
+            text-align: center;
+            gap: 0.8rem;
           }
         }
       `}</style>

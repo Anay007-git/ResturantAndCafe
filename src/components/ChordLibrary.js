@@ -191,8 +191,36 @@ const ChordLibrary = () => {
           border-radius: 15px;
         }
         @media (max-width: 768px) {
+          h2 {
+            font-size: 2rem;
+          }
+          
+          .chord-selector {
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+          }
+          
+          .chord-btn {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+          }
+          
           .chord-display {
             grid-template-columns: 1fr;
+            gap: 1.5rem;
+          }
+          
+          .chord-info h3 {
+            font-size: 1.5rem;
+          }
+          
+          .finger-positions {
+            margin: 1rem 0;
+          }
+          
+          .play-btn {
+            width: 100%;
+            justify-content: center;
           }
         }
       `}</style>

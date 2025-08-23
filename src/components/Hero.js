@@ -97,12 +97,31 @@ const Hero = () => {
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
         @media (max-width: 768px) {
+          .hero {
+            padding: 0 1rem;
+            min-height: 90vh;
+          }
           .hero-content {
             grid-template-columns: 1fr;
             text-align: center;
+            gap: 2rem;
           }
           h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
+            line-height: 1.3;
+          }
+          p {
+            font-size: 1rem;
+          }
+          .hero-buttons {
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+          }
+          .btn-primary, .btn-secondary {
+            width: 100%;
+            max-width: 250px;
+            justify-content: center;
           }
         }
       `}</style>

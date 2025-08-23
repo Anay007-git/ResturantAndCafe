@@ -140,8 +140,35 @@ const Classes = () => {
           font-size: 0.9rem;
         }
         @media (max-width: 768px) {
+          h2 {
+            font-size: 2rem;
+          }
+          
           .classes-grid {
             grid-template-columns: 1fr;
+            gap: 1.5rem;
+          }
+          
+          .schedule-card, .instructor-card {
+            padding: 1.5rem;
+          }
+          
+          .schedule-card h3, .instructor-card h3 {
+            font-size: 1.3rem;
+          }
+          
+          .instructor-image img {
+            width: 100px;
+            height: 100px;
+          }
+          
+          .credentials {
+            gap: 0.3rem;
+          }
+          
+          .credential {
+            font-size: 0.8rem;
+            padding: 0.4rem;
           }
         }
       `}</style>
