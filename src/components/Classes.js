@@ -29,6 +29,15 @@ const Classes = () => {
                   <span>Evening: 5:30 PM - 8:00 PM</span>
                 </div>
               </div>
+              <div className="weekday-info">
+                <h4>Weekday Classes Available:</h4>
+                <div className="weekday-item">
+                  <span>• Tuesday – from 5:30 PM onwards</span>
+                </div>
+                <div className="weekday-item">
+                  <span>• Wednesday – from 5:30 PM onwards</span>
+                </div>
+              </div>
               <div className="features">
                 <div className="feature">✓ Small Group Sessions</div>
                 <div className="feature">✓ Personalized Learning</div>
@@ -48,11 +57,28 @@ const Classes = () => {
                 ))}
                 <span>Expert Instructor</span>
               </div>
-              <p>Professional guitarist with 10+ years of teaching experience. Specializes in acoustic, electric, and classical guitar across multiple genres including rock, blues, jazz, and Indian classical music.</p>
+              <p>Professional musician with 10+ years of teaching experience. I specialize in lute instruments including Electric Guitar, Bass, Mandolin, Dotara, Ukulele, Banjo, and more. Additionally, I also offer lessons in Vocals, Drums, and Keyboard as add-on services.</p>
+              <div className="specializations">
+                <h4>Lute Instruments:</h4>
+                <div className="instruments-grid">
+                  <span className="instrument">🎸 Electric Guitar</span>
+                  <span className="instrument">🎸 Bass</span>
+                  <span className="instrument">🎵 Mandolin</span>
+                  <span className="instrument">🎶 Dotara</span>
+                  <span className="instrument">🎸 Ukulele</span>
+                  <span className="instrument">🪕 Banjo</span>
+                </div>
+                <h4>Add-on Services:</h4>
+                <div className="addon-services">
+                  <span className="service">🎤 Vocals</span>
+                  <span className="service">🥁 Drums</span>
+                  <span className="service">🎹 Keyboard</span>
+                </div>
+              </div>
               <div className="credentials">
                 <div className="credential">🎓 Music Degree</div>
                 <div className="credential">🏆 Award Winner</div>
-                <div className="credential">🎸 Multi-Genre Expert</div>
+                <div className="credential">🎸 Multi-Instrument Expert</div>
               </div>
             </div>
           </div>
@@ -96,6 +122,25 @@ const Classes = () => {
           display: grid;
           gap: 0.5rem;
         }
+        .weekday-info {
+          margin-bottom: 1.5rem;
+          padding: 1rem;
+          background: rgba(102, 126, 234, 0.1);
+          border-radius: 10px;
+          border-left: 4px solid #667eea;
+        }
+        .weekday-info h4 {
+          color: #667eea;
+          margin-bottom: 0.8rem;
+          font-size: 1.1rem;
+        }
+        .weekday-item {
+          margin-bottom: 0.5rem;
+        }
+        .weekday-item span {
+          color: #e0e0e0;
+          font-weight: 500;
+        }
         .feature {
           color: #22c55e;
           font-weight: 500;
@@ -131,6 +176,39 @@ const Classes = () => {
         .credentials {
           display: grid;
           gap: 0.5rem;
+        }
+        .specializations {
+          margin-bottom: 1.5rem;
+        }
+        .specializations h4 {
+          color: #667eea;
+          margin: 1rem 0 0.5rem 0;
+          font-size: 1rem;
+          text-align: left;
+        }
+        .instruments-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+          gap: 0.5rem;
+          margin-bottom: 1rem;
+        }
+        .instrument, .service {
+          background: rgba(102, 126, 234, 0.1);
+          padding: 0.4rem 0.6rem;
+          border-radius: 6px;
+          font-size: 0.85rem;
+          text-align: center;
+          border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        .addon-services {
+          display: flex;
+          gap: 0.5rem;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .service {
+          background: rgba(34, 197, 94, 0.1);
+          border-color: rgba(34, 197, 94, 0.2);
         }
         .credential {
           text-align: center;
