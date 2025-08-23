@@ -37,14 +37,16 @@ const Navbar = () => {
           top: 0;
           width: 100%;
           z-index: 1000;
-          padding: 1rem 0;
+          padding: 1.2rem 0;
           transition: all 0.3s ease;
-          background: rgba(10, 10, 10, 0.8);
-          backdrop-filter: blur(10px);
+          background: rgba(10, 10, 10, 0.95);
+          backdrop-filter: blur(20px);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         .navbar.scrolled {
-          background: rgba(10, 10, 10, 0.95);
-          box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+          background: rgba(10, 10, 10, 0.98);
+          box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+          border-bottom: 1px solid rgba(102, 126, 234, 0.2);
         }
         .nav-container {
           max-width: 1200px;
@@ -57,24 +59,44 @@ const Navbar = () => {
         .logo {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
+          gap: 0.8rem;
           color: #667eea;
-          font-size: 1.5rem;
+          font-size: 1.6rem;
           font-weight: 700;
+          text-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
         }
         .nav-menu {
           display: flex;
           list-style: none;
-          gap: 2rem;
+          gap: 2.5rem;
         }
         .nav-menu a {
           color: #ffffff;
           text-decoration: none;
           font-weight: 500;
-          transition: color 0.3s ease;
+          padding: 0.5rem 1rem;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+          position: relative;
         }
         .nav-menu a:hover {
           color: #667eea;
+          background: rgba(102, 126, 234, 0.1);
+          transform: translateY(-1px);
+        }
+        .nav-menu a::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 50%;
+          width: 0;
+          height: 2px;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          transition: all 0.3s ease;
+          transform: translateX(-50%);
+        }
+        .nav-menu a:hover::after {
+          width: 80%;
         }
         @media (max-width: 768px) {
           .nav-container {
@@ -87,8 +109,12 @@ const Navbar = () => {
             gap: 1rem;
             flex-wrap: wrap;
           }
+          .nav-menu {
+            gap: 1.5rem;
+          }
           .nav-menu a {
             font-size: 0.9rem;
+            padding: 0.4rem 0.8rem;
           }
         }
       `}</style>

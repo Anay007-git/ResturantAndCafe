@@ -98,9 +98,15 @@ const Hero = () => {
         }
         @media (max-width: 768px) {
           .hero {
-            padding: 80px 1rem 0;
-            min-height: calc(100vh - 80px);
+            padding: 120px 1rem 0;
+            min-height: calc(100vh - 120px);
           }
+        }
+        @media (min-width: 769px) {
+          .hero {
+            padding-top: 120px;
+          }
+        }
           .hero-content {
             grid-template-columns: 1fr;
             text-align: center;
