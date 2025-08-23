@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Music } from 'lucide-react';
+import { Music, Menu, X } from 'lucide-react';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -23,12 +24,15 @@ const Navbar = () => {
           <Music size={32} />
           <span>Presto Guitar Academy</span>
         </div>
-        <ul className="nav-menu">
-          <li><a href="#home">Home</a></li>
-          <li><a href="#student-zone">Student Zone</a></li>
-          <li><a href="#chords">Chords</a></li>
-          <li><a href="#classes">Classes</a></li>
-          <li><a href="#contact">Contact</a></li>
+        <div className="hamburger" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </div>
+        <ul className={`nav-menu ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+          <li><a href="#home" onClick={() => setMobileMenuOpen(false)}>Home</a></li>
+          <li><a href="#student-zone" onClick={() => setMobileMenuOpen(false)}>Student Zone</a></li>
+          <li><a href="#chords" onClick={() => setMobileMenuOpen(false)}>Chords</a></li>
+          <li><a href="#classes" onClick={() => setMobileMenuOpen(false)}>Classes</a></li>
+          <li><a href="#contact" onClick={() => setMobileMenuOpen(false)}>Contact</a></li>
         </ul>
       </div>
       <style jsx>{`
@@ -98,6 +102,17 @@ const Navbar = () => {
         .nav-menu a:hover::after {
           width: 80%;
         }
+        .hamburger {
+          display: none;
+          color: #667eea;
+          cursor: pointer;
+          padding: 0.5rem;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+        }
+        .hamburger:hover {
+          background: rgba(102, 126, 234, 0.1);
+        }
         @media (max-width: 768px) {
           .nav-container {
             padding: 0 1rem;
@@ -105,16 +120,39 @@ const Navbar = () => {
           .logo {
             font-size: 1.2rem;
           }
-          .nav-menu {
-            gap: 1rem;
-            flex-wrap: wrap;
+          .hamburger {
+            display: block;
           }
           .nav-menu {
-            gap: 1.5rem;
+            position: fixed;
+            top: 80px;
+            right: -100%;
+            width: 100%;
+            height: calc(100vh - 80px);
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(20px);
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding-top: 2rem;
+            gap: 2rem;
+            transition: right 0.3s ease;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+          }
+          .nav-menu.mobile-open {
+            right: 0;
           }
           .nav-menu a {
-            font-size: 0.9rem;
-            padding: 0.4rem 0.8rem;
+            font-size: 1.1rem;
+            padding: 1rem 2rem;
+            width: 80%;
+            text-align: center;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+          }
+          .nav-menu a:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.3);
           }
         }
       `}</style>
