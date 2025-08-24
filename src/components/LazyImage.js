@@ -54,6 +54,7 @@ const LazyImage = ({
         .lazy-image-container {
           position: relative;
           overflow: hidden;
+          display: block;
         }
         
         .lazy-image {
@@ -63,6 +64,7 @@ const LazyImage = ({
           transition: opacity 0.3s ease, filter 0.3s ease;
           opacity: 0;
           filter: blur(5px);
+          display: block;
         }
         
         .lazy-image.loading {

@@ -252,11 +252,16 @@ const StudentsGallery = () => {
           position: relative;
         }
         
-        .post-image img {
+        .post-image .lazy-image-container {
+          width: 100%;
+          height: 100%;
+        }
+        
+        .post-image .lazy-image {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          transition: transform 0.3s ease;
+          transition: transform 0.3s ease, opacity 0.3s ease, filter 0.3s ease;
         }
         
         .post-overlay {
@@ -378,7 +383,15 @@ const StudentsGallery = () => {
           justify-content: center;
         }
         
-        .modal-image img {
+        .modal-image .lazy-image-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+        }
+        
+        .modal-image .lazy-image {
           max-width: 100%;
           max-height: 90vh;
           object-fit: contain;
@@ -401,11 +414,18 @@ const StudentsGallery = () => {
           border-bottom: 1px solid #404040;
         }
         
-        .avatar {
+        .avatar.lazy-image-container {
           width: 40px;
           height: 40px;
           border-radius: 50%;
+          overflow: hidden;
+        }
+        
+        .avatar .lazy-image {
+          width: 100%;
+          height: 100%;
           object-fit: cover;
+          border-radius: 50%;
         }
         
         .user-info {
