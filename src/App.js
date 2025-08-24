@@ -5,7 +5,6 @@ import StudentZone from './components/StudentZone';
 import ChordLibrary from './components/ChordLibrary';
 import Classes from './components/Classes';
 import StudentsGallery from './components/StudentsGallery';
-import Community from './components/Community';
 import DemoBooking from './components/DemoBooking';
 import Contact from './components/Contact';
 import FloatingChatBot from './components/FloatingChatBot';
@@ -25,7 +24,6 @@ function App() {
       <ChordLibrary />
       <Classes />
       <StudentsGallery />
-      <Community />
       <DemoBooking />
       <Contact />
       <FloatingChatBot />
