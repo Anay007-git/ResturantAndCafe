@@ -307,7 +307,8 @@ const Navbar = () => {
             position: fixed;
             top: 80px;
             right: 0;
-            width: 280px;
+            width: 100%;
+            max-width: 320px;
             height: calc(100vh - 80px);
             background: rgba(10, 10, 10, 0.98);
             backdrop-filter: blur(20px);
@@ -315,21 +316,32 @@ const Navbar = () => {
             flex-direction: column;
             justify-content: flex-start;
             align-items: stretch;
-            padding: 1.5rem 0;
+            padding: 2rem 0;
             gap: 0;
             border-left: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+          }
+          
+          .nav-menu.mobile-open li {
+            width: 100%;
+            margin: 0;
           }
           
           .nav-menu.mobile-open a {
-            font-size: 1rem;
-            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 1.2rem 2rem;
             text-align: left;
             border-radius: 0;
             border-right: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             background: transparent;
             margin: 0;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
           }
           
           .nav-menu.mobile-open li:last-child a {
@@ -337,13 +349,19 @@ const Navbar = () => {
           }
           
           .nav-menu.mobile-open a:hover {
-            background: rgba(102, 126, 234, 0.1);
-            border-left: 3px solid #667eea;
-            padding-left: calc(2rem - 3px);
+            background: rgba(102, 126, 234, 0.15);
+            border-left: 4px solid #667eea;
+            padding-left: calc(2rem - 4px);
+            color: #667eea;
+            transform: translateX(8px);
           }
           
           .nav-menu.mobile-open a::after {
             display: none;
+          }
+          
+          .nav-menu.mobile-open a:active {
+            background: rgba(102, 126, 234, 0.2);
           }
           
           .theme-menu {
@@ -367,6 +385,17 @@ const Navbar = () => {
           
           .nav-menu.mobile-open {
             width: 100%;
+            max-width: none;
+            padding: 1.5rem 0;
+          }
+          
+          .nav-menu.mobile-open a {
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+          }
+          
+          .nav-menu.mobile-open a:hover {
+            padding-left: calc(1.5rem - 4px);
           }
         }
         
@@ -422,16 +451,31 @@ const Navbar = () => {
         }
         
         [data-theme="light"] .nav-menu.mobile-open a {
-          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+          border-bottom: 1px solid rgba(0, 0, 0, 0.08);
         }
         
         [data-theme="light"] .nav-menu.mobile-open a:hover {
-          background: rgba(102, 126, 234, 0.1);
-          border-left: 3px solid #667eea;
+          background: rgba(102, 126, 234, 0.15);
+          border-left: 4px solid #667eea;
+          color: #667eea;
         }
         
         [data-theme="light"] .nav-menu a {
           border-right: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Mobile menu backdrop */
+        @media (max-width: 768px) {
+          .nav-menu.mobile-open::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+          }
         }
       `}</style>
     </motion.nav>
