@@ -30,7 +30,7 @@ const Hero = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.3 }}
         >
-          <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop" alt="Professional Guitar" />
+          <img src="/images/hero-guitar.jpg" alt="Professional Guitar" />
         </motion.div>
       </div>
       <style jsx>{`

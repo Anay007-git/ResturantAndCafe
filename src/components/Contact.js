@@ -77,7 +77,7 @@ const Contact = () => {
             </div>
             <div className="footer-links">
               <a href="#home">Home</a>
-              <a href="#ai-tutor">AI Tutor</a>
+              <a href="#student-zone">Student Zone</a>
               <a href="#chords">Chords</a>
               <a href="#classes">Classes</a>
             </div>

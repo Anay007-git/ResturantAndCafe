@@ -48,7 +48,7 @@ const Classes = () => {
             
             <div className="instructor-card glass-card">
               <div className="instructor-image">
-                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" alt="Kaustav Mitra" />
+                <img src="/images/instructor.jpg" alt="Kaustav Mitra" />
               </div>
               <h3><User size={24} /> Kaustav Mitra</h3>
               <div className="rating">
@@ -150,11 +150,13 @@ const Classes = () => {
           margin-bottom: 1rem;
         }
         .instructor-image img {
-          width: 120px;
-          height: 120px;
+          width: 150px;
+          height: 150px;
           border-radius: 50%;
           object-fit: cover;
           border: 3px solid #667eea;
+          display: block;
+          margin: 0 auto;
         }
         .rating {
           display: flex;
@@ -236,8 +238,8 @@ const Classes = () => {
           }
           
           .instructor-image img {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
           }
           
           .credentials {

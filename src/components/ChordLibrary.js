@@ -10,37 +10,37 @@ const ChordLibrary = () => {
     G: {
       name: 'G Major',
       fingers: ['3rd fret 6th string', '2nd fret 5th string', '3rd fret 1st string'],
-      image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop',
+      image: '/images/chords/g-major.jpg',
       difficulty: 'Beginner'
     },
     C: {
       name: 'C Major',
       fingers: ['1st fret 2nd string', '2nd fret 4th string', '3rd fret 5th string'],
-      image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=200&fit=crop',
+      image: '/images/chords/c-major.jpg',
       difficulty: 'Beginner'
     },
     D: {
       name: 'D Major',
       fingers: ['2nd fret 1st string', '2nd fret 3rd string', '3rd fret 2nd string'],
-      image: 'https://images.unsplash.com/photo-1564186763535-ebb21ef5277f?w=300&h=200&fit=crop',
+      image: '/images/chords/d-major.jpg',
       difficulty: 'Beginner'
     },
     Em: {
       name: 'E Minor',
       fingers: ['2nd fret 5th string', '2nd fret 4th string'],
-      image: 'https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=300&h=200&fit=crop',
+      image: '/images/chords/e-minor.jpg',
       difficulty: 'Beginner'
     },
     Am: {
       name: 'A Minor',
       fingers: ['1st fret 2nd string', '2nd fret 4th string', '2nd fret 3rd string'],
-      image: 'https://images.unsplash.com/photo-1516924962500-2b4b3b99ea02?w=300&h=200&fit=crop',
+      image: '/images/chords/a-minor.jpg',
       difficulty: 'Beginner'
     },
     F: {
       name: 'F Major (Barre)',
       fingers: ['Barre 1st fret all strings', '3rd fret 5th string', '3rd fret 4th string'],
-      image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&h=200&fit=crop',
+      image: '/images/chords/f-major.jpg',
       difficulty: 'Intermediate'
     }
   };

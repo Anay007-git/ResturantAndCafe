@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Music, Zap, Star, Trophy, Headphones } from 'lucide-react';
+import { Music, Zap, Star, Trophy, Headphones, Award, Target, Flame, Crown } from 'lucide-react';
 
 const StudentZone = () => {
   const [activeTab, setActiveTab] = useState('achievements');
   const [unlockedAchievements, setUnlockedAchievements] = useState([]);
   const [taskProgress, setTaskProgress] = useState({});
   const [showTask, setShowTask] = useState(null);
+  const [playerStats, setPlayerStats] = useState({
+    xp: 0,
+    level: 1,
+    streak: 0,
+    totalPracticeTime: 0,
+    badges: []
+  });
 
   const achievements = [
     { 
@@ -14,6 +21,7 @@ const StudentZone = () => {
       title: "First Chord Master", 
       desc: "Nailed your first chord!", 
       color: "#22c55e",
+      xp: 50,
       task: "Hold a G major chord for 10 seconds",
       steps: ["Place finger 3 on 6th string, 3rd fret", "Place finger 2 on 5th string, 2nd fret", "Place finger 4 on 1st string, 3rd fret", "Strum all strings"]
     },
@@ -22,6 +30,7 @@ const StudentZone = () => {
       title: "Song Slayer", 
       desc: "Played your first complete song!", 
       color: "#f59e0b",
+      xp: 100,
       task: "Play 'Wonderwall' chorus (G-D-Em-C)",
       steps: ["Practice G to D transition", "Practice D to Em transition", "Practice Em to C transition", "Play full progression 4 times"]
     },
@@ -30,6 +39,7 @@ const StudentZone = () => {
       title: "Speed Demon", 
       desc: "Lightning fast chord changes!", 
       color: "#ef4444",
+      xp: 75,
       task: "Change between G and C in under 2 seconds",
       steps: ["Practice G chord shape", "Practice C chord shape", "Switch slowly 10 times", "Increase speed gradually"]
     },
@@ -38,10 +48,41 @@ const StudentZone = () => {
       title: "Practice Warrior", 
       desc: "7 days straight practice!", 
       color: "#8b5cf6",
+      xp: 200,
       task: "Practice guitar for 20 minutes daily for 7 days",
       steps: ["Day 1: Basic chords", "Day 2: Strumming patterns", "Day 3: Chord transitions", "Days 4-7: Song practice"]
+    },
+    { 
+      icon: <Crown size={24} />, 
+      title: "Rockstar", 
+      desc: "Performed in front of others!", 
+      color: "#ff6b6b",
+      xp: 300,
+      task: "Play a song for friends or family",
+      steps: ["Choose your best song", "Practice until confident", "Set up performance space", "Rock the stage!"]
+    },
+    { 
+      icon: <Flame size={24} />, 
+      title: "Streak Master", 
+      desc: "30-day practice streak!", 
+      color: "#ff4500",
+      xp: 500,
+      task: "Practice for 30 consecutive days",
+      steps: ["Week 1: Build habit", "Week 2: Stay consistent", "Week 3: Push through", "Week 4: Victory lap!"]
     }
   ];
+
+  const badges = [
+    { name: "Early Bird", icon: "🌅", desc: "Practice before 9 AM" },
+    { name: "Night Owl", icon: "🦉", desc: "Practice after 9 PM" },
+    { name: "Weekend Warrior", icon: "⚔️", desc: "Practice on weekends" },
+    { name: "Perfectionist", icon: "💎", desc: "Complete 10 tasks perfectly" },
+    { name: "Explorer", icon: "🗺️", desc: "Try 5 different songs" }
+  ];
+
+  const getLevel = (xp) => Math.floor(xp / 100) + 1;
+  const getXpForNextLevel = (level) => level * 100;
+  const getCurrentLevelXp = (xp) => xp % 100;
 
   const funFacts = [
     "🎸 The guitar has over 4,000 years of history!",
@@ -76,9 +117,34 @@ const StudentZone = () => {
     
     if (allStepsCompleted && !unlockedAchievements.includes(index)) {
       setUnlockedAchievements([...unlockedAchievements, index]);
+      setPlayerStats(prev => ({
+        ...prev,
+        xp: prev.xp + achievement.xp,
+        level: getLevel(prev.xp + achievement.xp)
+      }));
       setShowTask(null);
     }
   };
+
+  useEffect(() => {
+    // Simulate daily streak check
+    const checkStreak = () => {
+      const lastPractice = localStorage.getItem('lastPracticeDate');
+      const today = new Date().toDateString();
+      
+      if (lastPractice === today) return;
+      
+      if (lastPractice === new Date(Date.now() - 86400000).toDateString()) {
+        setPlayerStats(prev => ({ ...prev, streak: prev.streak + 1 }));
+      } else {
+        setPlayerStats(prev => ({ ...prev, streak: 1 }));
+      }
+      
+      localStorage.setItem('lastPracticeDate', today);
+    };
+    
+    checkStreak();
+  }, []);
 
   return (
     <section id="student-zone" className="section">
@@ -90,6 +156,50 @@ const StudentZone = () => {
         >
           <h2>🎸 Student Zone - Where Guitar Dreams Come Alive! 🌟</h2>
           
+          {/* Player Stats Dashboard */}
+          <div className="player-dashboard glass-card">
+            <div className="stats-grid">
+              <div className="stat-item">
+                <div className="stat-icon">🎸</div>
+                <div className="stat-info">
+                  <span className="stat-label">Level</span>
+                  <span className="stat-value">{playerStats.level}</span>
+                </div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-icon">⚡</div>
+                <div className="stat-info">
+                  <span className="stat-label">XP</span>
+                  <span className="stat-value">{playerStats.xp}</span>
+                </div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-icon">🔥</div>
+                <div className="stat-info">
+                  <span className="stat-label">Streak</span>
+                  <span className="stat-value">{playerStats.streak} days</span>
+                </div>
+              </div>
+              <div className="stat-item">
+                <div className="stat-icon">🏆</div>
+                <div className="stat-info">
+                  <span className="stat-label">Achievements</span>
+                  <span className="stat-value">{unlockedAchievements.length}/{achievements.length}</span>
+                </div>
+              </div>
+            </div>
+            <div className="xp-bar">
+              <div className="xp-label">Progress to Level {playerStats.level + 1}</div>
+              <div className="xp-progress">
+                <div 
+                  className="xp-fill" 
+                  style={{ width: `${(getCurrentLevelXp(playerStats.xp) / 100) * 100}%` }}
+                ></div>
+              </div>
+              <div className="xp-text">{getCurrentLevelXp(playerStats.xp)}/100 XP</div>
+            </div>
+          </div>
+
           <div className="zone-tabs">
             <button 
               className={`tab-btn ${activeTab === 'achievements' ? 'active' : ''}`}
@@ -97,6 +207,13 @@ const StudentZone = () => {
             >
               <Trophy size={20} />
               Achievements
+            </button>
+            <button 
+              className={`tab-btn ${activeTab === 'badges' ? 'active' : ''}`}
+              onClick={() => setActiveTab('badges')}
+            >
+              <Award size={20} />
+              Badges
             </button>
             <button 
               className={`tab-btn ${activeTab === 'facts' ? 'active' : ''}`}
@@ -136,6 +253,7 @@ const StudentZone = () => {
                     <p>{achievement.desc}</p>
                     <div className="task-info">
                       <strong>Task:</strong> {achievement.task}
+                      <div className="xp-reward">🎯 +{achievement.xp} XP</div>
                     </div>
                     {showTask === idx && (
                       <div className="task-steps">
@@ -166,6 +284,33 @@ const StudentZone = () => {
                       onClick={() => unlockedAchievements.includes(idx) ? null : startTask(idx)}
                     >
                       {unlockedAchievements.includes(idx) ? '✅ Unlocked!' : '🎯 Start Task'}
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+
+            {activeTab === 'badges' && (
+              <motion.div 
+                className="badges-grid"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                {badges.map((badge, idx) => (
+                  <motion.div
+                    key={idx}
+                    className={`badge-card glass-card ${playerStats.badges.includes(badge.name) ? 'earned' : 'locked'}`}
+                    whileHover={{ scale: 1.05 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                  >
+                    <div className="badge-icon">{badge.icon}</div>
+                    <h3>{badge.name}</h3>
+                    <p>{badge.desc}</p>
+                    <div className={`badge-status ${playerStats.badges.includes(badge.name) ? 'earned' : 'locked'}`}>
+                      {playerStats.badges.includes(badge.name) ? '✅ Earned!' : '🔒 Locked'}
                     </div>
                   </motion.div>
                 ))}
@@ -209,18 +354,25 @@ const StudentZone = () => {
                 <div className="progress-tracker glass-card">
                   <h3>🎯 Your Progress</h3>
                   <div className="progress-item">
-                    <span>Chords Learned</span>
+                    <span>🎵 Chords Learned</span>
                     <div className="progress-bar">
                       <div className="progress-fill" style={{ width: '60%' }}></div>
                     </div>
                     <span>3/5</span>
                   </div>
                   <div className="progress-item">
-                    <span>Songs Mastered</span>
+                    <span>🎸 Songs Mastered</span>
                     <div className="progress-bar">
                       <div className="progress-fill" style={{ width: '40%' }}></div>
                     </div>
                     <span>2/5</span>
+                  </div>
+                  <div className="progress-item">
+                    <span>⏱️ Practice Time</span>
+                    <div className="progress-bar">
+                      <div className="progress-fill" style={{ width: '75%' }}></div>
+                    </div>
+                    <span>15/20 hrs</span>
                   </div>
                 </div>
               </motion.div>
@@ -238,6 +390,85 @@ const StudentZone = () => {
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
+        }
+        
+        .player-dashboard {
+          margin-bottom: 3rem;
+          padding: 2rem;
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+          border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        
+        .stats-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 1.5rem;
+          margin-bottom: 2rem;
+        }
+        
+        .stat-item {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          padding: 1rem;
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 15px;
+          transition: all 0.3s ease;
+        }
+        
+        .stat-item:hover {
+          background: rgba(255, 255, 255, 0.1);
+          transform: translateY(-2px);
+        }
+        
+        .stat-icon {
+          font-size: 2rem;
+        }
+        
+        .stat-info {
+          display: flex;
+          flex-direction: column;
+        }
+        
+        .stat-label {
+          font-size: 0.9rem;
+          color: #b0b0b0;
+        }
+        
+        .stat-value {
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: #667eea;
+        }
+        
+        .xp-bar {
+          text-align: center;
+        }
+        
+        .xp-label {
+          margin-bottom: 0.5rem;
+          color: #667eea;
+          font-weight: 600;
+        }
+        
+        .xp-progress {
+          width: 100%;
+          height: 12px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 6px;
+          overflow: hidden;
+          margin-bottom: 0.5rem;
+        }
+        
+        .xp-fill {
+          height: 100%;
+          background: linear-gradient(45deg, #22c55e, #4ecdc4);
+          transition: width 0.5s ease;
+        }
+        
+        .xp-text {
+          font-size: 0.9rem;
+          color: #b0b0b0;
         }
         
         .zone-tabs {
@@ -322,6 +553,63 @@ const StudentZone = () => {
           background: rgba(102, 126, 234, 0.1);
           border-radius: 8px;
           font-size: 0.9rem;
+        }
+        
+        .xp-reward {
+          margin-top: 0.5rem;
+          color: #22c55e;
+          font-weight: 600;
+          font-size: 0.8rem;
+        }
+        
+        .badges-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 1.5rem;
+        }
+        
+        .badge-card {
+          text-align: center;
+          padding: 1.5rem;
+          transition: all 0.3s ease;
+          position: relative;
+        }
+        
+        .badge-card.locked {
+          opacity: 0.5;
+          filter: grayscale(100%);
+        }
+        
+        .badge-card.earned {
+          border: 2px solid #22c55e;
+          box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+        }
+        
+        .badge-icon {
+          font-size: 3rem;
+          margin-bottom: 1rem;
+        }
+        
+        .badge-card h3 {
+          color: #667eea;
+          margin-bottom: 0.5rem;
+        }
+        
+        .badge-status {
+          margin-top: 1rem;
+          padding: 0.5rem;
+          border-radius: 10px;
+          font-weight: 600;
+        }
+        
+        .badge-status.earned {
+          background: rgba(34, 197, 94, 0.2);
+          color: #22c55e;
+        }
+        
+        .badge-status.locked {
+          background: rgba(255, 255, 255, 0.1);
+          color: #b0b0b0;
         }
         
         .task-steps {
@@ -456,6 +744,22 @@ const StudentZone = () => {
             margin-bottom: 2rem;
           }
           
+          .player-dashboard {
+            padding: 1.5rem;
+          }
+          
+          .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+          }
+          
+          .stat-item {
+            padding: 0.8rem;
+            flex-direction: column;
+            text-align: center;
+            gap: 0.5rem;
+          }
+          
           .zone-tabs {
             flex-direction: column;
             align-items: center;
@@ -508,6 +812,15 @@ const StudentZone = () => {
             flex-direction: column;
             text-align: center;
             gap: 0.8rem;
+          }
+          
+          .badges-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+          }
+          
+          .badge-card {
+            padding: 1rem;
           }
         }
       `}</style>
