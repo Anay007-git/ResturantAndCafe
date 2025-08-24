@@ -553,44 +553,73 @@ const Community = () => {
           >
             <motion.div
               className="modal-content post-modal"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
               onClick={(e) => e.stopPropagation()}
             >
               <button className="modal-close" onClick={() => setShowNewPost(false)}>
-                <X size={24} />
+                <X size={20} />
               </button>
-              <h3>Create New Post</h3>
-              <form onSubmit={handleNewPost}>
-                <select 
-                  value={newPost.category} 
-                  onChange={(e) => setNewPost({...newPost, category: e.target.value})}
-                >
-                  <option value="Doubt">Doubt - Ask for help</option>
-                  <option value="Solution">Solution - Share knowledge</option>
-                  <option value="Confession">Confession - Share experiences</option>
-                </select>
-                <input 
-                  type="text" 
-                  placeholder="Post title" 
-                  value={newPost.title}
-                  onChange={(e) => setNewPost({...newPost, title: e.target.value})}
-                  required 
-                />
-                <textarea 
-                  placeholder="Share your thoughts..." 
-                  value={newPost.content}
-                  onChange={(e) => setNewPost({...newPost, content: e.target.value})}
-                  required
-                ></textarea>
-                <input 
-                  type="text" 
-                  placeholder="Tags (comma separated)" 
-                  value={newPost.tags}
-                  onChange={(e) => setNewPost({...newPost, tags: e.target.value})}
-                />
-                <button type="submit" className="btn-primary">Post</button>
+              
+              <div className="modal-header">
+                <div className="modal-icon">
+                  <Plus size={32} />
+                </div>
+                <h3>Create New Post</h3>
+                <p>Share your guitar knowledge with the community</p>
+              </div>
+              
+              <form onSubmit={handleNewPost} className="post-form">
+                <div className="form-group">
+                  <label>Post Category</label>
+                  <select 
+                    value={newPost.category} 
+                    onChange={(e) => setNewPost({...newPost, category: e.target.value})}
+                    className="category-select"
+                  >
+                    <option value="Doubt">🤔 Doubt - Ask for help</option>
+                    <option value="Solution">💡 Solution - Share knowledge</option>
+                    <option value="Confession">💭 Confession - Share experiences</option>
+                  </select>
+                </div>
+                
+                <div className="form-group">
+                  <label>Post Title</label>
+                  <input 
+                    type="text" 
+                    placeholder="What's your post about?" 
+                    value={newPost.title}
+                    onChange={(e) => setNewPost({...newPost, title: e.target.value})}
+                    required 
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Content</label>
+                  <textarea 
+                    placeholder="Share your thoughts, questions, or experiences..." 
+                    value={newPost.content}
+                    onChange={(e) => setNewPost({...newPost, content: e.target.value})}
+                    required
+                    rows="6"
+                  ></textarea>
+                </div>
+                
+                <div className="form-group">
+                  <label>Tags (Optional)</label>
+                  <input 
+                    type="text" 
+                    placeholder="beginner, chords, practice (comma separated)" 
+                    value={newPost.tags}
+                    onChange={(e) => setNewPost({...newPost, tags: e.target.value})}
+                  />
+                </div>
+                
+                <button type="submit" className="btn-submit">
+                  <Plus size={18} />
+                  Create Post
+                </button>
               </form>
             </motion.div>
           </motion.div>
@@ -1209,6 +1238,64 @@ const Community = () => {
           font-family: monospace;
         }
         
+        .post-form {
+          padding: 32px;
+        }
+        
+        .category-select {
+          width: 100%;
+          padding: 12px 16px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.05);
+          color: white;
+          font-size: 16px;
+          transition: border-color 0.2s ease;
+          box-sizing: border-box;
+          appearance: none;
+          background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+          background-repeat: no-repeat;
+          background-position: right 12px center;
+          background-size: 20px;
+          padding-right: 40px;
+        }
+        
+        .category-select:focus {
+          outline: none;
+          border-color: #667eea;
+        }
+        
+        .category-select option {
+          background: #1a1a2e;
+          color: white;
+          padding: 12px;
+        }
+        
+        .form-group textarea {
+          width: 100%;
+          padding: 12px 16px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.05);
+          color: white;
+          font-size: 16px;
+          transition: border-color 0.2s ease;
+          box-sizing: border-box;
+          resize: vertical;
+          min-height: 120px;
+          font-family: inherit;
+          line-height: 1.5;
+        }
+        
+        .form-group textarea:focus {
+          outline: none;
+          border-color: #667eea;
+        }
+        
+        .form-group textarea::placeholder {
+          color: #999;
+        }
+        
         .otp-note {
           font-size: 0.8rem;
           color: #8e8e8e;
@@ -1452,6 +1539,23 @@ const Community = () => {
           .code-hint code {
             font-size: 16px;
           }
+          
+          .post-form {
+            padding: 50px;
+          }
+          
+          .category-select {
+            padding: 16px 20px;
+            font-size: 18px;
+            padding-right: 50px;
+            background-size: 24px;
+          }
+          
+          .form-group textarea {
+            padding: 20px 24px;
+            font-size: 18px;
+            min-height: 150px;
+          }
         }
         
         @media (max-width: 768px) {
@@ -1479,6 +1583,15 @@ const Community = () => {
             flex-direction: column;
             gap: 1rem;
             text-align: center;
+          }
+          
+          .category-select {
+            background-size: 18px;
+            padding-right: 35px;
+          }
+          
+          .form-group textarea {
+            min-height: 100px;
           }
         }
       `}</style>
