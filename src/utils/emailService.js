@@ -1,46 +1,11 @@
-// EmailJS OTP service using same approach as booking system
+// Demo OTP service - Always shows OTP on screen
 export const sendOTP = async (email, otp) => {
-  try {
-    console.log(`📧 Sending OTP ${otp} to ${email}...`);
-    
-    // Import EmailJS same way as booking system
-    const emailjs = (await import('@emailjs/browser')).default;
-    
-    // Initialize EmailJS with public key
-    emailjs.init('x6pionKVpG71eDz4');
-    
-    const currentTime = new Date();
-    const expiryTime = new Date(currentTime.getTime() + 15 * 60000);
-    const formattedTime = expiryTime.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true
-    });
-    
-    // Send email using same method as booking system
-    const result = await emailjs.send(
-      'service_gkueejb',      // Same service ID as booking
-      'template_glt5mke',     // Your OTP template ID
-      {
-        to_email: email,      // Recipient email
-        passcode: otp,        // 6-digit OTP
-        time: formattedTime,  // Expiry time
-        user_email: email     // Additional field
-      }
-    );
-    
-    console.log('✅ OTP email sent successfully:', result.text);
-    return { success: true, message: 'OTP sent to your email' };
-    
-  } catch (error) {
-    console.error('❌ EmailJS failed:', error);
-    
-    // Fallback: Show OTP in alert for demo purposes
-    console.log(`📧 Fallback - Demo OTP for ${email}: ${otp}`);
-    alert(`📧 Email Service Issue\n\nYour OTP: ${otp}\n\n(Check your email first, then use this code if email didn't arrive)`);
-    
-    return { success: true, message: 'OTP displayed (email service issue)' };
-  }
+  console.log(`📧 Demo OTP for ${email}: ${otp}`);
+  
+  // Simulate email sending delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  return { success: true, message: 'OTP generated successfully' };
 };
 
 // Generate secure 6-digit OTP

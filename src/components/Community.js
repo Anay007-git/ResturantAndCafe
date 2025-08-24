@@ -8,6 +8,8 @@ const Community = () => {
   const [isSignedUp, setIsSignedUp] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
   const [showOTPVerification, setShowOTPVerification] = useState(false);
+  const [showOTPDisplay, setShowOTPDisplay] = useState(false);
+  const [displayedOTP, setDisplayedOTP] = useState('');
   const [showNewPost, setShowNewPost] = useState(false);
   const [signUpData, setSignUpData] = useState({ username: '', email: '', password: '' });
   const [otpCode, setOtpCode] = useState('');
@@ -95,14 +97,23 @@ const Community = () => {
     
     console.log(`📧 Generated OTP: ${otp} for ${userData.email}`);
     
-    // Send OTP via EmailJS
-    const result = await sendOTP(userData.email, otp);
-    if (result.success) {
-      setShowSignUp(false);
-      setShowOTPVerification(true);
-    } else {
-      alert('Failed to send OTP. Please try again.');
+    // Try to send OTP via EmailJS, but always show OTP on screen
+    try {
+      await sendOTP(userData.email, otp);
+    } catch (error) {
+      console.log('Email service not available, showing OTP on screen');
     }
+    
+    // Always show OTP on screen for demo
+    setDisplayedOTP(otp);
+    setShowSignUp(false);
+    setShowOTPDisplay(true);
+    
+    // Auto-proceed to verification after 3 seconds
+    setTimeout(() => {
+      setShowOTPDisplay(false);
+      setShowOTPVerification(true);
+    }, 3000);
   };
   
   const handleOTPVerification = (e) => {
@@ -359,6 +370,52 @@ const Community = () => {
         )}
       </AnimatePresence>
       
+      {/* OTP Display Modal */}
+      <AnimatePresence>
+        {showOTPDisplay && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="modal-content otp-display-modal"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+            >
+              <div className="otp-display-header">
+                <h3>📧 Verification Code Generated</h3>
+                <p>Your OTP for <strong>{signUpData.email}</strong></p>
+              </div>
+              
+              <div className="otp-display-code">
+                <div className="otp-code-container">
+                  {displayedOTP.split('').map((digit, index) => (
+                    <div key={index} className="otp-digit">{digit}</div>
+                  ))}
+                </div>
+                <p className="otp-copy-text">Copy this code: <strong>{displayedOTP}</strong></p>
+              </div>
+              
+              <div className="otp-display-footer">
+                <p>⏱️ Auto-proceeding to verification in 3 seconds...</p>
+                <button 
+                  className="btn-primary"
+                  onClick={() => {
+                    setShowOTPDisplay(false);
+                    setShowOTPVerification(true);
+                  }}
+                >
+                  Continue Now
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
       {/* OTP Verification Modal */}
       <AnimatePresence>
         {showOTPVerification && (
@@ -374,10 +431,9 @@ const Community = () => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
             >
-              <h3>📧 Verify Your Email</h3>
-              <p>We've sent a 6-digit verification code to:</p>
+              <h3>🔐 Enter Verification Code</h3>
+              <p>Enter the 6-digit code for:</p>
               <p><strong>{signUpData.email}</strong></p>
-              <p className="email-note">📧 Check your inbox (and spam folder)</p>
               <form onSubmit={handleOTPVerification}>
                 <input 
                   type="text" 
@@ -389,7 +445,10 @@ const Community = () => {
                 />
                 <button type="submit" className="btn-primary">Verify & Join</button>
               </form>
-              <p className="otp-note">Didn't receive the code? Check your spam folder.</p>
+              <div className="otp-hint">
+                <p>💡 Hint: The code was just displayed on screen</p>
+                <p className="otp-reminder">Code: <span className="code-reminder">{displayedOTP}</span></p>
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -798,6 +857,87 @@ const Community = () => {
           color: #667eea;
           margin: 0.5rem 0;
           font-weight: 500;
+        }
+        
+        .otp-display-modal {
+          text-align: center;
+          max-width: 600px;
+        }
+        
+        .otp-display-header h3 {
+          color: #22c55e;
+          margin-bottom: 1rem;
+        }
+        
+        .otp-code-container {
+          display: flex;
+          justify-content: center;
+          gap: 1rem;
+          margin: 2rem 0;
+        }
+        
+        .otp-digit {
+          width: 60px;
+          height: 60px;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          color: white;
+          font-size: 2rem;
+          font-weight: 700;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+          animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.05); }
+        }
+        
+        .otp-copy-text {
+          font-size: 1.1rem;
+          color: #667eea;
+          margin: 1rem 0;
+          padding: 1rem;
+          background: rgba(102, 126, 234, 0.1);
+          border-radius: 8px;
+          border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        
+        .otp-display-footer {
+          margin-top: 2rem;
+        }
+        
+        .otp-display-footer p {
+          color: #8e8e8e;
+          margin-bottom: 1rem;
+        }
+        
+        .otp-hint {
+          margin-top: 1.5rem;
+          padding: 1rem;
+          background: rgba(34, 197, 94, 0.1);
+          border-radius: 8px;
+          border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        
+        .otp-hint p {
+          margin: 0.5rem 0;
+          color: #22c55e;
+        }
+        
+        .otp-reminder {
+          font-weight: 600;
+        }
+        
+        .code-reminder {
+          background: rgba(102, 126, 234, 0.2);
+          padding: 0.3rem 0.6rem;
+          border-radius: 4px;
+          font-family: monospace;
+          font-size: 1.1rem;
         }
         
         .modal-content h3 {
