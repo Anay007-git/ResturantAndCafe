@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Music, Zap, Star, Trophy, Headphones, Award, Target, Flame, Crown } from 'lucide-react';
+import { Music, Zap, Star, Trophy, Headphones, Award, Flame, Crown } from 'lucide-react';
 
 const StudentZone = () => {
   const [activeTab, setActiveTab] = useState('achievements');
@@ -81,7 +81,6 @@ const StudentZone = () => {
   ];
 
   const getLevel = (xp) => Math.floor(xp / 100) + 1;
-  const getXpForNextLevel = (level) => level * 100;
   const getCurrentLevelXp = (xp) => xp % 100;
 
   const funFacts = [

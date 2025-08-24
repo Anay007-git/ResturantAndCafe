@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, ArrowUp, ArrowDown, MessageCircle, Share2, Plus, Mail, Shield, Award, Clock, Tag, X } from 'lucide-react';
 import { sendOTP, generateOTP, validateEmail, validateOTP } from '../utils/emailService';
-import emailjs from '@emailjs/browser';
 
 const Community = () => {
   const [isSignedUp, setIsSignedUp] = useState(false);

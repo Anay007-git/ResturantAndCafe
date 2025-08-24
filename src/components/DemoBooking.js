@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, User, Mail, Phone } from 'lucide-react';
+import { Calendar, Clock, User } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 
 const DemoBooking = () => {
@@ -92,7 +92,7 @@ const DemoBooking = () => {
 
   const createGoogleCalendarLink = (date, timeSlot) => {
     const selectedDateTime = new Date(date);
-    const [startTime, endTime] = timeSlot.split(' - ');
+    const [startTime] = timeSlot.split(' - ');
     
     // Parse start time
     const [startHour, startMinute] = startTime.match(/(\d+):(\d+)\s*(AM|PM)/).slice(1, 3);
