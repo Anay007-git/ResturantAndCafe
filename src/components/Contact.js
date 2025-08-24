@@ -80,6 +80,7 @@ const Contact = () => {
               <a href="#student-zone">Student Zone</a>
               <a href="#chords">Chords</a>
               <a href="#classes">Classes</a>
+              <a href="#community">Community</a>
             </div>
           </div>
           <div className="footer-bottom">
