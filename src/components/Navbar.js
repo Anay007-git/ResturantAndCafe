@@ -176,35 +176,41 @@ const Navbar = () => {
         
         .desktop-menu {
           display: flex;
-          gap: 2.5rem;
+          gap: 0;
+          align-items: center;
         }
         .nav-menu a {
           color: #ffffff;
           text-decoration: none;
           font-weight: 500;
-          padding: 0.5rem 1rem;
-          border-radius: 8px;
+          padding: 0.8rem 1.5rem;
+          border-radius: 0;
           transition: all 0.3s ease;
           position: relative;
+          white-space: nowrap;
+          border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-menu li:last-child a {
+          border-right: none;
         }
         .nav-menu a:hover {
           color: #667eea;
           background: rgba(102, 126, 234, 0.1);
-          transform: translateY(-1px);
         }
         .nav-menu a::after {
           content: '';
           position: absolute;
-          bottom: -2px;
-          left: 50%;
+          bottom: 0;
+          left: 0;
           width: 0;
-          height: 2px;
+          height: 3px;
           background: linear-gradient(135deg, #667eea, #764ba2);
-          transition: all 0.3s ease;
-          transform: translateX(-50%);
+          transition: width 0.3s ease;
         }
+        
         .nav-menu a:hover::after {
-          width: 80%;
+          width: 100%;
         }
         .theme-switcher {
           position: relative;
@@ -303,25 +309,35 @@ const Navbar = () => {
             flex-direction: column;
             justify-content: flex-start;
             align-items: stretch;
-            padding: 2rem 1rem;
-            gap: 1rem;
+            padding: 1.5rem 0;
+            gap: 0;
             border-left: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
           }
           
           .nav-menu.mobile-open a {
-            font-size: 1.1rem;
-            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            padding: 1rem 2rem;
             text-align: left;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0;
+            border-right: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: transparent;
+            margin: 0;
+          }
+          
+          .nav-menu.mobile-open li:last-child a {
+            border-bottom: none;
           }
           
           .nav-menu.mobile-open a:hover {
-            background: rgba(102, 126, 234, 0.2);
-            border-color: rgba(102, 126, 234, 0.3);
-            transform: translateX(5px);
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 3px solid #667eea;
+            padding-left: calc(2rem - 3px);
+          }
+          
+          .nav-menu.mobile-open a::after {
+            display: none;
           }
           
           .theme-menu {
@@ -379,6 +395,19 @@ const Navbar = () => {
         [data-theme="light"] .nav-menu.mobile-open {
           background: rgba(255, 255, 255, 0.98);
           border-left: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        [data-theme="light"] .nav-menu.mobile-open a {
+          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        [data-theme="light"] .nav-menu.mobile-open a:hover {
+          background: rgba(102, 126, 234, 0.1);
+          border-left: 3px solid #667eea;
+        }
+        
+        [data-theme="light"] .nav-menu a {
+          border-right: 1px solid rgba(0, 0, 0, 0.1);
         }
       `}</style>
     </motion.nav>
