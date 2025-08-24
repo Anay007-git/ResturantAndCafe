@@ -349,22 +349,63 @@ const Community = () => {
           >
             <motion.div
               className="modal-content signup-modal"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
               onClick={(e) => e.stopPropagation()}
             >
               <button className="modal-close" onClick={() => setShowSignUp(false)}>
-                <X size={24} />
+                <X size={20} />
               </button>
-              <h3>🎸 Join Presto Guitar Community</h3>
-              <p>Create your account and start connecting with fellow guitarists</p>
-              <form onSubmit={handleSignUp}>
-                <input type="text" name="username" placeholder="Choose a username" required />
-                <input type="email" name="email" placeholder="Your email address" required />
-                <input type="password" name="password" placeholder="Create a password" required />
-                <button type="submit" className="btn-primary">Send Verification Code</button>
+              
+              <div className="modal-header">
+                <div className="modal-icon">
+                  <Users size={32} />
+                </div>
+                <h3>Join Presto Guitar Community</h3>
+                <p>Connect with guitarists worldwide and share your musical journey</p>
+              </div>
+              
+              <form onSubmit={handleSignUp} className="signup-form">
+                <div className="form-group">
+                  <label>Username</label>
+                  <input 
+                    type="text" 
+                    name="username" 
+                    placeholder="Choose a unique username" 
+                    required 
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Email Address</label>
+                  <input 
+                    type="email" 
+                    name="email" 
+                    placeholder="your.email@example.com" 
+                    required 
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Password</label>
+                  <input 
+                    type="password" 
+                    name="password" 
+                    placeholder="Create a secure password" 
+                    required 
+                  />
+                </div>
+                
+                <button type="submit" className="btn-submit">
+                  <Mail size={18} />
+                  Create Account
+                </button>
               </form>
+              
+              <div className="modal-footer">
+                <p>By joining, you agree to our community guidelines</p>
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -381,28 +422,51 @@ const Community = () => {
           >
             <motion.div
               className="modal-content otp-display-modal"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
             >
-              <div className="otp-display-header">
-                <h3>📧 Verification Code Generated</h3>
-                <p>Your OTP for <strong>{signUpData.email}</strong></p>
+              <div className="modal-header">
+                <div className="modal-icon success">
+                  <Shield size={32} />
+                </div>
+                <h3>Verification Code Generated</h3>
+                <p>Your secure access code for <strong>{signUpData.email}</strong></p>
               </div>
               
-              <div className="otp-display-code">
+              <div className="otp-display-section">
+                <div className="otp-label">Your Verification Code</div>
                 <div className="otp-code-container">
                   {displayedOTP.split('').map((digit, index) => (
-                    <div key={index} className="otp-digit">{digit}</div>
+                    <motion.div 
+                      key={index} 
+                      className="otp-digit"
+                      initial={{ scale: 0, rotate: 180 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      {digit}
+                    </motion.div>
                   ))}
                 </div>
-                <p className="otp-copy-text">Copy this code: <strong>{displayedOTP}</strong></p>
+                
+                <div className="otp-copy-section">
+                  <div className="copy-code">
+                    <span>Code: </span>
+                    <code>{displayedOTP}</code>
+                  </div>
+                </div>
               </div>
               
-              <div className="otp-display-footer">
-                <p>⏱️ Auto-proceeding to verification in 3 seconds...</p>
+              <div className="modal-footer">
+                <div className="auto-progress">
+                  <div className="progress-bar">
+                    <div className="progress-fill"></div>
+                  </div>
+                  <p>Auto-proceeding in 3 seconds...</p>
+                </div>
                 <button 
-                  className="btn-primary"
+                  className="btn-submit"
                   onClick={() => {
                     setShowOTPDisplay(false);
                     setShowOTPVerification(true);
@@ -426,28 +490,51 @@ const Community = () => {
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className="modal-content otp-modal"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
+              className="modal-content otp-verification-modal"
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
             >
-              <h3>🔐 Enter Verification Code</h3>
-              <p>Enter the 6-digit code for:</p>
-              <p><strong>{signUpData.email}</strong></p>
-              <form onSubmit={handleOTPVerification}>
-                <input 
-                  type="text" 
-                  placeholder="Enter 6-digit code" 
-                  value={otpCode}
-                  onChange={(e) => setOtpCode(e.target.value)}
-                  maxLength="6"
-                  required 
-                />
-                <button type="submit" className="btn-primary">Verify & Join</button>
+              <div className="modal-header">
+                <div className="modal-icon verify">
+                  <Shield size={32} />
+                </div>
+                <h3>Verify Your Account</h3>
+                <p>Enter the verification code for</p>
+                <div className="email-display">{signUpData.email}</div>
+              </div>
+              
+              <form onSubmit={handleOTPVerification} className="verification-form">
+                <div className="form-group">
+                  <label>Verification Code</label>
+                  <input 
+                    type="text" 
+                    placeholder="000000"
+                    value={otpCode}
+                    onChange={(e) => setOtpCode(e.target.value)}
+                    maxLength="6"
+                    className="otp-input"
+                    required 
+                  />
+                </div>
+                
+                <button type="submit" className="btn-submit">
+                  <Shield size={18} />
+                  Verify & Join Community
+                </button>
               </form>
-              <div className="otp-hint">
-                <p>💡 Hint: The code was just displayed on screen</p>
-                <p className="otp-reminder">Code: <span className="code-reminder">{displayedOTP}</span></p>
+              
+              <div className="verification-help">
+                <div className="help-section">
+                  <div className="help-icon">💡</div>
+                  <div className="help-content">
+                    <p>Need help? The code was displayed on the previous screen</p>
+                    <div className="code-hint">
+                      <span>Your code: </span>
+                      <code>{displayedOTP}</code>
+                    </div>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -800,7 +887,8 @@ const Community = () => {
           left: 0;
           right: 0;
           bottom: 0;
-          background: rgba(0, 0, 0, 0.8);
+          background: rgba(0, 0, 0, 0.85);
+          backdrop-filter: blur(10px);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -808,31 +896,35 @@ const Community = () => {
         }
         
         .modal-content {
-          background: #1a1a1a;
-          padding: 2rem;
-          border-radius: 15px;
+          background: linear-gradient(145deg, #1e1e2e, #16213e);
+          padding: 0;
+          border-radius: 20px;
           width: 90%;
-          max-width: 500px;
-          border: 1px solid rgba(102, 126, 234, 0.2);
+          max-width: 480px;
+          border: 1px solid rgba(102, 126, 234, 0.3);
           position: relative;
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+          overflow: hidden;
         }
         
         .modal-close {
           position: absolute;
-          top: 1rem;
-          right: 1rem;
-          background: none;
+          top: 1.5rem;
+          right: 1.5rem;
+          background: rgba(255, 255, 255, 0.1);
           border: none;
           color: #8e8e8e;
           cursor: pointer;
-          padding: 0.5rem;
+          padding: 0.8rem;
           border-radius: 50%;
           transition: all 0.3s ease;
+          z-index: 10;
         }
         
         .modal-close:hover {
-          background: rgba(255, 255, 255, 0.1);
-          color: white;
+          background: rgba(239, 68, 68, 0.2);
+          color: #ef4444;
+          transform: scale(1.1);
         }
         
         .otp-modal {
@@ -844,6 +936,122 @@ const Community = () => {
           font-size: 1.2rem;
           letter-spacing: 0.5rem;
           font-weight: 600;
+        }
+        
+        .modal-header {
+          text-align: center;
+          padding: 3rem 2rem 2rem;
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-icon {
+          width: 80px;
+          height: 80px;
+          margin: 0 auto 1.5rem;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .modal-icon.success {
+          background: linear-gradient(135deg, #22c55e, #16a34a);
+          box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+        }
+        
+        .modal-icon.verify {
+          background: linear-gradient(135deg, #f59e0b, #d97706);
+          box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
+        }
+        
+        .modal-header h3 {
+          color: white;
+          font-size: 1.8rem;
+          font-weight: 700;
+          margin: 0 0 0.5rem;
+        }
+        
+        .modal-header p {
+          color: #b0b0b0;
+          margin: 0;
+          font-size: 1rem;
+        }
+        
+        .signup-form, .verification-form {
+          padding: 2rem;
+        }
+        
+        .form-group {
+          margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+          display: block;
+          color: #667eea;
+          font-weight: 600;
+          margin-bottom: 0.5rem;
+          font-size: 0.9rem;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        
+        .form-group input {
+          width: 100%;
+          padding: 1rem 1.2rem;
+          border: 2px solid rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.05);
+          color: white;
+          font-size: 1rem;
+          transition: all 0.3s ease;
+          box-sizing: border-box;
+        }
+        
+        .form-group input:focus {
+          outline: none;
+          border-color: #667eea;
+          background: rgba(102, 126, 234, 0.1);
+          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn-submit {
+          width: 100%;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          color: white;
+          border: none;
+          padding: 1.2rem 2rem;
+          border-radius: 12px;
+          font-size: 1.1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          margin-top: 1rem;
+        }
+        
+        .btn-submit:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .modal-footer {
+          padding: 1.5rem 2rem;
+          background: rgba(0, 0, 0, 0.2);
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          text-align: center;
+        }
+        
+        .modal-footer p {
+          color: #8e8e8e;
+          font-size: 0.85rem;
+          margin: 0;
         }
         
         .otp-note {
