@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, ArrowUp, ArrowDown, MessageCircle, Share2, Plus, Mail, Shield, Award, Clock, Tag, X } from 'lucide-react';
-import { sendOTP, generateOTP } from '../utils/emailService';
+import { sendOTP, generateOTP, validateEmail, validateOTP } from '../utils/emailService';
 
 const Community = () => {
   const [isSignedUp, setIsSignedUp] = useState(false);
@@ -76,19 +76,43 @@ const Community = () => {
       password: formData.get('password')
     };
     
+    // Validate email format
+    if (!validateEmail(userData.email)) {
+      alert('Please enter a valid email address');
+      return;
+    }
+    
+    // Validate username
+    if (userData.username.length < 3) {
+      alert('Username must be at least 3 characters long');
+      return;
+    }
+    
     setSignUpData(userData);
     const otp = generateOTP();
     setGeneratedOTP(otp);
     
-    const emailSent = await sendOTP(userData.email, otp);
-    if (emailSent) {
+    console.log(`📧 Generated OTP: ${otp} for ${userData.email}`);
+    
+    // Send OTP via EmailJS
+    const result = await sendOTP(userData.email, otp);
+    if (result.success) {
       setShowSignUp(false);
       setShowOTPVerification(true);
+    } else {
+      alert('Failed to send OTP. Please try again.');
     }
   };
   
   const handleOTPVerification = (e) => {
     e.preventDefault();
+    
+    // Validate OTP format
+    if (!validateOTP(otpCode)) {
+      alert('Please enter a valid 6-digit OTP');
+      return;
+    }
+    
     if (otpCode === generatedOTP) {
       setCurrentUser({
         username: signUpData.username,
@@ -100,8 +124,11 @@ const Community = () => {
       setIsSignedUp(true);
       setShowOTPVerification(false);
       setOtpCode('');
+      
+      // Success message
+      alert(`✅ Welcome to Presto Guitar Community, ${signUpData.username}!`);
     } else {
-      alert('Invalid OTP. Please try again.');
+      alert('❌ Invalid OTP. Please check your email and try again.');
     }
   };
 
@@ -347,7 +374,9 @@ const Community = () => {
               exit={{ scale: 0.8, opacity: 0 }}
             >
               <h3>📧 Verify Your Email</h3>
-              <p>We've sent a 6-digit code to <strong>{signUpData.email}</strong></p>
+              <p>We've sent a 6-digit verification code to:</p>
+              <p><strong>{signUpData.email}</strong></p>
+              <p className="email-note">📧 Check your inbox (and spam folder)</p>
               <form onSubmit={handleOTPVerification}>
                 <input 
                   type="text" 
@@ -761,6 +790,13 @@ const Community = () => {
           font-size: 0.8rem;
           color: #8e8e8e;
           margin-top: 1rem;
+        }
+        
+        .email-note {
+          font-size: 0.9rem;
+          color: #667eea;
+          margin: 0.5rem 0;
+          font-weight: 500;
         }
         
         .modal-content h3 {
