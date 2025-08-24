@@ -1,53 +1,51 @@
-// Mock email service for OTP verification (for demo purposes)
+// Real EmailJS implementation for OTP verification
 export const sendOTP = async (email, otp) => {
   try {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const currentTime = new Date();
+    const expiryTime = new Date(currentTime.getTime() + 15 * 60000); // 15 minutes from now
+    const formattedTime = expiryTime.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
     
-    // For demo purposes, log the OTP to console
-    console.log(`📧 OTP sent to ${email}: ${otp}`);
-    
-    // Show alert with OTP for demo (remove in production)
-    alert(`Demo Mode: Your OTP is ${otp}\n\nIn production, this would be sent to ${email}`);
-    
-    // Always return true for demo
-    return true;
-  } catch (error) {
-    console.error('Failed to send OTP:', error);
-    return false;
-  }
-};
-
-// Alternative: Real EmailJS implementation (uncomment and configure)
-/*
-export const sendOTPReal = async (email, otp) => {
-  try {
     const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        service_id: 'service_YOUR_ID', // Replace with your EmailJS service ID
-        template_id: 'template_YOUR_ID', // Replace with your EmailJS template ID
-        user_id: 'YOUR_PUBLIC_KEY', // Replace with your EmailJS public key
+        service_id: 'service_369z29l',
+        template_id: 'template_glt5mke',
+        user_id: '-x6pionKVpG71eDz4',
         template_params: {
           to_email: email,
-          otp_code: otp,
-          subject: 'Presto Guitar Academy - Email Verification',
-          message: `Your verification code is: ${otp}. This code will expire in 10 minutes.`
+          passcode: otp,
+          time: formattedTime
         }
       })
     });
     
-    return response.ok;
+    if (response.ok) {
+      console.log(`📧 OTP sent successfully to ${email}`);
+      return true;
+    } else {
+      console.error('EmailJS API error:', response.status);
+      return false;
+    }
   } catch (error) {
     console.error('Failed to send OTP:', error);
     return false;
   }
 };
-*/
 
 export const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+// Fallback mock function for testing
+export const sendOTPMock = async (email, otp) => {
+  console.log(`📧 Mock OTP sent to ${email}: ${otp}`);
+  alert(`Demo Mode: Your OTP is ${otp}`);
+  return true;
 };
