@@ -1,8 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import StudentZone from './components/StudentZone';
-import ChordLibrary from './cimport React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import StudentZone from './components/StudentZone';
