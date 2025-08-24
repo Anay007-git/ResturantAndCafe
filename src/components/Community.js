@@ -885,46 +885,53 @@ const Community = () => {
           position: fixed;
           top: 0;
           left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.85);
-          backdrop-filter: blur(10px);
+          width: 100vw;
+          height: 100vh;
+          background: rgba(0, 0, 0, 0.8);
+          backdrop-filter: blur(8px);
           display: flex;
           align-items: center;
           justify-content: center;
           z-index: 1000;
+          padding: 20px;
+          box-sizing: border-box;
         }
         
         .modal-content {
-          background: linear-gradient(145deg, #1e1e2e, #16213e);
-          padding: 0;
-          border-radius: 20px;
-          width: 90%;
-          max-width: 480px;
-          border: 1px solid rgba(102, 126, 234, 0.3);
+          background: #1a1a2e;
+          border-radius: 16px;
+          width: 100%;
+          max-width: 450px;
+          max-height: 90vh;
+          border: 1px solid rgba(102, 126, 234, 0.2);
           position: relative;
-          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-          overflow: hidden;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+          overflow-y: auto;
+          margin: auto;
         }
         
         .modal-close {
           position: absolute;
-          top: 1.5rem;
-          right: 1.5rem;
+          top: 16px;
+          right: 16px;
           background: rgba(255, 255, 255, 0.1);
           border: none;
-          color: #8e8e8e;
+          color: #999;
           cursor: pointer;
-          padding: 0.8rem;
+          padding: 8px;
           border-radius: 50%;
-          transition: all 0.3s ease;
+          transition: all 0.2s ease;
           z-index: 10;
+          width: 36px;
+          height: 36px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
         
         .modal-close:hover {
           background: rgba(239, 68, 68, 0.2);
           color: #ef4444;
-          transform: scale(1.1);
         }
         
         .otp-modal {
@@ -940,118 +947,263 @@ const Community = () => {
         
         .modal-header {
           text-align: center;
-          padding: 3rem 2rem 2rem;
-          background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+          padding: 40px 32px 24px;
           border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .modal-icon {
-          width: 80px;
-          height: 80px;
-          margin: 0 auto 1.5rem;
-          background: linear-gradient(135deg, #667eea, #764ba2);
+          width: 64px;
+          height: 64px;
+          margin: 0 auto 20px;
+          background: #667eea;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
           color: white;
-          box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
         }
         
         .modal-icon.success {
-          background: linear-gradient(135deg, #22c55e, #16a34a);
-          box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+          background: #22c55e;
         }
         
         .modal-icon.verify {
-          background: linear-gradient(135deg, #f59e0b, #d97706);
-          box-shadow: 0 10px 30px rgba(245, 158, 11, 0.3);
+          background: #f59e0b;
         }
         
         .modal-header h3 {
           color: white;
-          font-size: 1.8rem;
-          font-weight: 700;
-          margin: 0 0 0.5rem;
+          font-size: 24px;
+          font-weight: 600;
+          margin: 0 0 8px;
         }
         
         .modal-header p {
-          color: #b0b0b0;
+          color: #999;
           margin: 0;
-          font-size: 1rem;
+          font-size: 14px;
+          line-height: 1.4;
         }
         
         .signup-form, .verification-form {
-          padding: 2rem;
+          padding: 32px;
         }
         
         .form-group {
-          margin-bottom: 1.5rem;
+          margin-bottom: 20px;
         }
         
         .form-group label {
           display: block;
           color: #667eea;
-          font-weight: 600;
-          margin-bottom: 0.5rem;
-          font-size: 0.9rem;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
+          font-weight: 500;
+          margin-bottom: 8px;
+          font-size: 14px;
         }
         
         .form-group input {
           width: 100%;
-          padding: 1rem 1.2rem;
-          border: 2px solid rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
+          padding: 12px 16px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 8px;
           background: rgba(255, 255, 255, 0.05);
           color: white;
-          font-size: 1rem;
-          transition: all 0.3s ease;
+          font-size: 16px;
+          transition: border-color 0.2s ease;
           box-sizing: border-box;
         }
         
         .form-group input:focus {
           outline: none;
           border-color: #667eea;
-          background: rgba(102, 126, 234, 0.1);
-          box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         
         .btn-submit {
           width: 100%;
-          background: linear-gradient(135deg, #667eea, #764ba2);
+          background: #667eea;
           color: white;
           border: none;
-          padding: 1.2rem 2rem;
-          border-radius: 12px;
-          font-size: 1.1rem;
-          font-weight: 600;
+          padding: 14px 24px;
+          border-radius: 8px;
+          font-size: 16px;
+          font-weight: 500;
           cursor: pointer;
-          transition: all 0.3s ease;
+          transition: background-color 0.2s ease;
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 0.5rem;
-          margin-top: 1rem;
+          gap: 8px;
+          margin-top: 16px;
         }
         
         .btn-submit:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+          background: #5a67d8;
         }
         
         .modal-footer {
-          padding: 1.5rem 2rem;
-          background: rgba(0, 0, 0, 0.2);
+          padding: 20px 32px;
           border-top: 1px solid rgba(255, 255, 255, 0.1);
           text-align: center;
         }
         
         .modal-footer p {
-          color: #8e8e8e;
-          font-size: 0.85rem;
+          color: #999;
+          font-size: 12px;
           margin: 0;
+        }
+        
+        .otp-display-section {
+          padding: 32px;
+          text-align: center;
+        }
+        
+        .otp-label {
+          color: #667eea;
+          font-weight: 500;
+          font-size: 14px;
+          margin-bottom: 24px;
+        }
+        
+        .otp-code-container {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          margin: 24px 0;
+        }
+        
+        .otp-digit {
+          width: 48px;
+          height: 48px;
+          background: #22c55e;
+          color: white;
+          font-size: 24px;
+          font-weight: 600;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: monospace;
+        }
+        
+        .otp-copy-section {
+          margin-top: 24px;
+        }
+        
+        .copy-code {
+          background: rgba(255, 255, 255, 0.05);
+          padding: 12px 16px;
+          border-radius: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+        }
+        
+        .copy-code span {
+          color: #999;
+          font-size: 14px;
+        }
+        
+        .copy-code code {
+          background: rgba(102, 126, 234, 0.2);
+          color: #667eea;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-family: monospace;
+          font-size: 16px;
+          font-weight: 600;
+        }
+        
+        .auto-progress {
+          margin-bottom: 20px;
+        }
+        
+        .progress-bar {
+          width: 100%;
+          height: 4px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 2px;
+          overflow: hidden;
+          margin-bottom: 12px;
+        }
+        
+        .progress-fill {
+          height: 100%;
+          background: #22c55e;
+          width: 0;
+          animation: progress 3s linear forwards;
+        }
+        
+        @keyframes progress {
+          to { width: 100%; }
+        }
+        
+        .auto-progress p {
+          color: #999;
+          font-size: 14px;
+          margin: 0;
+        }
+        
+        .verification-help {
+          padding: 20px 32px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .help-section {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          text-align: left;
+        }
+        
+        .help-icon {
+          font-size: 20px;
+          flex-shrink: 0;
+        }
+        
+        .help-content p {
+          color: #999;
+          margin: 0 0 8px;
+          font-size: 14px;
+        }
+        
+        .code-hint {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        
+        .code-hint span {
+          color: #999;
+          font-size: 14px;
+        }
+        
+        .code-hint code {
+          background: rgba(245, 158, 11, 0.2);
+          color: #f59e0b;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-family: monospace;
+          font-weight: 600;
+          font-size: 14px;
+        }
+        
+        .email-display {
+          background: rgba(102, 126, 234, 0.1);
+          color: #667eea;
+          padding: 8px 16px;
+          border-radius: 20px;
+          font-weight: 500;
+          margin-top: 12px;
+          font-size: 14px;
+        }
+        
+        .otp-input {
+          text-align: center;
+          font-size: 20px;
+          font-weight: 600;
+          letter-spacing: 8px;
+          font-family: monospace;
         }
         
         .otp-note {
@@ -1175,6 +1327,75 @@ const Community = () => {
           resize: vertical;
         }
         
+        /* Desktop Modal Styles */
+        @media (min-width: 769px) {
+          .modal-content {
+            max-width: 520px;
+            min-height: auto;
+          }
+          
+          .modal-header {
+            padding: 48px 40px 32px;
+          }
+          
+          .modal-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 24px;
+          }
+          
+          .modal-header h3 {
+            font-size: 28px;
+            margin-bottom: 12px;
+          }
+          
+          .modal-header p {
+            font-size: 16px;
+          }
+          
+          .signup-form, .verification-form {
+            padding: 40px;
+          }
+          
+          .otp-display-section {
+            padding: 40px;
+          }
+          
+          .otp-digit {
+            width: 64px;
+            height: 64px;
+            font-size: 32px;
+          }
+          
+          .otp-code-container {
+            gap: 16px;
+            margin: 32px 0;
+          }
+          
+          .form-group {
+            margin-bottom: 24px;
+          }
+          
+          .form-group input {
+            padding: 16px 20px;
+            font-size: 16px;
+          }
+          
+          .btn-submit {
+            padding: 16px 32px;
+            font-size: 18px;
+            margin-top: 24px;
+          }
+          
+          .modal-footer {
+            padding: 24px 40px;
+          }
+          
+          .verification-help {
+            padding: 24px 40px;
+          }
+        }
+        
         @media (max-width: 768px) {
           h2 {
             font-size: 2rem;
@@ -1200,11 +1421,6 @@ const Community = () => {
             flex-direction: column;
             gap: 1rem;
             text-align: center;
-          }
-          
-          .modal-content {
-            width: 95%;
-            padding: 1.5rem;
           }
         }
       `}</style>
