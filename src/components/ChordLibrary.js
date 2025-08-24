@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Music2, Play } from 'lucide-react';
 import { playChordSound } from './AudioPlayer';
+import LazyImage from './LazyImage';
 
 const ChordLibrary = () => {
   const [selectedChord, setSelectedChord] = useState('G');
@@ -85,7 +86,7 @@ const ChordLibrary = () => {
               </button>
             </div>
             <div className="chord-image">
-              <img src={chords[selectedChord].image} alt={chords[selectedChord].name} />
+              <LazyImage src={chords[selectedChord].image} alt={chords[selectedChord].name} />
             </div>
           </div>
         </motion.div>

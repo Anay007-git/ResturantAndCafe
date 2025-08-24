@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Play, Sparkles } from 'lucide-react';
+import LazyImage from './LazyImage';
 
 const Hero = () => {
   return (
@@ -30,7 +31,7 @@ const Hero = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.3 }}
         >
-          <img src="/images/hero-guitar.jpg" alt="Professional Guitar" />
+          <LazyImage src="/images/hero-guitar.jpg" alt="Professional Guitar" />
         </motion.div>
       </div>
       <style jsx>{`

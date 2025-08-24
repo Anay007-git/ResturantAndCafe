@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, User, Star } from 'lucide-react';
+import LazyImage from './LazyImage';
 
 const Classes = () => {
   return (
@@ -48,7 +49,7 @@ const Classes = () => {
             
             <div className="instructor-card glass-card">
               <div className="instructor-image">
-                <img src="/images/instructor.jpg" alt="Kaustav Mitra" />
+                <LazyImage src="/images/instructor.jpg" alt="Kaustav Mitra" />
               </div>
               <h3><User size={24} /> Kaustav Mitra</h3>
               <div className="rating">

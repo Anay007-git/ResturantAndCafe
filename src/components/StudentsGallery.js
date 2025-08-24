@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Heart, MessageCircle, Share, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import LazyImage from './LazyImage';
 
 const StudentsGallery = () => {
   const [selectedPost, setSelectedPost] = useState(null);
@@ -121,7 +122,7 @@ const StudentsGallery = () => {
                 onClick={() => openModal(post, index)}
               >
                 <div className="post-image">
-                  <img src={post.src} alt={post.caption} />
+                  <LazyImage src={post.src} alt={post.caption} />
                   <div className="post-overlay">
                     <div className="post-stats">
                       <span><Heart size={20} /> {post.likes + (likes[post.id] ? 1 : 0)}</span>
@@ -169,12 +170,12 @@ const StudentsGallery = () => {
               </button>
               
               <div className="modal-image">
-                <img src={selectedPost.src} alt={selectedPost.caption} />
+                <LazyImage src={selectedPost.src} alt={selectedPost.caption} />
               </div>
               
               <div className="modal-sidebar">
                 <div className="post-header">
-                  <img src={selectedPost.avatar} alt={selectedPost.username} className="avatar" />
+                  <LazyImage src={selectedPost.avatar} alt={selectedPost.username} className="avatar" />
                   <div className="user-info">
                     <span className="username">{selectedPost.username}</span>
                     <span className="time">{selectedPost.timeAgo}</span>

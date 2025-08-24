@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import StudentZone from './components/StudentZone';
@@ -8,9 +8,14 @@ import StudentsGallery from './components/StudentsGallery';
 import DemoBooking from './components/DemoBooking';
 import Contact from './components/Contact';
 import FloatingChatBot from './components/FloatingChatBot';
+import { preloadCriticalImages } from './utils/imageOptimization';
 import './App.css';
 
 function App() {
+  useEffect(() => {
+    preloadCriticalImages();
+  }, []);
+
   return (
     <div className="App">
       <Navbar />
