@@ -1,9 +1,13 @@
-// EmailJS OTP service - Sends real OTP to user's email
+// EmailJS OTP service using same approach as booking system
 export const sendOTP = async (email, otp) => {
   try {
     console.log(`📧 Sending OTP ${otp} to ${email}...`);
     
-    const emailjs = await import('@emailjs/browser');
+    // Import EmailJS same way as booking system
+    const emailjs = (await import('@emailjs/browser')).default;
+    
+    // Initialize EmailJS with public key
+    emailjs.init('x6pionKVpG71eDz4');
     
     const currentTime = new Date();
     const expiryTime = new Date(currentTime.getTime() + 15 * 60000);
@@ -13,16 +17,16 @@ export const sendOTP = async (email, otp) => {
       hour12: true
     });
     
-    // Send real email via EmailJS
+    // Send email using same method as booking system
     const result = await emailjs.send(
-      'service_369z29l',      // Your service ID
-      'template_glt5mke',     // Your template ID  
+      'service_gkueejb',      // Same service ID as booking
+      'template_glt5mke',     // Your OTP template ID
       {
         to_email: email,      // Recipient email
         passcode: otp,        // 6-digit OTP
-        time: formattedTime   // Expiry time
-      },
-      'x6pionKVpG71eDz4'      // Your public key
+        time: formattedTime,  // Expiry time
+        user_email: email     // Additional field
+      }
     );
     
     console.log('✅ OTP email sent successfully:', result.text);
