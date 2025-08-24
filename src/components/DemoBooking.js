@@ -62,7 +62,6 @@ const DemoBooking = () => {
   
   const isSlotPast = (date, slotId) => {
     const now = new Date();
-    const selectedDate = new Date(date);
     const today = new Date().toISOString().split('T')[0];
     
     // If not today, allow booking
