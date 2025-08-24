@@ -885,8 +885,8 @@ const Community = () => {
           position: fixed;
           top: 0;
           left: 0;
-          width: 100vw;
-          height: 100vh;
+          width: 100%;
+          height: 100%;
           background: rgba(0, 0, 0, 0.8);
           backdrop-filter: blur(8px);
           display: flex;
@@ -895,6 +895,7 @@ const Community = () => {
           z-index: 1000;
           padding: 20px;
           box-sizing: border-box;
+          overflow-y: auto;
         }
         
         .modal-content {
@@ -902,12 +903,14 @@ const Community = () => {
           border-radius: 16px;
           width: 100%;
           max-width: 450px;
-          max-height: 90vh;
+          max-height: calc(100vh - 40px);
           border: 1px solid rgba(102, 126, 234, 0.2);
           position: relative;
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
           overflow-y: auto;
           margin: auto;
+          display: flex;
+          flex-direction: column;
         }
         
         .modal-close {
@@ -1329,70 +1332,125 @@ const Community = () => {
         
         /* Desktop Modal Styles */
         @media (min-width: 769px) {
+          .modal-overlay {
+            padding: 40px;
+          }
+          
           .modal-content {
-            max-width: 520px;
+            max-width: 600px;
             min-height: auto;
+            max-height: calc(100vh - 80px);
           }
           
           .modal-header {
-            padding: 48px 40px 32px;
+            padding: 60px 50px 40px;
+            flex-shrink: 0;
           }
           
           .modal-icon {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 24px;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 30px;
           }
           
           .modal-header h3 {
-            font-size: 28px;
-            margin-bottom: 12px;
+            font-size: 32px;
+            margin-bottom: 16px;
+            line-height: 1.2;
           }
           
           .modal-header p {
-            font-size: 16px;
+            font-size: 18px;
+            line-height: 1.4;
           }
           
           .signup-form, .verification-form {
-            padding: 40px;
+            padding: 50px;
+            flex: 1;
+            overflow-y: auto;
           }
           
           .otp-display-section {
-            padding: 40px;
+            padding: 50px;
+            flex: 1;
           }
           
           .otp-digit {
-            width: 64px;
-            height: 64px;
-            font-size: 32px;
+            width: 80px;
+            height: 80px;
+            font-size: 40px;
           }
           
           .otp-code-container {
-            gap: 16px;
-            margin: 32px 0;
+            gap: 20px;
+            margin: 40px 0;
           }
           
           .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 30px;
+          }
+          
+          .form-group label {
+            font-size: 16px;
+            margin-bottom: 12px;
           }
           
           .form-group input {
-            padding: 16px 20px;
-            font-size: 16px;
+            padding: 20px 24px;
+            font-size: 18px;
           }
           
           .btn-submit {
-            padding: 16px 32px;
-            font-size: 18px;
-            margin-top: 24px;
+            padding: 20px 40px;
+            font-size: 20px;
+            margin-top: 30px;
           }
           
           .modal-footer {
-            padding: 24px 40px;
+            padding: 30px 50px;
+            flex-shrink: 0;
           }
           
           .verification-help {
-            padding: 24px 40px;
+            padding: 30px 50px;
+            flex-shrink: 0;
+          }
+          
+          .email-display {
+            padding: 12px 24px;
+            font-size: 16px;
+            margin-top: 16px;
+          }
+          
+          .copy-code {
+            padding: 16px 24px;
+          }
+          
+          .copy-code span {
+            font-size: 16px;
+          }
+          
+          .copy-code code {
+            font-size: 20px;
+            padding: 6px 12px;
+          }
+          
+          .otp-input {
+            font-size: 28px;
+            letter-spacing: 12px;
+            padding: 24px;
+          }
+          
+          .help-content p {
+            font-size: 16px;
+          }
+          
+          .code-hint span {
+            font-size: 16px;
+          }
+          
+          .code-hint code {
+            font-size: 16px;
           }
         }
         
