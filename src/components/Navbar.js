@@ -2,12 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Music, Menu, X, Sun, Moon, Monitor } from 'lucide-react';
 
-const Navbar = () => {
+const Navbar = ({ theme, setTheme }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('theme') || 'system';
-  });
   const [showThemeMenu, setShowThemeMenu] = useState(false);
 
   useEffect(() => {
@@ -15,27 +12,6 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    const applyTheme = () => {
-      const root = document.documentElement;
-      if (theme === 'system') {
-        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        root.setAttribute('data-theme', systemTheme);
-      } else {
-        root.setAttribute('data-theme', theme);
-      }
-    };
-    
-    applyTheme();
-    localStorage.setItem('theme', theme);
-    
-    if (theme === 'system') {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      mediaQuery.addEventListener('change', applyTheme);
-      return () => mediaQuery.removeEventListener('change', applyTheme);
-    }
-  }, [theme]);
 
   const handleThemeChange = (newTheme) => {
     setTheme(newTheme);
