@@ -154,12 +154,14 @@ const Navbar = () => {
           align-items: center;
           padding: 0 2rem;
           position: relative;
+          width: 100%;
         }
         
         .nav-right {
           display: flex;
           align-items: center;
           gap: 1rem;
+          flex-shrink: 0;
         }
         .logo {
           display: flex;
@@ -169,6 +171,7 @@ const Navbar = () => {
           font-size: 1.6rem;
           font-weight: 700;
           text-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+          flex-shrink: 0;
         }
         .nav-menu {
           list-style: none;
@@ -178,6 +181,8 @@ const Navbar = () => {
           display: flex;
           gap: 0;
           align-items: center;
+          margin: 0;
+          padding: 0;
         }
         .nav-menu a {
           color: #ffffff;
@@ -282,11 +287,12 @@ const Navbar = () => {
           }
           
           .logo {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
           }
           
           .logo span {
-            display: none;
+            font-size: 1rem;
+            font-weight: 600;
           }
           
           .desktop-menu {
@@ -347,8 +353,26 @@ const Navbar = () => {
         }
         
         @media (max-width: 480px) {
+          .nav-container {
+            padding: 0 1rem;
+          }
+          
+          .logo {
+            font-size: 1.1rem;
+          }
+          
+          .logo span {
+            font-size: 0.9rem;
+          }
+          
           .nav-menu.mobile-open {
             width: 100%;
+          }
+        }
+        
+        @media (max-width: 360px) {
+          .logo span {
+            display: none;
           }
         }
         
