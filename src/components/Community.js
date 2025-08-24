@@ -1,74 +1,145 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Users, MessageSquare, Plus, Heart, MessageCircle, Share2, User, Clock, Tag } from 'lucide-react';
+import { Users, MessageSquare, Plus, Heart, MessageCircle, Share2, User, Clock, Tag, ArrowUp, ArrowDown, Award, Shield } from 'lucide-react';
+import { sendOTP, generateOTP } from '../utils/emailService';
 
 const Community = () => {
   const [isSignedUp, setIsSignedUp] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
+  const [showOTPVerification, setShowOTPVerification] = useState(false);
   const [showNewPost, setShowNewPost] = useState(false);
+  const [signUpData, setSignUpData] = useState({ username: '', email: '', password: '' });
+  const [otpCode, setOtpCode] = useState('');
+  const [generatedOTP, setGeneratedOTP] = useState('');
+  const [currentUser, setCurrentUser] = useState(null);
+  const [votes, setVotes] = useState({});
   const [posts, setPosts] = useState([
     {
       id: 1,
       author: 'GuitarMaster92',
-      avatar: '/images/gallery/tutor_profile.jpg',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=GuitarMaster92',
       time: '2h ago',
       category: 'Question',
       title: 'Help with F chord transition',
-      content: 'I\'m struggling with the transition from C to F chord. Any tips for smooth changes?',
-      likes: 12,
+      content: 'I\'m struggling with the transition from C to F chord. Any tips for smooth changes? I\'ve been practicing for weeks but still can\'t get it smooth.',
+      upvotes: 12,
+      downvotes: 1,
       comments: 8,
-      tags: ['beginner', 'chords', 'help']
+      tags: ['beginner', 'chords', 'help'],
+      userBadge: 'Beginner',
+      verified: true
     },
     {
       id: 2,
       author: 'StrumQueen',
-      avatar: '/images/gallery/tutor_profile.jpg',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=StrumQueen',
       time: '4h ago',
       category: 'Knowledge',
       title: 'Essential strumming patterns for beginners',
-      content: 'Here are 5 strumming patterns every beginner should master: D-D-U-U-D-U, D-D-U-D-U...',
-      likes: 24,
+      content: 'Here are 5 strumming patterns every beginner should master:\n\n1. D-D-U-U-D-U (Down-Down-Up-Up-Down-Up)\n2. D-D-U-D-U (Classic folk pattern)\n3. D-U-X-U-D-U (X = muted strum)\n\nPractice these slowly first!',
+      upvotes: 45,
+      downvotes: 2,
       comments: 15,
-      tags: ['strumming', 'beginner', 'tutorial']
+      tags: ['strumming', 'beginner', 'tutorial'],
+      userBadge: 'Expert',
+      verified: true
     },
     {
       id: 3,
       author: 'RockStar_Dev',
-      avatar: '/images/gallery/tutor_profile.jpg',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=RockStar_Dev',
       time: '6h ago',
       category: 'Discussion',
-      title: 'Best guitar for intermediate players?',
-      content: 'Looking to upgrade from my starter guitar. Budget around $500. Any recommendations?',
-      likes: 18,
+      title: 'Best guitar for intermediate players under $500?',
+      content: 'Looking to upgrade from my starter Yamaha F310. Budget is around $500. Considering Fender CD-60S or Epiphone DR-100. Any recommendations from the community?',
+      upvotes: 18,
+      downvotes: 0,
       comments: 22,
-      tags: ['gear', 'intermediate', 'advice']
+      tags: ['gear', 'intermediate', 'advice'],
+      userBadge: 'Intermediate',
+      verified: false
     }
   ]);
   const [newPost, setNewPost] = useState({ title: '', content: '', category: 'Question', tags: '' });
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    setIsSignedUp(true);
-    setShowSignUp(false);
+    const formData = new FormData(e.target);
+    const userData = {
+      username: formData.get('username'),
+      email: formData.get('email'),
+      password: formData.get('password')
+    };
+    
+    setSignUpData(userData);
+    const otp = generateOTP();
+    setGeneratedOTP(otp);
+    
+    const emailSent = await sendOTP(userData.email, otp);
+    if (emailSent) {
+      setShowSignUp(false);
+      setShowOTPVerification(true);
+    } else {
+      alert('Failed to send verification email. Please try again.');
+    }
+  };
+  
+  const handleOTPVerification = (e) => {
+    e.preventDefault();
+    if (otpCode === generatedOTP) {
+      setCurrentUser({
+        username: signUpData.username,
+        email: signUpData.email,
+        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${signUpData.username}`,
+        badge: 'Newbie',
+        verified: true
+      });
+      setIsSignedUp(true);
+      setShowOTPVerification(false);
+      setOtpCode('');
+    } else {
+      alert('Invalid OTP. Please try again.');
+    }
   };
 
   const handleNewPost = (e) => {
     e.preventDefault();
     const post = {
       id: posts.length + 1,
-      author: 'You',
-      avatar: '/images/gallery/tutor_profile.jpg',
+      author: currentUser.username,
+      avatar: currentUser.avatar,
       time: 'now',
       category: newPost.category,
       title: newPost.title,
       content: newPost.content,
-      likes: 0,
+      upvotes: 0,
+      downvotes: 0,
       comments: 0,
-      tags: newPost.tags.split(',').map(tag => tag.trim())
+      tags: newPost.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
+      userBadge: currentUser.badge,
+      verified: currentUser.verified
     };
     setPosts([post, ...posts]);
     setNewPost({ title: '', content: '', category: 'Question', tags: '' });
     setShowNewPost(false);
+  };
+  
+  const handleVote = (postId, voteType) => {
+    setVotes(prev => ({
+      ...prev,
+      [postId]: voteType
+    }));
+  };
+  
+  const getVoteCount = (post) => {
+    const userVote = votes[post.id];
+    let upvotes = post.upvotes;
+    let downvotes = post.downvotes;
+    
+    if (userVote === 'up') upvotes += 1;
+    if (userVote === 'down') downvotes += 1;
+    
+    return upvotes - downvotes;
   };
 
   return (
@@ -81,23 +152,47 @@ const Community = () => {
         >
           <div className="community-header">
             <h2><Users size={32} /> Guitar Community</h2>
-            <p>Connect, learn, and share with fellow guitar enthusiasts</p>
+            <p>Connect with 10,000+ guitarists worldwide</p>
           </div>
 
           {!isSignedUp ? (
             <div className="community-cta glass-card">
-              <h3>Join Our Guitar Community! 🎸</h3>
-              <p>Share your knowledge, ask questions, and connect with guitarists worldwide</p>
+              <h3>🎸 Join Presto Guitar Community</h3>
+              <p>Connect with guitarists worldwide. Share knowledge, get help, and grow together.</p>
+              <div className="community-stats">
+                <div className="stat">
+                  <span className="stat-number">10.2k</span>
+                  <span className="stat-label">Members</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-number">1.5k</span>
+                  <span className="stat-label">Online</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-number">50+</span>
+                  <span className="stat-label">Daily Posts</span>
+                </div>
+              </div>
               <button className="btn-primary" onClick={() => setShowSignUp(true)}>
                 <Users size={20} />
                 Join Community
               </button>
             </div>
           ) : (
-            <div className="community-actions">
+            <div className="user-dashboard glass-card">
+              <div className="user-info">
+                <img src={currentUser.avatar} alt={currentUser.username} className="user-avatar" />
+                <div className="user-details">
+                  <span className="username">
+                    {currentUser.username}
+                    {currentUser.verified && <Shield size={16} className="verified-badge" />}
+                  </span>
+                  <span className="user-badge">{currentUser.badge}</span>
+                </div>
+              </div>
               <button className="btn-primary" onClick={() => setShowNewPost(true)}>
                 <Plus size={20} />
-                New Post
+                Create Post
               </button>
             </div>
           )}
@@ -111,44 +206,69 @@ const Community = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <div className="post-header">
-                  <img src={post.avatar} alt={post.author} className="post-avatar" />
-                  <div className="post-meta">
-                    <span className="post-author">{post.author}</span>
-                    <span className="post-time"><Clock size={14} /> {post.time}</span>
-                  </div>
-                  <span className={`post-category ${post.category.toLowerCase()}`}>
-                    {post.category}
-                  </span>
+                <div className="post-voting">
+                  <button 
+                    className={`vote-btn ${votes[post.id] === 'up' ? 'active' : ''}`}
+                    onClick={() => handleVote(post.id, votes[post.id] === 'up' ? null : 'up')}
+                  >
+                    <ArrowUp size={20} />
+                  </button>
+                  <span className="vote-count">{getVoteCount(post)}</span>
+                  <button 
+                    className={`vote-btn ${votes[post.id] === 'down' ? 'active' : ''}`}
+                    onClick={() => handleVote(post.id, votes[post.id] === 'down' ? null : 'down')}
+                  >
+                    <ArrowDown size={20} />
+                  </button>
                 </div>
                 
-                <div className="post-content">
-                  <h3>{post.title}</h3>
-                  <p>{post.content}</p>
+                <div className="post-main">
+                  <div className="post-header">
+                    <img src={post.avatar} alt={post.author} className="post-avatar" />
+                    <div className="post-meta">
+                      <div className="author-info">
+                        <span className="post-author">
+                          {post.author}
+                          {post.verified && <Shield size={14} className="verified-badge" />}
+                        </span>
+                        <span className={`user-badge ${post.userBadge.toLowerCase()}`}>
+                          <Award size={12} />
+                          {post.userBadge}
+                        </span>
+                      </div>
+                      <span className="post-time"><Clock size={14} /> {post.time}</span>
+                    </div>
+                    <span className={`post-category ${post.category.toLowerCase()}`}>
+                      {post.category}
+                    </span>
+                  </div>
                   
-                  <div className="post-tags">
-                    {post.tags.map((tag, idx) => (
-                      <span key={idx} className="tag">
-                        <Tag size={12} />
-                        {tag}
-                      </span>
-                    ))}
+                  <div className="post-content">
+                    <h3>{post.title}</h3>
+                    <p>{post.content.split('\n').map((line, i) => (
+                      <span key={i}>{line}<br /></span>
+                    ))}</p>
+                    
+                    <div className="post-tags">
+                      {post.tags.map((tag, idx) => (
+                        <span key={idx} className="tag">
+                          <Tag size={12} />
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </div>
-                
-                <div className="post-actions">
-                  <button className="action-btn">
-                    <Heart size={18} />
-                    {post.likes}
-                  </button>
-                  <button className="action-btn">
-                    <MessageCircle size={18} />
-                    {post.comments}
-                  </button>
-                  <button className="action-btn">
-                    <Share2 size={18} />
-                    Share
-                  </button>
+                  
+                  <div className="post-actions">
+                    <button className="action-btn">
+                      <MessageCircle size={18} />
+                      {post.comments} Comments
+                    </button>
+                    <button className="action-btn">
+                      <Share2 size={18} />
+                      Share
+                    </button>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -173,13 +293,48 @@ const Community = () => {
               exit={{ scale: 0.8, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <h3>Join Guitar Community</h3>
+              <h3>🎸 Join Presto Guitar Community</h3>
+              <p>Create your account and start connecting with fellow guitarists</p>
               <form onSubmit={handleSignUp}>
-                <input type="text" placeholder="Username" required />
-                <input type="email" placeholder="Email" required />
-                <input type="password" placeholder="Password" required />
-                <button type="submit" className="btn-primary">Sign Up</button>
+                <input type="text" name="username" placeholder="Choose a username" required />
+                <input type="email" name="email" placeholder="Your email address" required />
+                <input type="password" name="password" placeholder="Create a password" required />
+                <button type="submit" className="btn-primary">Send Verification Code</button>
               </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
+      {/* OTP Verification Modal */}
+      <AnimatePresence>
+        {showOTPVerification && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="modal-content otp-modal"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+            >
+              <h3>📧 Verify Your Email</h3>
+              <p>We've sent a 6-digit code to <strong>{signUpData.email}</strong></p>
+              <form onSubmit={handleOTPVerification}>
+                <input 
+                  type="text" 
+                  placeholder="Enter 6-digit code" 
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value)}
+                  maxLength="6"
+                  required 
+                />
+                <button type="submit" className="btn-primary">Verify & Join</button>
+              </form>
+              <p className="otp-note">Didn't receive the code? Check your spam folder or try again.</p>
             </motion.div>
           </motion.div>
         )}
@@ -268,11 +423,79 @@ const Community = () => {
         .community-cta h3 {
           color: #667eea;
           margin-bottom: 1rem;
+          font-size: 1.8rem;
         }
         
-        .community-actions {
-          text-align: center;
+        .community-stats {
+          display: flex;
+          justify-content: center;
+          gap: 3rem;
+          margin: 2rem 0;
+        }
+        
+        .stat {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        
+        .stat-number {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: #667eea;
+        }
+        
+        .stat-label {
+          font-size: 0.9rem;
+          color: #8e8e8e;
+        }
+        
+        .user-dashboard {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1.5rem 2rem;
           margin-bottom: 3rem;
+        }
+        
+        .user-info {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
+        
+        .user-avatar {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+        }
+        
+        .user-details {
+          display: flex;
+          flex-direction: column;
+        }
+        
+        .username {
+          font-weight: 600;
+          color: white;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+        
+        .verified-badge {
+          color: #22c55e;
+        }
+        
+        .user-badge {
+          font-size: 0.8rem;
+          padding: 0.2rem 0.6rem;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          gap: 0.3rem;
+          background: rgba(156, 163, 175, 0.2);
+          color: #9ca3af;
         }
         
         .community-posts {
@@ -282,12 +505,56 @@ const Community = () => {
         }
         
         .post-card {
-          padding: 2rem;
+          display: flex;
+          gap: 1rem;
+          padding: 1.5rem;
+          border-left: 3px solid transparent;
+          transition: border-color 0.3s ease;
+        }
+        
+        .post-card:hover {
+          border-left-color: #667eea;
+        }
+        
+        .post-voting {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+          min-width: 40px;
+        }
+        
+        .vote-btn {
+          background: none;
+          border: none;
+          color: #8e8e8e;
+          cursor: pointer;
+          padding: 0.3rem;
+          border-radius: 4px;
+          transition: all 0.3s ease;
+        }
+        
+        .vote-btn:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .vote-btn.active {
+          color: #667eea;
+        }
+        
+        .vote-count {
+          font-weight: 600;
+          color: white;
+          font-size: 0.9rem;
+        }
+        
+        .post-main {
+          flex: 1;
         }
         
         .post-header {
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           gap: 1rem;
           margin-bottom: 1.5rem;
         }
@@ -303,11 +570,21 @@ const Community = () => {
           flex: 1;
           display: flex;
           flex-direction: column;
+          gap: 0.3rem;
+        }
+        
+        .author-info {
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
         }
         
         .post-author {
           font-weight: 600;
           color: white;
+          display: flex;
+          align-items: center;
+          gap: 0.3rem;
         }
         
         .post-time {
@@ -410,6 +687,24 @@ const Community = () => {
           border-radius: 15px;
           width: 90%;
           max-width: 500px;
+          border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        
+        .otp-modal {
+          text-align: center;
+        }
+        
+        .otp-modal input {
+          text-align: center;
+          font-size: 1.2rem;
+          letter-spacing: 0.5rem;
+          font-weight: 600;
+        }
+        
+        .otp-note {
+          font-size: 0.8rem;
+          color: #8e8e8e;
+          margin-top: 1rem;
         }
         
         .modal-content h3 {
@@ -445,16 +740,25 @@ const Community = () => {
           }
           
           .post-card {
-            padding: 1.5rem;
+            padding: 1rem;
+            flex-direction: column;
           }
           
-          .post-header {
-            flex-wrap: wrap;
-            gap: 0.8rem;
+          .post-voting {
+            flex-direction: row;
+            justify-content: center;
+            order: 2;
+            margin-top: 1rem;
           }
           
-          .post-actions {
+          .community-stats {
+            gap: 1.5rem;
+          }
+          
+          .user-dashboard {
+            flex-direction: column;
             gap: 1rem;
+            text-align: center;
           }
           
           .modal-content {
