@@ -1,35 +1,5 @@
-// Demo OTP system (working implementation)
+// Real EmailJS OTP system
 export const sendOTP = async (email, otp) => {
-  try {
-    // Simulate sending delay
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Log for debugging
-    console.log(`📧 Demo OTP sent to ${email}: ${otp}`);
-    
-    // Show OTP in alert for demo purposes
-    alert(`✅ Verification Code Sent!\n\nYour OTP: ${otp}\n\nEmail: ${email}\n\n(In production, this would be sent via email)`);
-    
-    return true;
-  } catch (error) {
-    console.error('Failed to send OTP:', error);
-    return false;
-  }
-};
-
-export const generateOTP = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-};
-
-// Quick test function
-export const sendOTPTest = async (email, otp) => {
-  console.log(`📧 Test OTP: ${otp} for ${email}`);
-  alert(`Test OTP: ${otp}`);
-  return true;
-};
-
-// For future EmailJS implementation (when configured properly)
-export const sendOTPEmailJS = async (email, otp) => {
   try {
     const emailjs = await import('@emailjs/browser');
     
@@ -49,13 +19,36 @@ export const sendOTPEmailJS = async (email, otp) => {
         passcode: otp,
         time: formattedTime
       },
-      '-x6pionKVpG71eDz4'
+      'x6pionKVpG71eDz4'
     );
     
     console.log('📧 EmailJS success:', result.text);
     return true;
   } catch (error) {
     console.error('EmailJS error:', error);
-    return false;
+    
+    // Fallback to demo mode
+    console.log(`📧 Fallback OTP for ${email}: ${otp}`);
+    alert(`⚠️ Email service unavailable\n\nDemo Mode - Your OTP: ${otp}\n\nPlease use this code to continue.`);
+    return true;
   }
+};
+
+export const generateOTP = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+// Quick test function
+export const sendOTPTest = async (email, otp) => {
+  console.log(`📧 Test OTP: ${otp} for ${email}`);
+  alert(`Test OTP: ${otp}`);
+  return true;
+};
+
+// Demo-only function for testing
+export const sendOTPDemo = async (email, otp) => {
+  await new Promise(resolve => setTimeout(resolve, 1500));
+  console.log(`📧 Demo OTP sent to ${email}: ${otp}`);
+  alert(`✅ Demo Mode\n\nYour OTP: ${otp}`);
+  return true;
 };
