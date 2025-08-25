@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, ArrowUp, ArrowDown, MessageCircle, Share2, Plus, Mail, Shield, Award, Clock, Tag, X } from 'lucide-react';
 import { sendOTP, generateOTP, validateEmail, validateOTP } from '../utils/emailService';
-import { communityStorage } from '../utils/communityStorage';
-import { blobStorage } from '../utils/blobStorage';
+import { apiService } from '../utils/apiService';
 
 const Community = () => {
   const [isSignedUp, setIsSignedUp] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [recoveryData, setRecoveryData] = useState(null);
   const [showOTPVerification, setShowOTPVerification] = useState(false);
   const [showOTPDisplay, setShowOTPDisplay] = useState(false);
   const [displayedOTP, setDisplayedOTP] = useState('');
@@ -98,13 +100,13 @@ const Community = () => {
     
     try {
       // Check username availability
-      if (await communityStorage.checkUsername(userData.username)) {
+      if (await apiService.checkUsername(userData.username)) {
         alert('Username not available. Please choose a different username.');
         return;
       }
       
       // Check email availability
-      if (await communityStorage.checkEmail(userData.email)) {
+      if (await apiService.checkEmail(userData.email)) {
         alert('Email already registered. Please sign in instead.');
         return;
       }
@@ -137,6 +139,24 @@ const Community = () => {
     }, 3000);
   };
 
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const result = await apiService.recoverPassword(forgotEmail);
+      if (result.error) {
+        alert('❌ Email not found. Please check your email address.');
+      } else {
+        setRecoveryData(result);
+        alert(`✅ Recovery code: ${result.recoveryCode}\nUsername: ${result.username}`);
+        setShowForgotPassword(false);
+        setForgotEmail('');
+      }
+    } catch (error) {
+      alert('❌ Recovery failed. Please try again.');
+    }
+  };
+
   const handleSignIn = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -152,15 +172,15 @@ const Community = () => {
     }
     
     try {
-      // Check if user exists and password matches
-      const user = await communityStorage.authenticateUser(loginData.email, loginData.password);
-      if (user) {
+      const user = await apiService.login(loginData);
+      if (user.error) {
+        alert('❌ Invalid email or password. Please try again or sign up.');
+      } else {
+        localStorage.setItem('currentUser', JSON.stringify(user));
         setCurrentUser(user);
         setIsSignedUp(true);
         setShowSignIn(false);
         alert(`✅ Welcome back, ${user.username}!`);
-      } else {
-        alert('❌ Invalid email or password. Please try again or sign up.');
       }
     } catch (error) {
       alert('❌ Login failed. Please try again.');
@@ -185,16 +205,18 @@ const Community = () => {
         verified: true
       };
       
-      // Save user to storage with password
-      const userWithPassword = { ...newUser, password: signUpData.password };
-      const savedUser = await communityStorage.addUser(userWithPassword);
-      setCurrentUser(savedUser);
-      setIsSignedUp(true);
-      setShowOTPVerification(false);
-      setOtpCode('');
-      
-      // Success message
-      alert(`✅ Welcome to Presto Guitar Community, ${signUpData.username}!`);
+      // Register user with backend
+      const result = await apiService.register(signUpData);
+      if (result.error) {
+        alert('❌ Registration failed. Please try again.');
+      } else {
+        localStorage.setItem('currentUser', JSON.stringify(result));
+        setCurrentUser(result);
+        setIsSignedUp(true);
+        setShowOTPVerification(false);
+        setOtpCode('');
+        alert(`✅ Welcome to Presto Guitar Community, ${signUpData.username}!`);
+      }
     } else {
       alert('❌ Invalid OTP. Please check your email and try again.');
     }
@@ -204,21 +226,24 @@ const Community = () => {
     e.preventDefault();
     const postData = {
       author: currentUser.username,
+      authorId: currentUser.id,
       avatar: currentUser.avatar,
-      time: 'now',
       category: newPost.category,
       title: newPost.title,
       content: newPost.content,
       tags: newPost.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
-      userBadge: currentUser.badge,
-      verified: currentUser.verified
+      userBadge: currentUser.badge
     };
     
-    const savedPost = await communityStorage.addPost(postData);
-    const updatedPosts = await blobStorage.getPosts();
-    setPosts(updatedPosts);
-    setNewPost({ title: '', content: '', category: 'Doubt', tags: '' });
-    setShowNewPost(false);
+    try {
+      await apiService.createPost(postData);
+      const updatedPosts = await apiService.getPosts();
+      setPosts(updatedPosts);
+      setNewPost({ title: '', content: '', category: 'Doubt', tags: '' });
+      setShowNewPost(false);
+    } catch (error) {
+      alert('Failed to create post. Please try again.');
+    }
   };
   
   const handleVote = (postId, voteType) => {
@@ -227,14 +252,7 @@ const Community = () => {
       return;
     }
     
-    const newVote = communityStorage.vote(postId, voteType, currentUser.id);
-    setVotes(prev => ({
-      ...prev,
-      [postId]: newVote
-    }));
-    
-    // Refresh posts to show updated vote counts
-    setPosts(communityStorage.getPosts());
+    console.log('Voting feature coming soon');
   };
   
   const getVoteCount = (post) => {
@@ -249,9 +267,8 @@ const Community = () => {
     
     if (!newComment.trim()) return;
     
-    communityStorage.addComment(postId, newComment, currentUser.id, currentUser.username);
+    console.log('Comments feature coming soon');
     setNewComment('');
-    setPosts(communityStorage.getPosts());
   };
   
   const toggleComments = (postId) => {
@@ -267,21 +284,19 @@ const Community = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      // Load posts from blob storage
-      const storedPosts = await blobStorage.getPosts();
-      if (storedPosts.length > 0) {
-        setPosts(storedPosts);
-      } else {
-        // Initialize with default posts if none exist
-        await communityStorage.initializeDefaultPosts(posts);
-        const initializedPosts = await blobStorage.getPosts();
-        setPosts(initializedPosts);
+      try {
+        // Load posts from backend
+        const posts = await apiService.getPosts();
+        setPosts(posts);
+      } catch (error) {
+        console.log('Failed to load posts from server');
       }
       
-      // Check if user is already logged in (session persistence)
-      const savedUser = communityStorage.getCurrentUser();
+      // Check if user is already logged in
+      const savedUser = localStorage.getItem('currentUser');
       if (savedUser) {
-        setCurrentUser(savedUser);
+        const user = JSON.parse(savedUser);
+        setCurrentUser(user);
         setIsSignedUp(true);
       }
     };
@@ -290,15 +305,8 @@ const Community = () => {
   }, []);
 
   useEffect(() => {
-    // Load user votes when user logs in
     if (currentUser) {
-      const storedPosts = communityStorage.getPosts();
-      const userVotes = {};
-      storedPosts.forEach(post => {
-        const vote = communityStorage.getUserVote(post.id, currentUser.id);
-        if (vote) userVotes[post.id] = vote;
-      });
-      setVotes(userVotes);
+      setVotes({});
     }
   }, [currentUser]);
 
@@ -365,7 +373,7 @@ const Community = () => {
                   Create Post
                 </button>
                 <button className="btn-logout" onClick={() => {
-                  communityStorage.clearCurrentUser();
+                  localStorage.removeItem('currentUser');
                   setCurrentUser(null);
                   setIsSignedUp(false);
                   setVotes({});
@@ -470,13 +478,7 @@ const Community = () => {
                   {showComments[post.id] && (
                     <div className="comments-section">
                       <div className="comments-list">
-                        {communityStorage.getPostComments(post.id).map(comment => (
-                          <div key={comment.id} className="comment-item">
-                            <strong>{comment.username}:</strong>
-                            <span>{comment.content}</span>
-                            <small>{new Date(comment.timestamp).toLocaleString()}</small>
-                          </div>
-                        ))}
+                        <p>Comments feature coming soon!</p>
                       </div>
                       {currentUser && (
                         <div className="comment-form">
@@ -631,6 +633,62 @@ const Community = () => {
               
               <div className="modal-footer">
                 <p>Don't have an account? <button type="button" className="link-btn" onClick={() => { setShowSignIn(false); setShowSignUp(true); }}>Join Community</button></p>
+                <p><button type="button" className="link-btn" onClick={() => { setShowSignIn(false); setShowForgotPassword(true); }}>Forgot Password?</button></p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Forgot Password Modal */}
+      <AnimatePresence>
+        {showForgotPassword && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowForgotPassword(false)}
+          >
+            <motion.div
+              className="modal-content forgot-modal"
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button className="modal-close" onClick={() => setShowForgotPassword(false)}>
+                <X size={20} />
+              </button>
+              
+              <div className="modal-header">
+                <div className="modal-icon">
+                  <Mail size={32} />
+                </div>
+                <h3>Recover Account</h3>
+                <p>Enter your email to get your username and recovery code</p>
+              </div>
+              
+              <form onSubmit={handleForgotPassword} className="signin-form">
+                <div className="form-group">
+                  <label>Email Address</label>
+                  <input 
+                    type="email" 
+                    value={forgotEmail}
+                    onChange={(e) => setForgotEmail(e.target.value)}
+                    placeholder="your.email@example.com" 
+                    required 
+                  />
+                </div>
+                
+                <button type="submit" className="btn-submit">
+                  <Mail size={18} />
+                  Get Recovery Code
+                </button>
+              </form>
+              
+              <div className="modal-footer">
+                <p>Remember your password? <button type="button" className="link-btn" onClick={() => { setShowForgotPassword(false); setShowSignIn(true); }}>Sign In</button></p>
               </div>
             </motion.div>
           </motion.div>
