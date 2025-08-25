@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
+    "@vercel/blob": "^1.1.1",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "framer-motion": "^10.16.4",

@@ -3,15 +3,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Users, ArrowUp, ArrowDown, MessageCircle, Share2, Plus, Mail, Shield, Award, Clock, Tag, X } from 'lucide-react';
 import { sendOTP, generateOTP, validateEmail, validateOTP } from '../utils/emailService';
 import { communityStorage } from '../utils/communityStorage';
+import { blobStorage } from '../utils/blobStorage';
 
 const Community = () => {
   const [isSignedUp, setIsSignedUp] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
   const [showOTPVerification, setShowOTPVerification] = useState(false);
   const [showOTPDisplay, setShowOTPDisplay] = useState(false);
   const [displayedOTP, setDisplayedOTP] = useState('');
   const [showNewPost, setShowNewPost] = useState(false);
   const [signUpData, setSignUpData] = useState({ username: '', email: '', password: '' });
+  const [signInData, setSignInData] = useState({ email: '', password: '' });
   const [otpCode, setOtpCode] = useState('');
   const [generatedOTP, setGeneratedOTP] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
@@ -93,10 +96,20 @@ const Community = () => {
       return;
     }
     
-    // Check username availability
-    if (communityStorage.checkUsername(userData.username)) {
-      alert('Username not available. Please choose a different username.');
-      return;
+    try {
+      // Check username availability
+      if (await communityStorage.checkUsername(userData.username)) {
+        alert('Username not available. Please choose a different username.');
+        return;
+      }
+      
+      // Check email availability
+      if (await communityStorage.checkEmail(userData.email)) {
+        alert('Email already registered. Please sign in instead.');
+        return;
+      }
+    } catch (error) {
+      console.log('Validation check failed, proceeding with signup');
     }
     
     setSignUpData(userData);
@@ -123,8 +136,38 @@ const Community = () => {
       setShowOTPVerification(true);
     }, 3000);
   };
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const loginData = {
+      email: formData.get('email'),
+      password: formData.get('password')
+    };
+    
+    // Validate email format
+    if (!validateEmail(loginData.email)) {
+      alert('Please enter a valid email address');
+      return;
+    }
+    
+    try {
+      // Check if user exists and password matches
+      const user = await communityStorage.authenticateUser(loginData.email, loginData.password);
+      if (user) {
+        setCurrentUser(user);
+        setIsSignedUp(true);
+        setShowSignIn(false);
+        alert(`✅ Welcome back, ${user.username}!`);
+      } else {
+        alert('❌ Invalid email or password. Please try again or sign up.');
+      }
+    } catch (error) {
+      alert('❌ Login failed. Please try again.');
+    }
+  };
   
-  const handleOTPVerification = (e) => {
+  const handleOTPVerification = async (e) => {
     e.preventDefault();
     
     // Validate OTP format
@@ -142,8 +185,9 @@ const Community = () => {
         verified: true
       };
       
-      // Save user to storage
-      const savedUser = communityStorage.addUser(newUser);
+      // Save user to storage with password
+      const userWithPassword = { ...newUser, password: signUpData.password };
+      const savedUser = await communityStorage.addUser(userWithPassword);
       setCurrentUser(savedUser);
       setIsSignedUp(true);
       setShowOTPVerification(false);
@@ -156,7 +200,7 @@ const Community = () => {
     }
   };
 
-  const handleNewPost = (e) => {
+  const handleNewPost = async (e) => {
     e.preventDefault();
     const postData = {
       author: currentUser.username,
@@ -170,8 +214,9 @@ const Community = () => {
       verified: currentUser.verified
     };
     
-    const savedPost = communityStorage.addPost(postData);
-    setPosts([savedPost, ...posts]);
+    const savedPost = await communityStorage.addPost(postData);
+    const updatedPosts = await blobStorage.getPosts();
+    setPosts(updatedPosts);
     setNewPost({ title: '', content: '', category: 'Doubt', tags: '' });
     setShowNewPost(false);
   };
@@ -221,14 +266,33 @@ const Community = () => {
     : posts.filter(post => post.category === selectedCategory);
 
   useEffect(() => {
-    // Load posts from storage
-    const storedPosts = communityStorage.getPosts();
-    if (storedPosts.length > 0) {
-      setPosts(storedPosts);
-    }
+    const loadData = async () => {
+      // Load posts from blob storage
+      const storedPosts = await blobStorage.getPosts();
+      if (storedPosts.length > 0) {
+        setPosts(storedPosts);
+      } else {
+        // Initialize with default posts if none exist
+        await communityStorage.initializeDefaultPosts(posts);
+        const initializedPosts = await blobStorage.getPosts();
+        setPosts(initializedPosts);
+      }
+      
+      // Check if user is already logged in (session persistence)
+      const savedUser = communityStorage.getCurrentUser();
+      if (savedUser) {
+        setCurrentUser(savedUser);
+        setIsSignedUp(true);
+      }
+    };
     
-    // Load user votes if logged in
+    loadData();
+  }, []);
+
+  useEffect(() => {
+    // Load user votes when user logs in
     if (currentUser) {
+      const storedPosts = communityStorage.getPosts();
       const userVotes = {};
       storedPosts.forEach(post => {
         const vote = communityStorage.getUserVote(post.id, currentUser.id);
@@ -269,10 +333,16 @@ const Community = () => {
                   <span className="stat-label">Daily Posts</span>
                 </div>
               </div>
-              <button className="btn-primary" onClick={() => setShowSignUp(true)}>
-                <Mail size={20} />
-                Join Community
-              </button>
+              <div className="auth-buttons">
+                <button className="btn-primary" onClick={() => setShowSignUp(true)}>
+                  <Mail size={20} />
+                  Join Community
+                </button>
+                <button className="btn-secondary" onClick={() => setShowSignIn(true)}>
+                  <Shield size={20} />
+                  Sign In
+                </button>
+              </div>
             </div>
           ) : (
             <div className="user-dashboard glass-card">
@@ -289,10 +359,20 @@ const Community = () => {
                   </span>
                 </div>
               </div>
-              <button className="btn-primary" onClick={() => setShowNewPost(true)}>
-                <Plus size={20} />
-                Create Post
-              </button>
+              <div className="user-actions">
+                <button className="btn-primary" onClick={() => setShowNewPost(true)}>
+                  <Plus size={20} />
+                  Create Post
+                </button>
+                <button className="btn-logout" onClick={() => {
+                  communityStorage.clearCurrentUser();
+                  setCurrentUser(null);
+                  setIsSignedUp(false);
+                  setVotes({});
+                }}>
+                  Logout
+                </button>
+              </div>
             </div>
           )}
 
@@ -486,7 +566,71 @@ const Community = () => {
               </form>
               
               <div className="modal-footer">
-                <p>By joining, you agree to our community guidelines</p>
+                <p>Already have an account? <button type="button" className="link-btn" onClick={() => { setShowSignUp(false); setShowSignIn(true); }}>Sign In</button></p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Sign In Modal */}
+      <AnimatePresence>
+        {showSignIn && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowSignIn(false)}
+          >
+            <motion.div
+              className="modal-content signin-modal"
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button className="modal-close" onClick={() => setShowSignIn(false)}>
+                <X size={20} />
+              </button>
+              
+              <div className="modal-header">
+                <div className="modal-icon">
+                  <Shield size={32} />
+                </div>
+                <h3>Welcome Back</h3>
+                <p>Sign in to your Presto Guitar Community account</p>
+              </div>
+              
+              <form onSubmit={handleSignIn} className="signin-form">
+                <div className="form-group">
+                  <label>Email Address</label>
+                  <input 
+                    type="email" 
+                    name="email" 
+                    placeholder="your.email@example.com" 
+                    required 
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Password</label>
+                  <input 
+                    type="password" 
+                    name="password" 
+                    placeholder="Enter your password" 
+                    required 
+                  />
+                </div>
+                
+                <button type="submit" className="btn-submit">
+                  <Shield size={18} />
+                  Sign In
+                </button>
+              </form>
+              
+              <div className="modal-footer">
+                <p>Don't have an account? <button type="button" className="link-btn" onClick={() => { setShowSignIn(false); setShowSignUp(true); }}>Join Community</button></p>
               </div>
             </motion.div>
           </motion.div>
@@ -741,6 +885,70 @@ const Community = () => {
           justify-content: center;
           gap: 3rem;
           margin: 2rem 0;
+        }
+        
+        .auth-buttons {
+          display: flex;
+          gap: 1rem;
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+        
+        .btn-secondary {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          padding: 1rem 2rem;
+          border-radius: 25px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          text-decoration: none;
+        }
+        
+        .btn-secondary:hover {
+          background: rgba(255, 255, 255, 0.2);
+          border-color: rgba(255, 255, 255, 0.5);
+          transform: translateY(-2px);
+        }
+        
+        .user-actions {
+          display: flex;
+          gap: 1rem;
+          align-items: center;
+        }
+        
+        .btn-logout {
+          background: rgba(239, 68, 68, 0.2);
+          color: #ef4444;
+          border: 1px solid rgba(239, 68, 68, 0.3);
+          padding: 0.8rem 1.5rem;
+          border-radius: 20px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-weight: 500;
+          font-size: 0.9rem;
+        }
+        
+        .btn-logout:hover {
+          background: rgba(239, 68, 68, 0.3);
+          border-color: #ef4444;
+        }
+        
+        .link-btn {
+          background: none;
+          border: none;
+          color: var(--accent);
+          cursor: pointer;
+          text-decoration: underline;
+          font-weight: 600;
+        }
+        
+        .link-btn:hover {
+          color: #5a67d8;
         }
         
         .stat {
@@ -1589,6 +1797,141 @@ const Community = () => {
           background: #5a67d8;
         }
         
+        /* Light Theme Styles */
+        [data-theme="light"] .btn-secondary {
+          background: rgba(14, 165, 233, 0.1) !important;
+          color: #0f172a !important;
+          border: 2px solid rgba(14, 165, 233, 0.3) !important;
+        }
+        
+        [data-theme="light"] .btn-secondary:hover {
+          background: rgba(14, 165, 233, 0.2) !important;
+          border-color: #0ea5e9 !important;
+          color: #0f172a !important;
+        }
+        
+        [data-theme="light"] .community-cta {
+          background: rgba(14, 165, 233, 0.05) !important;
+          border: 1px solid rgba(14, 165, 233, 0.2) !important;
+        }
+        
+        [data-theme="light"] .community-cta h3 {
+          color: #0ea5e9 !important;
+        }
+        
+        [data-theme="light"] .community-cta p {
+          color: #475569 !important;
+        }
+        
+        [data-theme="light"] .stat-number {
+          color: #0ea5e9 !important;
+        }
+        
+        [data-theme="light"] .stat-label {
+          color: #64748b !important;
+        }
+        
+        [data-theme="light"] .user-dashboard {
+          background: rgba(14, 165, 233, 0.05) !important;
+          border: 1px solid rgba(14, 165, 233, 0.2) !important;
+        }
+        
+        [data-theme="light"] .username {
+          color: #0f172a !important;
+        }
+        
+        [data-theme="light"] .btn-logout {
+          background: rgba(239, 68, 68, 0.1) !important;
+          color: #dc2626 !important;
+          border: 1px solid rgba(239, 68, 68, 0.3) !important;
+        }
+        
+        [data-theme="light"] .btn-logout:hover {
+          background: rgba(239, 68, 68, 0.2) !important;
+          border-color: #dc2626 !important;
+        }
+        
+        [data-theme="light"] .post-card {
+          background: rgba(14, 165, 233, 0.03) !important;
+          border: 1px solid rgba(14, 165, 233, 0.1) !important;
+        }
+        
+        [data-theme="light"] .post-card:hover {
+          border-left-color: #0ea5e9 !important;
+        }
+        
+        [data-theme="light"] .post-author {
+          color: #0f172a !important;
+        }
+        
+        [data-theme="light"] .post-content h3 {
+          color: #0ea5e9 !important;
+        }
+        
+        [data-theme="light"] .post-content p {
+          color: #475569 !important;
+        }
+        
+        [data-theme="light"] .vote-count {
+          color: #0f172a !important;
+        }
+        
+        [data-theme="light"] .post-time {
+          color: #64748b !important;
+        }
+        
+        [data-theme="light"] .action-btn {
+          color: #64748b !important;
+        }
+        
+        [data-theme="light"] .action-btn:hover {
+          color: #0ea5e9 !important;
+        }
+        
+        [data-theme="light"] .link-btn {
+          color: #0ea5e9 !important;
+        }
+        
+        [data-theme="light"] .link-btn:hover {
+          color: #0284c7 !important;
+        }
+        
+        [data-theme="light"] .comments-section {
+          background: rgba(14, 165, 233, 0.05) !important;
+          border-top: 1px solid rgba(14, 165, 233, 0.2) !important;
+        }
+        
+        [data-theme="light"] .comment-item {
+          background: rgba(14, 165, 233, 0.03) !important;
+          border-left: 3px solid #0ea5e9 !important;
+        }
+        
+        [data-theme="light"] .comment-item strong {
+          color: #0ea5e9 !important;
+        }
+        
+        [data-theme="light"] .comment-item span {
+          color: #475569 !important;
+        }
+        
+        [data-theme="light"] .comment-item small {
+          color: #64748b !important;
+        }
+        
+        [data-theme="light"] .comment-form input {
+          background: #ffffff !important;
+          border: 1px solid rgba(14, 165, 233, 0.3) !important;
+          color: #0f172a !important;
+        }
+        
+        [data-theme="light"] .comment-form button {
+          background: #0ea5e9 !important;
+        }
+        
+        [data-theme="light"] .comment-form button:hover {
+          background: #0284c7 !important;
+        }
+
         /* Light Theme Modal Overrides */
         [data-theme="light"] .modal-content {
           background: #ffffff !important;
@@ -1883,6 +2226,16 @@ const Community = () => {
             flex-direction: column;
             gap: 1rem;
             text-align: center;
+          }
+          
+          .auth-buttons {
+            flex-direction: column;
+            align-items: center;
+          }
+          
+          .user-actions {
+            flex-direction: column;
+            width: 100%;
           }
           
           .category-select {
