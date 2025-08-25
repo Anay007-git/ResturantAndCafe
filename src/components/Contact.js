@@ -68,32 +68,15 @@ const Contact = () => {
         </motion.div>
       </div>
       
-      <footer className="footer">
-        <div className="container">
-          <div className="footer-content">
-            <div className="footer-logo">
-              <span>Presto Guitar Academy</span>
-              <p>Transforming musical dreams into reality</p>
-            </div>
-            <div className="footer-links">
-              <a href="#home">Home</a>
-              <a href="#student-zone">Student Zone</a>
-              <a href="#chords">Chords</a>
-              <a href="#classes">Classes</a>
-            </div>
-          </div>
-          <div className="footer-bottom">
-            <p>&copy; 2024 Presto Guitar Academy. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
-      
       <style jsx>{`
         h2 {
           text-align: center;
-          font-size: 2.5rem;
+          font-size: 2.8rem;
           margin-bottom: 3rem;
           color: #667eea;
+          font-weight: 800;
+          letter-spacing: -0.5px;
+          text-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
         }
         .contact-grid {
           display: grid;
@@ -116,6 +99,8 @@ const Contact = () => {
         .contact-card h3 {
           margin-bottom: 1rem;
           color: #667eea;
+          font-weight: 700;
+          font-size: 1.3rem;
         }
         .contact-link {
           display: block;
@@ -169,49 +154,34 @@ const Contact = () => {
         .whatsapp-btn:hover {
           background: #128c7e !important;
         }
-        .footer {
-          background: rgba(0, 0, 0, 0.5);
-          padding: 3rem 0 1rem;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+        [data-theme="light"] h2 {
+          color: #0f172a !important;
+          text-shadow: 0 2px 4px rgba(14, 165, 233, 0.2) !important;
+          font-weight: 800 !important;
         }
-        .footer-content {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 2rem;
-          margin-bottom: 2rem;
+        [data-theme="light"] .contact-card h3 {
+          color: #0ea5e9 !important;
+          font-weight: 700 !important;
         }
-        .footer-logo span {
-          font-size: 1.5rem;
-          font-weight: 700;
-          color: #667eea;
+        [data-theme="light"] .contact-card {
+          background: rgba(255, 255, 255, 0.9) !important;
+          border: 1px solid rgba(14, 165, 233, 0.2) !important;
         }
-        .footer-logo p {
-          color: #b0b0b0;
-          margin-top: 0.5rem;
+        [data-theme="light"] .contact-card p {
+          color: #334155 !important;
         }
-        .footer-links {
-          display: flex;
-          gap: 2rem;
-          justify-content: flex-end;
-          align-items: center;
+        [data-theme="light"] .contact-link {
+          color: #0f172a !important;
+          font-weight: 600 !important;
         }
-        .footer-links a {
-          color: #b0b0b0;
-          text-decoration: none;
-          transition: color 0.3s ease;
-        }
-        .footer-links a:hover {
-          color: #667eea;
-        }
-        .footer-bottom {
-          text-align: center;
-          padding-top: 2rem;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-          color: #b0b0b0;
+        [data-theme="light"] .contact-link:hover {
+          color: #0ea5e9 !important;
         }
         @media (max-width: 768px) {
           h2 {
-            font-size: 2rem;
+            font-size: 2.2rem;
+            font-weight: 800;
           }
           
           .contact-grid {
@@ -248,17 +218,7 @@ const Contact = () => {
             justify-content: center;
           }
           
-          .footer-content {
-            grid-template-columns: 1fr;
-            text-align: center;
-            gap: 1.5rem;
-          }
-          
-          .footer-links {
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-          }
+
         }
       `}</style>
     </section>

@@ -518,6 +518,55 @@ const DemoBooking = () => {
           opacity: 0.6;
           cursor: not-allowed;
         }
+        [data-theme="light"] h2 {
+          color: #1a202c !important;
+        }
+        [data-theme="light"] .booking-container {
+          background: rgba(255, 255, 255, 0.9) !important;
+          color: #1a202c !important;
+        }
+        [data-theme="light"] .form-section h3 {
+          color: #1a202c !important;
+        }
+        [data-theme="light"] .date-btn {
+          background: rgba(102, 126, 234, 0.1) !important;
+          color: #1a202c !important;
+          border: 2px solid rgba(102, 126, 234, 0.3) !important;
+        }
+        [data-theme="light"] .date-btn.selected {
+          background: #667eea !important;
+          color: white !important;
+        }
+        [data-theme="light"] .slot-btn {
+          background: rgba(102, 126, 234, 0.1) !important;
+          color: #1a202c !important;
+          border: 2px solid rgba(102, 126, 234, 0.3) !important;
+        }
+        [data-theme="light"] .slot-btn.selected {
+          background: #667eea !important;
+          color: white !important;
+        }
+        [data-theme="light"] .form-grid input,
+        [data-theme="light"] .form-grid select {
+          background: #ffffff !important;
+          border: 2px solid #cbd5e1 !important;
+          color: #0f172a !important;
+          font-weight: 500 !important;
+        }
+        [data-theme="light"] .form-grid input:focus,
+        [data-theme="light"] .form-grid select:focus {
+          border-color: #0ea5e9 !important;
+          box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1) !important;
+          outline: none !important;
+        }
+        [data-theme="light"] .form-grid input::placeholder {
+          color: #64748b !important;
+          font-weight: 400 !important;
+        }
+        [data-theme="light"] .section-subtitle {
+          color: #334155 !important;
+          font-weight: 500 !important;
+        }
         @media (max-width: 768px) {
           h2 {
             font-size: 2rem;

@@ -151,7 +151,8 @@ const StudentZone = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true, amount: 0.2 }}
         >
           <h2>🎸 Student Zone - Where Guitar Dreams Come Alive! 🌟</h2>
           
@@ -200,34 +201,54 @@ const StudentZone = () => {
           </div>
 
           <div className="zone-tabs">
-            <button 
+            <motion.button 
               className={`tab-btn ${activeTab === 'achievements' ? 'active' : ''}`}
               onClick={() => setActiveTab('achievements')}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
             >
               <Trophy size={20} />
               Achievements
-            </button>
-            <button 
+            </motion.button>
+            <motion.button 
               className={`tab-btn ${activeTab === 'badges' ? 'active' : ''}`}
               onClick={() => setActiveTab('badges')}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
             >
               <Award size={20} />
               Badges
-            </button>
-            <button 
+            </motion.button>
+            <motion.button 
               className={`tab-btn ${activeTab === 'facts' ? 'active' : ''}`}
               onClick={() => setActiveTab('facts')}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
             >
               <Zap size={20} />
               Fun Facts
-            </button>
-            <button 
+            </motion.button>
+            <motion.button 
               className={`tab-btn ${activeTab === 'motivation' ? 'active' : ''}`}
               onClick={() => setActiveTab('motivation')}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
             >
               <Star size={20} />
               Daily Motivation
-            </button>
+            </motion.button>
           </div>
 
           <div className="zone-content">
@@ -242,7 +263,11 @@ const StudentZone = () => {
                   <motion.div
                     key={idx}
                     className="achievement-card glass-card"
-                    whileHover={{ scale: 1.05, rotate: 2 }}
+                    initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.6, delay: idx * 0.1, ease: "easeOut" }}
+                    whileHover={{ scale: 1.05, rotate: 2, y: -5 }}
+                    viewport={{ once: true, amount: 0.3 }}
                     style={{ borderLeft: `4px solid ${achievement.color}` }}
                   >
                     <div className="achievement-icon" style={{ color: achievement.color }}>
@@ -737,6 +762,67 @@ const StudentZone = () => {
           transition: width 0.5s ease;
         }
         
+        [data-theme="light"] h2 {
+          color: #1a202c !important;
+        }
+        [data-theme="light"] .tab-btn {
+          background: rgba(102, 126, 234, 0.1) !important;
+          color: #1a202c !important;
+          border: 2px solid rgba(102, 126, 234, 0.3) !important;
+        }
+        [data-theme="light"] .tab-btn.active {
+          background: #667eea !important;
+          color: white !important;
+        }
+        [data-theme="light"] .achievement-card {
+          background: rgba(255, 255, 255, 0.8) !important;
+          color: #1a202c !important;
+        }
+        [data-theme="light"] .achievement-card h3 {
+          color: #1a202c !important;
+        }
+        [data-theme="light"] .achievement-card p {
+          color: #334155 !important;
+        }
+        [data-theme="light"] .progress-bar {
+          background: rgba(14, 165, 233, 0.2) !important;
+        }
+        [data-theme="light"] .progress-fill {
+          background: #0ea5e9 !important;
+        }
+        [data-theme="light"] .progress-text {
+          color: #0f172a !important;
+          font-weight: 600 !important;
+        }
+        [data-theme="light"] .level-info {
+          color: #334155 !important;
+        }
+        [data-theme="light"] .xp-bar {
+          background: rgba(14, 165, 233, 0.1) !important;
+        }
+        [data-theme="light"] .xp-label {
+          color: #0f172a !important;
+          font-weight: 600 !important;
+        }
+        [data-theme="light"] .xp-progress {
+          background: #cbd5e1 !important;
+          border: 1px solid #94a3b8 !important;
+          box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+          border-radius: 12px !important;
+          height: 10px !important;
+          overflow: hidden !important;
+        }
+        [data-theme="light"] .xp-fill {
+          background: linear-gradient(90deg, #0ea5e9, #0369a1) !important;
+          border-radius: 10px !important;
+          height: 100% !important;
+          transition: width 0.3s ease !important;
+          box-shadow: 0 1px 2px rgba(14, 165, 233, 0.3) !important;
+        }
+        [data-theme="light"] .xp-text {
+          color: #0f172a !important;
+          font-weight: 600 !important;
+        }
         @media (max-width: 768px) {
           h2 {
             font-size: 2rem;

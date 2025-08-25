@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, ArrowUp, ArrowDown, MessageCircle, Share2, Plus, Mail, Shield, Award, Clock, Tag, X } from 'lucide-react';
 import { sendOTP, generateOTP, validateEmail, validateOTP } from '../utils/emailService';
+import { communityStorage } from '../utils/communityStorage';
 
 const Community = () => {
   const [isSignedUp, setIsSignedUp] = useState(false);
@@ -16,6 +17,8 @@ const Community = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [votes, setVotes] = useState({});
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [showComments, setShowComments] = useState({});
+  const [newComment, setNewComment] = useState('');
   
   const [posts, setPosts] = useState([
     {
@@ -90,6 +93,12 @@ const Community = () => {
       return;
     }
     
+    // Check username availability
+    if (communityStorage.checkUsername(userData.username)) {
+      alert('Username not available. Please choose a different username.');
+      return;
+    }
+    
     setSignUpData(userData);
     const otp = generateOTP();
     setGeneratedOTP(otp);
@@ -125,13 +134,17 @@ const Community = () => {
     }
     
     if (otpCode === generatedOTP) {
-      setCurrentUser({
+      const newUser = {
         username: signUpData.username,
         email: signUpData.email,
         avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${signUpData.username}`,
         badge: 'Newbie',
         verified: true
-      });
+      };
+      
+      // Save user to storage
+      const savedUser = communityStorage.addUser(newUser);
+      setCurrentUser(savedUser);
       setIsSignedUp(true);
       setShowOTPVerification(false);
       setOtpCode('');
@@ -145,47 +158,85 @@ const Community = () => {
 
   const handleNewPost = (e) => {
     e.preventDefault();
-    const post = {
-      id: posts.length + 1,
+    const postData = {
       author: currentUser.username,
       avatar: currentUser.avatar,
       time: 'now',
       category: newPost.category,
       title: newPost.title,
       content: newPost.content,
-      upvotes: 0,
-      downvotes: 0,
-      comments: 0,
       tags: newPost.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
       userBadge: currentUser.badge,
       verified: currentUser.verified
     };
-    setPosts([post, ...posts]);
+    
+    const savedPost = communityStorage.addPost(postData);
+    setPosts([savedPost, ...posts]);
     setNewPost({ title: '', content: '', category: 'Doubt', tags: '' });
     setShowNewPost(false);
   };
   
   const handleVote = (postId, voteType) => {
+    if (!currentUser) {
+      alert('Please sign up to vote on posts!');
+      return;
+    }
+    
+    const newVote = communityStorage.vote(postId, voteType, currentUser.id);
     setVotes(prev => ({
       ...prev,
-      [postId]: prev[postId] === voteType ? null : voteType
+      [postId]: newVote
     }));
+    
+    // Refresh posts to show updated vote counts
+    setPosts(communityStorage.getPosts());
   };
   
   const getVoteCount = (post) => {
-    const userVote = votes[post.id];
-    let upvotes = post.upvotes;
-    let downvotes = post.downvotes;
+    return post.upvotes - post.downvotes;
+  };
+  
+  const handleComment = (postId) => {
+    if (!currentUser) {
+      alert('Please sign up to comment on posts!');
+      return;
+    }
     
-    if (userVote === 'up') upvotes += 1;
-    if (userVote === 'down') downvotes += 1;
+    if (!newComment.trim()) return;
     
-    return upvotes - downvotes;
+    communityStorage.addComment(postId, newComment, currentUser.id, currentUser.username);
+    setNewComment('');
+    setPosts(communityStorage.getPosts());
+  };
+  
+  const toggleComments = (postId) => {
+    setShowComments(prev => ({
+      ...prev,
+      [postId]: !prev[postId]
+    }));
   };
 
   const filteredPosts = selectedCategory === 'All' 
     ? posts 
     : posts.filter(post => post.category === selectedCategory);
+
+  useEffect(() => {
+    // Load posts from storage
+    const storedPosts = communityStorage.getPosts();
+    if (storedPosts.length > 0) {
+      setPosts(storedPosts);
+    }
+    
+    // Load user votes if logged in
+    if (currentUser) {
+      const userVotes = {};
+      storedPosts.forEach(post => {
+        const vote = communityStorage.getUserVote(post.id, currentUser.id);
+        if (vote) userVotes[post.id] = vote;
+      });
+      setVotes(userVotes);
+    }
+  }, [currentUser]);
 
   return (
     <section id="community" className="section">
@@ -320,15 +371,47 @@ const Community = () => {
                   </div>
                   
                   <div className="post-actions">
-                    <button className="action-btn">
+                    <button 
+                      className="action-btn"
+                      onClick={() => toggleComments(post.id)}
+                    >
                       <MessageCircle size={18} />
                       {post.comments} Comments
                     </button>
-                    <button className="action-btn">
+                    <button 
+                      className="action-btn"
+                      onClick={() => navigator.share ? navigator.share({title: post.title, text: post.content}) : alert('Sharing feature coming soon!')}
+                    >
                       <Share2 size={18} />
                       Share
                     </button>
                   </div>
+                  
+                  {showComments[post.id] && (
+                    <div className="comments-section">
+                      <div className="comments-list">
+                        {communityStorage.getPostComments(post.id).map(comment => (
+                          <div key={comment.id} className="comment-item">
+                            <strong>{comment.username}:</strong>
+                            <span>{comment.content}</span>
+                            <small>{new Date(comment.timestamp).toLocaleString()}</small>
+                          </div>
+                        ))}
+                      </div>
+                      {currentUser && (
+                        <div className="comment-form">
+                          <input
+                            type="text"
+                            placeholder="Write a comment..."
+                            value={newComment}
+                            onChange={(e) => setNewComment(e.target.value)}
+                            onKeyPress={(e) => e.key === 'Enter' && handleComment(post.id)}
+                          />
+                          <button onClick={() => handleComment(post.id)}>Post</button>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -733,18 +816,38 @@ const Community = () => {
         
         .category-btn {
           background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          border: 2px solid rgba(255, 255, 255, 0.2);
           color: white;
-          padding: 0.8rem 1.5rem;
+          padding: 1rem 2rem;
           border-radius: 25px;
           cursor: pointer;
           transition: all 0.3s ease;
-          font-weight: 600;
+          font-weight: 700;
+          font-size: 1rem;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
         
         .category-btn:hover, .category-btn.active {
           background: #667eea;
           border-color: #667eea;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        [data-theme="light"] .category-btn {
+          background: rgba(14, 165, 233, 0.1) !important;
+          border: 2px solid rgba(14, 165, 233, 0.3) !important;
+          color: #0f172a !important;
+          font-weight: 700 !important;
+        }
+        
+        [data-theme="light"] .category-btn:hover,
+        [data-theme="light"] .category-btn.active {
+          background: #0ea5e9 !important;
+          border-color: #0ea5e9 !important;
+          color: white !important;
+          box-shadow: 0 8px 20px rgba(14, 165, 233, 0.4) !important;
         }
         
         .community-posts {
@@ -927,14 +1030,14 @@ const Community = () => {
         }
         
         .modal-content {
-          background: #1a1a2e;
-          border-radius: 16px;
+          background: var(--bg-secondary);
+          border-radius: 20px;
           width: 100%;
-          max-width: 450px;
+          max-width: 500px;
           max-height: calc(100vh - 40px);
-          border: 1px solid rgba(102, 126, 234, 0.2);
+          border: 2px solid var(--accent);
           position: relative;
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
           overflow-y: auto;
           margin: auto;
           display: flex;
@@ -978,8 +1081,10 @@ const Community = () => {
         
         .modal-header {
           text-align: center;
-          padding: 40px 32px 24px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 3rem 2.5rem 2rem;
+          border-bottom: 2px solid var(--border);
+          background: linear-gradient(135deg, var(--accent) 0%, rgba(102, 126, 234, 0.8) 100%);
+          border-radius: 20px 20px 0 0;
         }
         
         .modal-icon {
@@ -1004,20 +1109,23 @@ const Community = () => {
         
         .modal-header h3 {
           color: white;
-          font-size: 24px;
-          font-weight: 600;
-          margin: 0 0 8px;
+          font-size: 28px;
+          font-weight: 700;
+          margin: 0 0 12px;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
         
         .modal-header p {
-          color: #999;
+          color: rgba(255, 255, 255, 0.9);
           margin: 0;
-          font-size: 14px;
-          line-height: 1.4;
+          font-size: 16px;
+          line-height: 1.5;
+          font-weight: 400;
         }
         
         .signup-form, .verification-form {
-          padding: 32px;
+          padding: 2.5rem;
+          background: var(--bg-primary);
         }
         
         .form-group {
@@ -1026,61 +1134,83 @@ const Community = () => {
         
         .form-group label {
           display: block;
-          color: #667eea;
-          font-weight: 500;
-          margin-bottom: 8px;
-          font-size: 14px;
+          color: var(--accent);
+          font-weight: 600;
+          margin-bottom: 10px;
+          font-size: 15px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
         
         .form-group input {
           width: 100%;
-          padding: 12px 16px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          border-radius: 8px;
-          background: rgba(255, 255, 255, 0.05);
-          color: white;
+          padding: 15px 20px;
+          border: 2px solid var(--border);
+          border-radius: 12px;
+          background: var(--glass);
+          color: var(--text-primary);
           font-size: 16px;
-          transition: border-color 0.2s ease;
+          font-weight: 500;
+          transition: all 0.3s ease;
           box-sizing: border-box;
         }
         
         .form-group input:focus {
           outline: none;
-          border-color: #667eea;
+          border-color: var(--accent);
+          background: rgba(102, 126, 234, 0.1);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+        }
+        
+        .form-group input::placeholder {
+          color: var(--text-secondary);
+          font-weight: 400;
         }
         
         .btn-submit {
           width: 100%;
-          background: #667eea;
+          background: linear-gradient(135deg, var(--accent) 0%, #5a67d8 100%);
           color: white;
           border: none;
-          padding: 14px 24px;
-          border-radius: 8px;
-          font-size: 16px;
-          font-weight: 500;
+          padding: 18px 24px;
+          border-radius: 12px;
+          font-size: 17px;
+          font-weight: 600;
           cursor: pointer;
-          transition: background-color 0.2s ease;
+          transition: all 0.3s ease;
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 8px;
-          margin-top: 16px;
+          gap: 10px;
+          margin-top: 24px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
         
         .btn-submit:hover {
-          background: #5a67d8;
+          background: linear-gradient(135deg, #5a67d8 0%, #4c51bf 100%);
+          transform: translateY(-3px);
+          box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-submit:active {
+          transform: translateY(-1px);
         }
         
         .modal-footer {
-          padding: 20px 32px;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 24px 40px;
+          border-top: 2px solid var(--border);
           text-align: center;
+          background: var(--glass);
+          border-radius: 0 0 20px 20px;
         }
         
         .modal-footer p {
-          color: #999;
-          font-size: 12px;
+          color: var(--text-secondary);
+          font-size: 13px;
           margin: 0;
+          font-weight: 500;
         }
         
         .otp-display-section {
@@ -1395,6 +1525,123 @@ const Community = () => {
           text-align: center;
         }
         
+        .comments-section {
+          margin-top: 1rem;
+          padding: 1rem;
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .comments-list {
+          margin-bottom: 1rem;
+        }
+        
+        .comment-item {
+          padding: 0.8rem;
+          margin-bottom: 0.5rem;
+          background: rgba(255, 255, 255, 0.03);
+          border-radius: 8px;
+          border-left: 3px solid #667eea;
+        }
+        
+        .comment-item strong {
+          color: #667eea;
+          margin-right: 0.5rem;
+        }
+        
+        .comment-item span {
+          color: #e0e0e0;
+        }
+        
+        .comment-item small {
+          display: block;
+          color: #8e8e8e;
+          margin-top: 0.3rem;
+          font-size: 0.8rem;
+        }
+        
+        .comment-form {
+          display: flex;
+          gap: 0.5rem;
+        }
+        
+        .comment-form input {
+          flex: 1;
+          padding: 0.8rem;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 20px;
+          background: rgba(255, 255, 255, 0.05);
+          color: white;
+        }
+        
+        .comment-form button {
+          background: #667eea;
+          color: white;
+          border: none;
+          padding: 0.8rem 1.5rem;
+          border-radius: 20px;
+          cursor: pointer;
+          font-weight: 600;
+        }
+        
+        .comment-form button:hover {
+          background: #5a67d8;
+        }
+        
+        /* Light Theme Modal Overrides */
+        [data-theme="light"] .modal-content {
+          background: #ffffff !important;
+          border: 2px solid #0ea5e9 !important;
+          box-shadow: 0 25px 50px rgba(14, 165, 233, 0.3) !important;
+        }
+        
+        [data-theme="light"] .modal-header {
+          background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
+        }
+        
+        [data-theme="light"] .signup-form,
+        [data-theme="light"] .verification-form {
+          background: #f8fafc !important;
+        }
+        
+        [data-theme="light"] .form-group label {
+          color: #0ea5e9 !important;
+        }
+        
+        [data-theme="light"] .form-group input {
+          background: #ffffff !important;
+          border: 2px solid #cbd5e1 !important;
+          color: #0f172a !important;
+        }
+        
+        [data-theme="light"] .form-group input:focus {
+          border-color: #0ea5e9 !important;
+          background: rgba(14, 165, 233, 0.05) !important;
+          box-shadow: 0 8px 25px rgba(14, 165, 233, 0.2) !important;
+        }
+        
+        [data-theme="light"] .form-group input::placeholder {
+          color: #64748b !important;
+        }
+        
+        [data-theme="light"] .btn-submit {
+          background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
+        }
+        
+        [data-theme="light"] .btn-submit:hover {
+          background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+          box-shadow: 0 10px 30px rgba(14, 165, 233, 0.4) !important;
+        }
+        
+        [data-theme="light"] .modal-footer {
+          background: rgba(14, 165, 233, 0.05) !important;
+        }
+        
+        [data-theme="light"] .modal-footer p {
+          color: #475569 !important;
+        }
+        
         .modal-content form {
           display: flex;
           flex-direction: column;
@@ -1565,6 +1812,8 @@ const Community = () => {
           .post-card {
             padding: 1rem;
             flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1rem;
           }
           
           .post-voting {
@@ -1572,6 +1821,58 @@ const Community = () => {
             justify-content: center;
             order: 2;
             margin-top: 1rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+          }
+          
+          .post-main {
+            order: 1;
+            width: 100%;
+          }
+          
+          .post-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.8rem;
+          }
+          
+          .post-meta {
+            width: 100%;
+          }
+          
+          .author-info {
+            flex-wrap: wrap;
+            gap: 0.5rem;
+          }
+          
+          .post-category {
+            align-self: flex-start;
+            margin-top: 0.5rem;
+          }
+          
+          .post-content {
+            margin-top: 1rem;
+          }
+          
+          .post-tags {
+            flex-wrap: wrap;
+            gap: 0.3rem;
+          }
+          
+          .tag {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+          }
+          
+          .post-actions {
+            flex-direction: column;
+            gap: 0.8rem;
+            align-items: flex-start;
+          }
+          
+          .action-btn {
+            font-size: 0.9rem;
           }
           
           .community-stats {
@@ -1591,6 +1892,10 @@ const Community = () => {
           
           .form-group textarea {
             min-height: 100px;
+          }
+          
+          .community-posts {
+            gap: 1.5rem;
           }
         }
       `}</style>

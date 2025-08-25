@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 // Import components with error handling
-let Navbar, Hero, StudentZone, ChordLibrary, Classes, StudentsGallery, Community, MusicNotations, DemoBooking, Contact, FloatingChatBot;
+let Navbar, Hero, StudentZone, ChordLibrary, Classes, StudentsGallery, Community, MusicNotations, DemoBooking, Contact, Footer, FloatingChatBot;
 
 try {
   Navbar = require('./components/Navbar').default;
@@ -15,6 +15,7 @@ try {
   MusicNotations = require('./components/MusicNotations').default;
   DemoBooking = require('./components/DemoBooking').default;
   Contact = require('./components/Contact').default;
+  Footer = require('./components/Footer').default;
   FloatingChatBot = require('./components/FloatingChatBot').default;
 } catch (error) {
   console.error('Component import error:', error);
@@ -66,6 +67,7 @@ function App() {
       {MusicNotations ? <MusicNotations /> : <FallbackComponent name="Music Notations" />}
       {DemoBooking ? <DemoBooking /> : <FallbackComponent name="Demo Booking" />}
       {Contact ? <Contact /> : <FallbackComponent name="Contact" />}
+      {Footer ? <Footer /> : <FallbackComponent name="Footer" />}
       {FloatingChatBot ? <FloatingChatBot /> : null}
     </div>
   );
@@ -87,12 +89,37 @@ const globalStyles = `
   
   [data-theme="light"] {
     --bg-primary: #ffffff;
-    --bg-secondary: #f8fafc;
-    --text-primary: #1a202c;
-    --text-secondary: #4a5568;
-    --accent: #667eea;
-    --border: rgba(0, 0, 0, 0.1);
-    --glass: rgba(0, 0, 0, 0.05);
+    --bg-secondary: #e0f2fe;
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --accent: #0ea5e9;
+    --border: rgba(14, 165, 233, 0.3);
+    --glass: rgba(14, 165, 233, 0.1);
+  }
+  
+  [data-theme="light"] .tab-btn {
+    background: rgba(102, 126, 234, 0.1) !important;
+    color: #1a202c !important;
+    border: 2px solid rgba(102, 126, 234, 0.3) !important;
+  }
+  
+  [data-theme="light"] .tab-btn.active {
+    background: #667eea !important;
+    color: white !important;
+  }
+  
+  [data-theme="light"] .glass-card {
+    background: rgba(0, 0, 0, 0.03) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    color: #1a202c !important;
+  }
+  
+  [data-theme="light"] h1, [data-theme="light"] h2, [data-theme="light"] h3 {
+    color: #1a202c !important;
+  }
+  
+  [data-theme="light"] p {
+    color: #4a5568 !important;
   }
   
   body {
