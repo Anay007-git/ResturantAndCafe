@@ -16,21 +16,22 @@ export default async function handler(req, res) {
   }
 
   const { email } = req.body;
+  const normalizedEmail = email.trim().toLowerCase();
 
   try {
     const { blobs } = await list({ prefix: 'users.json', token: BLOB_TOKEN });
     
     if (blobs.length === 0) {
-      return res.status(404).json({ error: 'Email not found' });
+      return res.status(404).json({ error: 'Email not found. Please check your email address.' });
     }
 
     const response = await fetch(blobs[0].url);
     const users = await response.json();
     
-    const user = users.find(u => u.email === email);
+    const user = users.find(u => u.email.trim().toLowerCase() === normalizedEmail);
     
     if (!user) {
-      return res.status(404).json({ error: 'Email not found' });
+      return res.status(404).json({ error: 'Email not found. Please check your email address.' });
     }
 
     const recoveryCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -49,6 +50,7 @@ export default async function handler(req, res) {
       message: 'Recovery code generated' 
     });
   } catch (error) {
-    res.status(500).json({ error: 'Recovery failed' });
+    console.error('Recovery error:', error);
+    res.status(500).json({ error: 'Recovery failed. Please try again.' });
   }
 }

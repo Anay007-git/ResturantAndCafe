@@ -143,10 +143,15 @@ const Community = () => {
   const handleForgotPassword = async (e) => {
     e.preventDefault();
     
+    if (!forgotEmail.trim()) {
+      alert('Please enter your email address.');
+      return;
+    }
+    
     try {
-      const result = await apiService.recoverPassword(forgotEmail);
+      const result = await apiService.recoverPassword(forgotEmail.trim());
       if (result.error) {
-        alert('❌ Email not found. Please check your email address.');
+        alert(`❌ ${result.error}`);
       } else {
         setRecoveryData(result);
         alert(`✅ Recovery code: ${result.recoveryCode}\nUsername: ${result.username}`);
@@ -154,6 +159,7 @@ const Community = () => {
         setForgotEmail('');
       }
     } catch (error) {
+      console.error('Recovery error:', error);
       alert('❌ Recovery failed. Please try again.');
     }
   };
