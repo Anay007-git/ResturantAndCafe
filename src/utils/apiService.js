@@ -1,6 +1,4 @@
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://your-app-name.vercel.app/api' 
-  : 'http://localhost:3000/api';
+const API_BASE_URL = 'https://prestoguitaracademy.com/api';
 
 export const apiService = {
   async register(userData) {
