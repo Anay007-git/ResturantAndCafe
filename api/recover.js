@@ -19,16 +19,22 @@ export default async function handler(req, res) {
   const normalizedEmail = email.trim().toLowerCase();
 
   try {
+    console.log('Looking for email:', normalizedEmail);
     const { blobs } = await list({ prefix: 'users.json', token: BLOB_TOKEN });
+    console.log('Found blobs:', blobs.length);
     
     if (blobs.length === 0) {
-      return res.status(404).json({ error: 'Email not found. Please check your email address.' });
+      console.log('No users.json found');
+      return res.status(404).json({ error: 'No users found in database' });
     }
 
     const response = await fetch(blobs[0].url);
     const users = await response.json();
+    console.log('Total users:', users.length);
+    console.log('User emails:', users.map(u => u.email));
     
-    const user = users.find(u => u.email.trim().toLowerCase() === normalizedEmail);
+    const user = users.find(u => u.email && u.email.trim().toLowerCase() === normalizedEmail);
+    console.log('Found user:', user ? user.username : 'none');
     
     if (!user) {
       return res.status(404).json({ error: 'Email not found. Please check your email address.' });
