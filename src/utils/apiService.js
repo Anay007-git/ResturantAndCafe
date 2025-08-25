@@ -52,5 +52,28 @@ export const apiService = {
     const response = await fetch(`${API_BASE_URL}/check-email?email=${email}`);
     const data = await response.json();
     return !data.available;
+  },
+
+  async vote(postId, voteType, userId) {
+    const response = await fetch(`${API_BASE_URL}/vote`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ postId, voteType, userId })
+    });
+    return response.json();
+  },
+
+  async addComment(postId, content, userId, username) {
+    const response = await fetch(`${API_BASE_URL}/comments`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ postId, content, userId, username })
+    });
+    return response.json();
+  },
+
+  async getComments(postId) {
+    const response = await fetch(`${API_BASE_URL}/comments?postId=${postId}`);
+    return response.json();
   }
 };

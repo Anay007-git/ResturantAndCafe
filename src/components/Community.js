@@ -24,6 +24,7 @@ const Community = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [showComments, setShowComments] = useState({});
   const [newComment, setNewComment] = useState('');
+  const [postComments, setPostComments] = useState({});
   
   const [posts, setPosts] = useState([
     {
@@ -246,20 +247,26 @@ const Community = () => {
     }
   };
   
-  const handleVote = (postId, voteType) => {
+  const handleVote = async (postId, voteType) => {
     if (!currentUser) {
       alert('Please sign up to vote on posts!');
       return;
     }
     
-    console.log('Voting feature coming soon');
+    try {
+      await apiService.vote(postId, voteType, currentUser.id);
+      const updatedPosts = await apiService.getPosts();
+      setPosts(updatedPosts);
+    } catch (error) {
+      console.error('Vote failed:', error);
+    }
   };
   
   const getVoteCount = (post) => {
     return post.upvotes - post.downvotes;
   };
   
-  const handleComment = (postId) => {
+  const handleComment = async (postId) => {
     if (!currentUser) {
       alert('Please sign up to comment on posts!');
       return;
@@ -267,15 +274,31 @@ const Community = () => {
     
     if (!newComment.trim()) return;
     
-    console.log('Comments feature coming soon');
-    setNewComment('');
+    try {
+      await apiService.addComment(postId, newComment, currentUser.id, currentUser.username);
+      setNewComment('');
+      const comments = await apiService.getComments(postId);
+      setPostComments(prev => ({ ...prev, [postId]: comments }));
+    } catch (error) {
+      console.error('Comment failed:', error);
+    }
   };
   
-  const toggleComments = (postId) => {
+  const toggleComments = async (postId) => {
+    const isShowing = showComments[postId];
     setShowComments(prev => ({
       ...prev,
       [postId]: !prev[postId]
     }));
+    
+    if (!isShowing && !postComments[postId]) {
+      try {
+        const comments = await apiService.getComments(postId);
+        setPostComments(prev => ({ ...prev, [postId]: comments }));
+      } catch (error) {
+        console.error('Failed to load comments:', error);
+      }
+    }
   };
 
   const filteredPosts = selectedCategory === 'All' 
@@ -478,7 +501,13 @@ const Community = () => {
                   {showComments[post.id] && (
                     <div className="comments-section">
                       <div className="comments-list">
-                        <p>Comments feature coming soon!</p>
+                        {(postComments[post.id] || []).map(comment => (
+                          <div key={comment.id} className="comment-item">
+                            <strong>{comment.username}:</strong>
+                            <span>{comment.content}</span>
+                            <small>{new Date(comment.timestamp).toLocaleString()}</small>
+                          </div>
+                        ))}
                       </div>
                       {currentUser && (
                         <div className="comment-form">
