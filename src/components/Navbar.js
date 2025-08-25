@@ -378,8 +378,13 @@ const Navbar = ({ theme, setTheme }) => {
         }
         
         @media (max-width: 360px) {
+          .logo {
+            font-size: 1rem;
+          }
+          
           .logo span {
-            display: none;
+            font-size: 0.8rem;
+            display: block;
           }
         }
         

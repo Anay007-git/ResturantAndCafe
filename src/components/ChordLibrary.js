@@ -334,6 +334,22 @@ const ChordLibrary = () => {
           .chord-display {
             grid-template-columns: 1fr;
             gap: 1.5rem;
+            height: auto;
+          }
+          
+          .chord-info {
+            height: auto;
+          }
+          
+          .chord-image {
+            height: 300px;
+            order: -1;
+          }
+          
+          .chord-image img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
           }
           
           .chord-info h3 {
