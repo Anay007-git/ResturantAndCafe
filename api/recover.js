@@ -65,7 +65,8 @@ export default async function handler(req, res) {
     
     await put('users.json', JSON.stringify(users), { 
       access: 'public', 
-      token: BLOB_TOKEN 
+      token: BLOB_TOKEN,
+      allowOverwrite: true
     });
 
     res.json({ 

@@ -1,6 +1,6 @@
 import { put, list } from '@vercel/blob';
 
-const BLOB_TOKEN = 'vercel_blob_rw_nAPRe8maBjE2wTQ0_Ygyy750hVQ2AMm8y4UzdNB0NfyGuYO';
+const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || 'vercel_blob_rw_nAPRe8maBjE2wTQ0_Ygyy750hVQ2AMm8y4UzdNB0NfyGuYO';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -49,7 +49,8 @@ export default async function handler(req, res) {
     // Save to blob
     await put('users.json', JSON.stringify(users), { 
       access: 'public', 
-      token: BLOB_TOKEN 
+      token: BLOB_TOKEN,
+      allowOverwrite: true
     });
 
     const { password: _, ...userResponse } = newUser;

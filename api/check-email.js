@@ -1,6 +1,6 @@
 import { list } from '@vercel/blob';
 
-const BLOB_TOKEN = 'vercel_blob_rw_nAPRe8maBjE2wTQ0_Ygyy750hVQ2AMm8y4UzdNB0NfyGuYO';
+const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || 'vercel_blob_rw_nAPRe8maBjE2wTQ0_Ygyy750hVQ2AMm8y4UzdNB0NfyGuYO';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
