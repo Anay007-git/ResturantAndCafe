@@ -68,7 +68,9 @@ export default async function handler(req, res) {
     }
 
     // Update password and remove recovery code
+    console.log('Old password:', users[userIndex].password);
     users[userIndex].password = newPassword; // In production, hash this password
+    console.log('New password set to:', newPassword);
     delete users[userIndex].recoveryCode; // Remove the used recovery code
     
     console.log('Updating user password...');
