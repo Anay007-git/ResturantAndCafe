@@ -82,11 +82,20 @@ export default async function handler(req, res) {
     });
     
     console.log('Password update result:', putResult.url);
+    
+    // Verify the update by reading back the data
+    const verifyResponse = await fetch(putResult.url);
+    const updatedUsers = await verifyResponse.json();
+    const updatedUser = updatedUsers.find(u => u.email && u.email.trim().toLowerCase() === normalizedEmail);
+    
+    console.log('Verification - Updated user password:', updatedUser ? updatedUser.password : 'USER NOT FOUND');
+    console.log('Verification - Password matches new password:', updatedUser ? (updatedUser.password === newPassword) : false);
 
     res.json({ 
       success: true,
       message: 'Password reset successfully',
-      username: user.username
+      username: user.username,
+      verified: updatedUser ? (updatedUser.password === newPassword) : false
     });
   } catch (error) {
     console.error('Password reset error:', error);
