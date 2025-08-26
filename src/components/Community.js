@@ -149,9 +149,16 @@ const Community = () => {
     }
     
     try {
-      const result = await apiService.recoverPassword(forgotEmail.trim());
-      if (result.error) {
-        alert(`❌ ${result.error}`);
+      const response = await fetch('/api/recover', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: forgotEmail.trim() })
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok || result.error) {
+        alert(`❌ ${result.error || 'Recovery failed. Please try again.'}`);
       } else {
         setRecoveryData(result);
         alert(`✅ Recovery code: ${result.recoveryCode}\nUsername: ${result.username}`);
@@ -160,7 +167,7 @@ const Community = () => {
       }
     } catch (error) {
       console.error('Recovery error:', error);
-      alert('❌ Recovery failed. Please try again.');
+      alert('❌ Network error. Please check your connection and try again.');
     }
   };
 

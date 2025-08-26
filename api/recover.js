@@ -1,6 +1,6 @@
 import { list, put } from '@vercel/blob';
 
-const BLOB_TOKEN = 'vercel_blob_rw_nAPRe8maBjE2wTQ0_Ygyy750hVQ2AMm8y4UzdNB0NfyGuYO';
+const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || 'vercel_blob_rw_nAPRe8maBjE2wTQ0_Ygyy750hVQ2AMm8y4UzdNB0NfyGuYO';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -16,10 +16,22 @@ export default async function handler(req, res) {
   }
 
   const { email } = req.body;
+  
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required' });
+  }
+  
   const normalizedEmail = email.trim().toLowerCase();
 
   try {
     console.log('Looking for email:', normalizedEmail);
+    
+    // Check if BLOB_TOKEN is available
+    if (!BLOB_TOKEN) {
+      console.error('BLOB_TOKEN not configured');
+      return res.status(500).json({ error: 'Server configuration error' });
+    }
+    
     const { blobs } = await list({ prefix: 'users.json', token: BLOB_TOKEN });
     console.log('Found blobs:', blobs.length);
     
@@ -29,6 +41,12 @@ export default async function handler(req, res) {
     }
 
     const response = await fetch(blobs[0].url);
+    
+    if (!response.ok) {
+      console.error('Failed to fetch users data:', response.status);
+      return res.status(500).json({ error: 'Failed to access user database' });
+    }
+    
     const users = await response.json();
     console.log('Total users:', users.length);
     console.log('User emails:', users.map(u => u.email));
@@ -57,6 +75,6 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error('Recovery error:', error);
-    res.status(500).json({ error: 'Recovery failed. Please try again.' });
+    res.status(500).json({ error: `Recovery failed: ${error.message}` });
   }
 }

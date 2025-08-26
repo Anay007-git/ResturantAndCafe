@@ -1,4 +1,6 @@
-const API_BASE_URL = 'https://prestoguitaracademy.com/api';
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://prestoguitaracademy.com/api'
+  : '/api';
 
 export const apiService = {
   async register(userData) {
