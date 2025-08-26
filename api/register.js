@@ -16,6 +16,13 @@ export default async function handler(req, res) {
   }
 
   const { username, email, password } = req.body;
+  
+  if (!username || !email || !password) {
+    return res.status(400).json({ error: 'Username, email, and password are required' });
+  }
+  
+  const normalizedEmail = email.trim().toLowerCase();
+  const normalizedUsername = username.trim();
 
   try {
     // Get existing users
@@ -27,18 +34,18 @@ export default async function handler(req, res) {
       users = await response.json();
     }
 
-    // Check if user exists
-    if (users.find(u => u.email === email || u.username === username)) {
+    // Check if user exists (normalize emails for comparison)
+    if (users.find(u => (u.email && u.email.trim().toLowerCase() === normalizedEmail) || u.username === normalizedUsername)) {
       return res.status(400).json({ error: 'User already exists' });
     }
 
     // Create new user
     const newUser = {
       id: Date.now().toString(),
-      username,
-      email,
+      username: normalizedUsername,
+      email: normalizedEmail,
       password, // In production, hash this
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`,
+      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${normalizedUsername}`,
       badge: 'Newbie',
       verified: true,
       joinDate: new Date().toISOString()

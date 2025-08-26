@@ -16,9 +16,15 @@ export default async function handler(req, res) {
   }
 
   const { email, password } = req.body;
+  
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
+  }
+  
+  const normalizedEmail = email.trim().toLowerCase();
 
   try {
-    console.log('Login attempt for email:', email);
+    console.log('Login attempt for email:', normalizedEmail);
     
     const { blobs } = await list({ prefix: 'users.json', token: BLOB_TOKEN });
     
@@ -32,11 +38,11 @@ export default async function handler(req, res) {
     console.log('Total users in database:', users.length);
     console.log('User emails:', users.map(u => u.email));
     
-    const user = users.find(u => u.email === email && u.password === password);
+    const user = users.find(u => u.email && u.email.trim().toLowerCase() === normalizedEmail && u.password === password);
     
     if (!user) {
       console.log('Login failed - user not found or password mismatch');
-      const foundUser = users.find(u => u.email === email);
+      const foundUser = users.find(u => u.email && u.email.trim().toLowerCase() === normalizedEmail);
       if (foundUser) {
         console.log('User exists but password mismatch. Stored password:', foundUser.password, 'Provided:', password);
       }

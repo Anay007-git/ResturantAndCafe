@@ -12,6 +12,12 @@ export default async function handler(req, res) {
   }
 
   const { email } = req.query;
+  
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required' });
+  }
+  
+  const normalizedEmail = email.trim().toLowerCase();
 
   try {
     const { blobs } = await list({ prefix: 'users.json', token: BLOB_TOKEN });
@@ -23,7 +29,7 @@ export default async function handler(req, res) {
     const response = await fetch(blobs[0].url);
     const users = await response.json();
     
-    const exists = users.some(u => u.email === email);
+    const exists = users.some(u => u.email && u.email.trim().toLowerCase() === normalizedEmail);
     res.json({ available: !exists });
   } catch (error) {
     res.json({ available: true });

@@ -12,6 +12,12 @@ export default async function handler(req, res) {
   }
 
   const { username } = req.query;
+  
+  if (!username) {
+    return res.status(400).json({ error: 'Username is required' });
+  }
+  
+  const normalizedUsername = username.trim();
 
   try {
     const { blobs } = await list({ prefix: 'users.json', token: BLOB_TOKEN });
@@ -23,7 +29,7 @@ export default async function handler(req, res) {
     const response = await fetch(blobs[0].url);
     const users = await response.json();
     
-    const exists = users.some(u => u.username === username);
+    const exists = users.some(u => u.username === normalizedUsername);
     res.json({ available: !exists });
   } catch (error) {
     res.json({ available: true });
