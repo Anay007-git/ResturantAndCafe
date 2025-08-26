@@ -13,8 +13,11 @@ const Community = () => {
   const [recoveryData, setRecoveryData] = useState(null);
   const [showRecoveryCodeDisplay, setShowRecoveryCodeDisplay] = useState(false);
   const [showRecoveryCodeInput, setShowRecoveryCodeInput] = useState(false);
+  const [showNewPasswordModal, setShowNewPasswordModal] = useState(false);
   const [recoveryCode, setRecoveryCode] = useState('');
   const [inputRecoveryCode, setInputRecoveryCode] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showOTPVerification, setShowOTPVerification] = useState(false);
   const [showOTPDisplay, setShowOTPDisplay] = useState(false);
   const [displayedOTP, setDisplayedOTP] = useState('');
@@ -185,14 +188,55 @@ const Community = () => {
     e.preventDefault();
     
     if (inputRecoveryCode === recoveryCode) {
-      alert(`✅ Recovery successful!\nUsername: ${recoveryData.username}\nYou can now sign in with your credentials.`);
       setShowRecoveryCodeInput(false);
-      setInputRecoveryCode('');
-      setRecoveryCode('');
-      setRecoveryData(null);
-      setShowSignIn(true);
+      setShowNewPasswordModal(true);
     } else {
       alert('❌ Invalid recovery code. Please try again.');
+    }
+  };
+  
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
+    
+    if (newPassword !== confirmPassword) {
+      alert('❌ Passwords do not match. Please try again.');
+      return;
+    }
+    
+    if (newPassword.length < 6) {
+      alert('❌ Password must be at least 6 characters long.');
+      return;
+    }
+    
+    try {
+      const response = await fetch('/api/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email: forgotEmail,
+          recoveryCode: recoveryCode,
+          newPassword: newPassword
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok || result.error) {
+        alert(`❌ ${result.error || 'Password reset failed. Please try again.'}`);
+      } else {
+        alert(`✅ Password reset successful!\nUsername: ${recoveryData.username}\nYou can now sign in with your new password.`);
+        setShowNewPasswordModal(false);
+        setNewPassword('');
+        setConfirmPassword('');
+        setInputRecoveryCode('');
+        setRecoveryCode('');
+        setRecoveryData(null);
+        setForgotEmail('');
+        setShowSignIn(true);
+      }
+    } catch (error) {
+      console.error('Password reset error:', error);
+      alert('❌ Network error. Please check your connection and try again.');
     }
   };
 
@@ -893,6 +937,73 @@ const Community = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
+      {/* New Password Modal */}
+      <AnimatePresence>
+        {showNewPasswordModal && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="modal-content password-reset-modal"
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
+            >
+              <button className="modal-close" onClick={() => setShowNewPasswordModal(false)}>
+                <X size={20} />
+              </button>
+              
+              <div className="modal-header">
+                <div className="modal-icon success">
+                  <Shield size={32} />
+                </div>
+                <h3>Set New Password</h3>
+                <p>Create a new secure password for your account</p>
+                <div className="email-display">{recoveryData?.username}</div>
+              </div>
+              
+              <form onSubmit={handlePasswordReset} className="password-reset-form">
+                <div className="form-group">
+                  <label>New Password</label>
+                  <input 
+                    type="password" 
+                    placeholder="Enter new password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    minLength="6"
+                    required 
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label>Confirm Password</label>
+                  <input 
+                    type="password" 
+                    placeholder="Confirm new password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    minLength="6"
+                    required 
+                  />
+                </div>
+                
+                <button type="submit" className="btn-submit">
+                  <Shield size={18} />
+                  Reset Password
+                </button>
+              </form>
+              
+              <div className="modal-footer">
+                <p>Password must be at least 6 characters long</p>
               </div>
             </motion.div>
           </motion.div>
@@ -1903,6 +2014,14 @@ const Community = () => {
         
         .recovery-info strong {
           color: #16a34a;
+        }
+        
+        .password-reset-form {
+          padding: 32px;
+        }
+        
+        .password-reset-modal {
+          max-width: 500px;
         }
         
         .post-form {
