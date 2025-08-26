@@ -11,6 +11,10 @@ const Community = () => {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
   const [recoveryData, setRecoveryData] = useState(null);
+  const [showRecoveryCodeDisplay, setShowRecoveryCodeDisplay] = useState(false);
+  const [showRecoveryCodeInput, setShowRecoveryCodeInput] = useState(false);
+  const [recoveryCode, setRecoveryCode] = useState('');
+  const [inputRecoveryCode, setInputRecoveryCode] = useState('');
   const [showOTPVerification, setShowOTPVerification] = useState(false);
   const [showOTPDisplay, setShowOTPDisplay] = useState(false);
   const [displayedOTP, setDisplayedOTP] = useState('');
@@ -161,13 +165,34 @@ const Community = () => {
         alert(`❌ ${result.error || 'Recovery failed. Please try again.'}`);
       } else {
         setRecoveryData(result);
-        alert(`✅ Recovery code: ${result.recoveryCode}\nUsername: ${result.username}`);
+        setRecoveryCode(result.recoveryCode);
         setShowForgotPassword(false);
-        setForgotEmail('');
+        setShowRecoveryCodeDisplay(true);
+        
+        // Auto-proceed to input after 3 seconds
+        setTimeout(() => {
+          setShowRecoveryCodeDisplay(false);
+          setShowRecoveryCodeInput(true);
+        }, 3000);
       }
     } catch (error) {
       console.error('Recovery error:', error);
       alert('❌ Network error. Please check your connection and try again.');
+    }
+  };
+  
+  const handleRecoveryCodeSubmit = (e) => {
+    e.preventDefault();
+    
+    if (inputRecoveryCode === recoveryCode) {
+      alert(`✅ Recovery successful!\nUsername: ${recoveryData.username}\nYou can now sign in with your credentials.`);
+      setShowRecoveryCodeInput(false);
+      setInputRecoveryCode('');
+      setRecoveryCode('');
+      setRecoveryData(null);
+      setShowSignIn(true);
+    } else {
+      alert('❌ Invalid recovery code. Please try again.');
     }
   };
 
@@ -731,6 +756,143 @@ const Community = () => {
               
               <div className="modal-footer">
                 <p>Remember your password? <button type="button" className="link-btn" onClick={() => { setShowForgotPassword(false); setShowSignIn(true); }}>Sign In</button></p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
+      {/* Recovery Code Display Modal */}
+      <AnimatePresence>
+        {showRecoveryCodeDisplay && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="modal-content recovery-display-modal"
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
+            >
+              <div className="modal-header">
+                <div className="modal-icon success">
+                  <Mail size={32} />
+                </div>
+                <h3>Recovery Code Generated</h3>
+                <p>Your account recovery code for <strong>{forgotEmail}</strong></p>
+              </div>
+              
+              <div className="recovery-display-section">
+                <div className="recovery-label">Your Recovery Code</div>
+                <div className="recovery-code-container">
+                  {recoveryCode.split('').map((digit, index) => (
+                    <motion.div 
+                      key={index} 
+                      className="recovery-digit"
+                      initial={{ scale: 0, rotate: 180 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      {digit}
+                    </motion.div>
+                  ))}
+                </div>
+                
+                <div className="recovery-copy-section">
+                  <div className="copy-code">
+                    <span>Code: </span>
+                    <code>{recoveryCode}</code>
+                  </div>
+                  <div className="recovery-info">
+                    <p><strong>Username:</strong> {recoveryData?.username}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="modal-footer">
+                <div className="auto-progress">
+                  <div className="progress-bar">
+                    <div className="progress-fill"></div>
+                  </div>
+                  <p>Auto-proceeding in 3 seconds...</p>
+                </div>
+                <button 
+                  className="btn-submit"
+                  onClick={() => {
+                    setShowRecoveryCodeDisplay(false);
+                    setShowRecoveryCodeInput(true);
+                  }}
+                >
+                  Continue Now
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
+      {/* Recovery Code Input Modal */}
+      <AnimatePresence>
+        {showRecoveryCodeInput && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="modal-content recovery-input-modal"
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
+            >
+              <button className="modal-close" onClick={() => setShowRecoveryCodeInput(false)}>
+                <X size={20} />
+              </button>
+              
+              <div className="modal-header">
+                <div className="modal-icon verify">
+                  <Mail size={32} />
+                </div>
+                <h3>Enter Recovery Code</h3>
+                <p>Enter the recovery code to verify your account</p>
+                <div className="email-display">{forgotEmail}</div>
+              </div>
+              
+              <form onSubmit={handleRecoveryCodeSubmit} className="verification-form">
+                <div className="form-group">
+                  <label>Recovery Code</label>
+                  <input 
+                    type="text" 
+                    placeholder="000000"
+                    value={inputRecoveryCode}
+                    onChange={(e) => setInputRecoveryCode(e.target.value)}
+                    maxLength="6"
+                    className="recovery-input"
+                    required 
+                  />
+                </div>
+                
+                <button type="submit" className="btn-submit">
+                  <Mail size={18} />
+                  Verify Recovery Code
+                </button>
+              </form>
+              
+              <div className="verification-help">
+                <div className="help-section">
+                  <div className="help-icon">💡</div>
+                  <div className="help-content">
+                    <p>Need help? The code was displayed on the previous screen</p>
+                    <div className="code-hint">
+                      <span>Your code: </span>
+                      <code>{recoveryCode}</code>
+                    </div>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -1675,6 +1837,74 @@ const Community = () => {
           font-family: monospace;
         }
         
+        .recovery-input {
+          text-align: center;
+          font-size: 20px;
+          font-weight: 600;
+          letter-spacing: 8px;
+          font-family: monospace;
+        }
+        
+        .recovery-display-modal {
+          text-align: center;
+          max-width: 600px;
+        }
+        
+        .recovery-display-section {
+          padding: 32px;
+          text-align: center;
+        }
+        
+        .recovery-label {
+          color: #22c55e;
+          font-weight: 500;
+          font-size: 14px;
+          margin-bottom: 24px;
+        }
+        
+        .recovery-code-container {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+          margin: 24px 0;
+        }
+        
+        .recovery-digit {
+          width: 48px;
+          height: 48px;
+          background: #22c55e;
+          color: white;
+          font-size: 24px;
+          font-weight: 600;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: monospace;
+        }
+        
+        .recovery-copy-section {
+          margin-top: 24px;
+        }
+        
+        .recovery-info {
+          margin-top: 16px;
+          padding: 12px;
+          background: rgba(34, 197, 94, 0.1);
+          border-radius: 8px;
+          border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        
+        .recovery-info p {
+          margin: 0;
+          color: #22c55e;
+          font-size: 14px;
+        }
+        
+        .recovery-info strong {
+          color: #16a34a;
+        }
+        
         .post-form {
           padding: 32px;
         }
@@ -1695,6 +1925,23 @@ const Community = () => {
           background-position: right 12px center;
           background-size: 20px;
           padding-right: 40px;
+        }
+        
+        [data-theme="light"] .category-select {
+          background: #ffffff !important;
+          border: 2px solid #0ea5e9 !important;
+          color: #0f172a !important;
+          background-image: url('data:image/svg+xml;utf8,<svg fill="%230ea5e9" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') !important;
+        }
+        
+        [data-theme="light"] .category-select:focus {
+          border-color: #0284c7 !important;
+          box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1) !important;
+        }
+        
+        [data-theme="light"] .category-select option {
+          background: #ffffff !important;
+          color: #0f172a !important;
         }
         
         .category-select:focus {
@@ -1722,6 +1969,42 @@ const Community = () => {
           min-height: 120px;
           font-family: inherit;
           line-height: 1.5;
+        }
+        
+        [data-theme="light"] .form-group textarea {
+          background: #ffffff !important;
+          border: 2px solid #0ea5e9 !important;
+          color: #0f172a !important;
+        }
+        
+        [data-theme="light"] .form-group textarea:focus {
+          border-color: #0284c7 !important;
+          box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1) !important;
+        }
+        
+        [data-theme="light"] .form-group textarea::placeholder {
+          color: #64748b !important;
+        }
+        
+        [data-theme="light"] .recovery-label {
+          color: #16a34a !important;
+        }
+        
+        [data-theme="light"] .recovery-digit {
+          background: #16a34a !important;
+        }
+        
+        [data-theme="light"] .recovery-info {
+          background: rgba(34, 197, 94, 0.1) !important;
+          border: 1px solid rgba(34, 197, 94, 0.3) !important;
+        }
+        
+        [data-theme="light"] .recovery-info p {
+          color: #16a34a !important;
+        }
+        
+        [data-theme="light"] .recovery-info strong {
+          color: #15803d !important;
         }
         
         .form-group textarea:focus {
@@ -2065,6 +2348,26 @@ const Community = () => {
         }
         
         [data-theme="light"] .form-group input::placeholder {
+          color: #64748b !important;
+        }
+        
+        [data-theme="light"] .modal-content input,
+        [data-theme="light"] .modal-content select,
+        [data-theme="light"] .modal-content textarea {
+          background: #ffffff !important;
+          border: 2px solid #0ea5e9 !important;
+          color: #0f172a !important;
+        }
+        
+        [data-theme="light"] .modal-content input:focus,
+        [data-theme="light"] .modal-content select:focus,
+        [data-theme="light"] .modal-content textarea:focus {
+          border-color: #0284c7 !important;
+          box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1) !important;
+        }
+        
+        [data-theme="light"] .modal-content input::placeholder,
+        [data-theme="light"] .modal-content textarea::placeholder {
           color: #64748b !important;
         }
         
