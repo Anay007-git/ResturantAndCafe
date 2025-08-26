@@ -18,6 +18,8 @@ export default async function handler(req, res) {
   const { email, password } = req.body;
 
   try {
+    console.log('Login attempt for email:', email);
+    
     const { blobs } = await list({ prefix: 'users.json', token: BLOB_TOKEN });
     
     if (blobs.length === 0) {
@@ -27,15 +29,25 @@ export default async function handler(req, res) {
     const response = await fetch(blobs[0].url);
     const users = await response.json();
     
+    console.log('Total users in database:', users.length);
+    console.log('User emails:', users.map(u => u.email));
+    
     const user = users.find(u => u.email === email && u.password === password);
     
     if (!user) {
+      console.log('Login failed - user not found or password mismatch');
+      const foundUser = users.find(u => u.email === email);
+      if (foundUser) {
+        console.log('User exists but password mismatch. Stored password:', foundUser.password, 'Provided:', password);
+      }
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
+    console.log('Login successful for user:', user.username);
     const { password: _, ...userResponse } = user;
     res.json(userResponse);
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ error: 'Login failed' });
   }
 }

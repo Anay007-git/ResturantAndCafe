@@ -209,20 +209,10 @@ const Community = () => {
     }
     
     try {
-      const response = await fetch('/api/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          email: forgotEmail,
-          recoveryCode: recoveryCode,
-          newPassword: newPassword
-        })
-      });
+      const result = await apiService.resetPassword(forgotEmail, recoveryCode, newPassword);
       
-      const result = await response.json();
-      
-      if (!response.ok || result.error) {
-        alert(`❌ ${result.error || 'Password reset failed. Please try again.'}`);
+      if (result.error) {
+        alert(`❌ ${result.error}`);
       } else {
         alert(`✅ Password reset successful!\nUsername: ${recoveryData.username}\nYou can now sign in with your new password.`);
         setShowNewPasswordModal(false);

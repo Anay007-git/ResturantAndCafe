@@ -29,6 +29,7 @@ export default async function handler(req, res) {
 
   try {
     console.log('Resetting password for email:', normalizedEmail);
+    console.log('Recovery code provided:', recoveryCode);
     
     if (!BLOB_TOKEN) {
       console.error('BLOB_TOKEN not configured');
@@ -49,12 +50,17 @@ export default async function handler(req, res) {
     }
     
     const users = await response.json();
+    console.log('Total users found:', users.length);
     
-    const user = users.find(u => u.email && u.email.trim().toLowerCase() === normalizedEmail);
+    const userIndex = users.findIndex(u => u.email && u.email.trim().toLowerCase() === normalizedEmail);
     
-    if (!user) {
+    if (userIndex === -1) {
       return res.status(404).json({ error: 'User not found' });
     }
+
+    const user = users[userIndex];
+    console.log('User found:', user.username);
+    console.log('User recovery code:', user.recoveryCode);
 
     // Verify recovery code
     if (!user.recoveryCode || user.recoveryCode !== recoveryCode) {
@@ -62,18 +68,23 @@ export default async function handler(req, res) {
     }
 
     // Update password and remove recovery code
-    user.password = newPassword; // In production, hash this password
-    delete user.recoveryCode; // Remove the used recovery code
+    users[userIndex].password = newPassword; // In production, hash this password
+    delete users[userIndex].recoveryCode; // Remove the used recovery code
     
-    await put('users.json', JSON.stringify(users), { 
+    console.log('Updating user password...');
+    
+    const putResult = await put('users.json', JSON.stringify(users), { 
       access: 'public', 
       token: BLOB_TOKEN,
       allowOverwrite: true
     });
+    
+    console.log('Password update result:', putResult.url);
 
     res.json({ 
       success: true,
-      message: 'Password reset successfully' 
+      message: 'Password reset successfully',
+      username: user.username
     });
   } catch (error) {
     console.error('Password reset error:', error);
