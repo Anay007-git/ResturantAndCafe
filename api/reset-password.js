@@ -83,14 +83,25 @@ export default async function handler(req, res) {
     console.log('Updated users array length:', users.length)
     
     console.log('Updating user password...');
+    console.log('Users array before save:', JSON.stringify(users, null, 2));
     
-    const putResult = await put('users.json', JSON.stringify(users), { 
+    // Force a new blob write with timestamp to avoid caching issues
+    const timestamp = Date.now();
+    const putResult = await put(`users-${timestamp}.json`, JSON.stringify(users), { 
+      access: 'public', 
+      token: BLOB_TOKEN
+    });
+    
+    console.log('Password update result:', putResult);
+    
+    // Now update the main users.json file
+    const mainPutResult = await put('users.json', JSON.stringify(users), { 
       access: 'public', 
       token: BLOB_TOKEN,
       allowOverwrite: true
     });
     
-    console.log('Password update result:', putResult.url);
+    console.log('Main users.json update result:', mainPutResult);
     
     // Verify the update by reading back the data
     const verifyResponse = await fetch(putResult.url);
