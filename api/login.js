@@ -25,6 +25,7 @@ export default async function handler(req, res) {
 
   try {
     console.log('Login attempt for email:', normalizedEmail);
+    console.log('Login attempt with password:', password);
     
     const { blobs } = await list({ prefix: 'users.json', token: BLOB_TOKEN });
     
@@ -36,7 +37,8 @@ export default async function handler(req, res) {
     const users = await response.json();
     
     console.log('Total users in database:', users.length);
-    console.log('User emails:', users.map(u => u.email));
+    console.log('User emails in DB:', users.map(u => u.email));
+    console.log('User passwords in DB:', users.map(u => ({ email: u.email, password: u.password })));
     
     const user = users.find(u => u.email && u.email.trim().toLowerCase() === normalizedEmail && u.password === password);
     
@@ -44,7 +46,12 @@ export default async function handler(req, res) {
       console.log('Login failed - user not found or password mismatch');
       const foundUser = users.find(u => u.email && u.email.trim().toLowerCase() === normalizedEmail);
       if (foundUser) {
-        console.log('User exists but password mismatch. Stored password:', foundUser.password, 'Provided:', password);
+        console.log('User exists but password mismatch.');
+        console.log('Stored password:', foundUser.password);
+        console.log('Provided password:', password);
+        console.log('Password match:', foundUser.password === password);
+      } else {
+        console.log('No user found with email:', normalizedEmail);
       }
       return res.status(401).json({ error: 'Invalid credentials' });
     }
