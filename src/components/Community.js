@@ -156,15 +156,9 @@ const Community = () => {
     }
     
     try {
-      const response = await fetch('/api/recover', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: forgotEmail.trim() })
-      });
+      const result = await apiService.recoverPassword(forgotEmail.trim());
       
-      const result = await response.json();
-      
-      if (!response.ok || result.error) {
+      if (result.error) {
         alert(`❌ ${result.error || 'Recovery failed. Please try again.'}`);
       } else {
         setRecoveryData(result);
