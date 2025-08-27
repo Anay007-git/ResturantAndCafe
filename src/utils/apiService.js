@@ -30,11 +30,11 @@ export const apiService = {
     return response.json();
   },
 
-  async resetPassword(email, token, newPassword) {
+  async resetPassword(email, recoveryCode, newPassword) {
     const response = await fetch(`${API_BASE_URL}/secure-reset`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'reset', email, token, newPassword })
+      body: JSON.stringify({ action: 'reset', email, token: recoveryCode, newPassword })
     });
     return response.json();
   },
