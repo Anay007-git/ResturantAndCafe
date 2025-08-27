@@ -4,7 +4,7 @@ const API_BASE_URL = process.env.NODE_ENV === 'production'
 
 export const apiService = {
   async register(userData) {
-    const response = await fetch(`${API_BASE_URL}/register`, {
+    const response = await fetch(`${API_BASE_URL}/secure-register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData)
@@ -13,7 +13,7 @@ export const apiService = {
   },
 
   async login(credentials) {
-    const response = await fetch(`${API_BASE_URL}/login`, {
+    const response = await fetch(`${API_BASE_URL}/secure-login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials)
@@ -22,19 +22,19 @@ export const apiService = {
   },
 
   async recoverPassword(email) {
-    const response = await fetch(`${API_BASE_URL}/recover`, {
+    const response = await fetch(`${API_BASE_URL}/secure-reset`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
+      body: JSON.stringify({ action: 'request', email })
     });
     return response.json();
   },
 
-  async resetPassword(email, recoveryCode, newPassword) {
-    const response = await fetch(`${API_BASE_URL}/reset-password`, {
+  async resetPassword(email, token, newPassword) {
+    const response = await fetch(`${API_BASE_URL}/secure-reset`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, recoveryCode, newPassword })
+      body: JSON.stringify({ action: 'reset', email, token, newPassword })
     });
     return response.json();
   },

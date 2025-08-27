@@ -168,7 +168,7 @@ const Community = () => {
         alert(`❌ ${result.error || 'Recovery failed. Please try again.'}`);
       } else {
         setRecoveryData(result);
-        setRecoveryCode(result.recoveryCode);
+        setRecoveryCode(result.token);
         setShowForgotPassword(false);
         setShowRecoveryCodeDisplay(true);
         
