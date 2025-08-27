@@ -1,5 +1,4 @@
 import { put, list } from '@vercel/blob';
-import { hash_password } from './passwordSecurity.js';
 
 const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || 'vercel_blob_rw_nAPRe8maBjE2wTQ0_Ygyy750hVQ2AMm8y4UzdNB0NfyGuYO';
 
@@ -31,14 +30,12 @@ export default async function handler(req, res) {
     if (users.find(u => (u.email && u.email.trim().toLowerCase() === normalizedEmail) || u.username === username)) {
       return res.status(400).json({ error: 'User already exists' });
     }
-
-    const hashedPassword = hash_password(password);
     
     const newUser = {
       id: Date.now().toString(),
       username,
       email: normalizedEmail,
-      password: hashedPassword,
+      password,
       avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`,
       badge: 'Newbie',
       verified: true,

@@ -1,5 +1,4 @@
 import { list } from '@vercel/blob';
-import { verify_password } from './passwordSecurity.js';
 
 const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || 'vercel_blob_rw_nAPRe8maBjE2wTQ0_Ygyy750hVQ2AMm8y4UzdNB0NfyGuYO';
 
@@ -29,9 +28,9 @@ export default async function handler(req, res) {
     const response = await fetch(blobs[0].url);
     const users = await response.json();
     
-    const user = users.find(u => u.email && u.email.trim().toLowerCase() === normalizedEmail);
+    const user = users.find(u => u.email && u.email.trim().toLowerCase() === normalizedEmail && u.password === password);
     
-    if (!user || !verify_password(password, user.password)) {
+    if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 

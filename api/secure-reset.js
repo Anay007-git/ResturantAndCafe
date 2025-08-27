@@ -1,5 +1,4 @@
 import { list, put } from '@vercel/blob';
-import { generate_reset_token, hash_token, is_token_expired, hash_password } from './passwordSecurity.js';
 
 const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || 'vercel_blob_rw_nAPRe8maBjE2wTQ0_Ygyy750hVQ2AMm8y4UzdNB0NfyGuYO';
 
@@ -25,10 +24,9 @@ export default async function handler(req, res) {
       const userIndex = users.findIndex(u => u.email && u.email.trim().toLowerCase() === normalizedEmail);
       if (userIndex === -1) return res.status(404).json({ error: 'User not found' });
 
-      const resetToken = generate_reset_token();
-      const hashedToken = hash_token(resetToken);
+      const resetToken = Math.floor(100000 + Math.random() * 900000).toString();
       
-      users[userIndex].resetToken = hashedToken;
+      users[userIndex].resetToken = resetToken;
       users[userIndex].resetTokenExpiry = Date.now();
 
       await put('users.json', JSON.stringify(users), { 
@@ -39,7 +37,8 @@ export default async function handler(req, res) {
 
       res.json({ 
         success: true, 
-        token: resetToken, // In production, send via email
+        token: resetToken,
+        username: users[userIndex].username,
         message: 'Reset token generated' 
       });
 
@@ -48,21 +47,21 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Token and new password required' });
       }
 
-      const hashedToken = hash_token(token);
       const userIndex = users.findIndex(u => 
         u.email && u.email.trim().toLowerCase() === normalizedEmail && 
-        u.resetToken === hashedToken
+        u.resetToken === token
       );
 
       if (userIndex === -1) {
         return res.status(400).json({ error: 'Invalid token' });
       }
 
-      if (is_token_expired(users[userIndex].resetTokenExpiry)) {
+      const tokenAge = Date.now() - users[userIndex].resetTokenExpiry;
+      if (tokenAge > 15 * 60 * 1000) {
         return res.status(400).json({ error: 'Token expired' });
       }
 
-      users[userIndex].password = hash_password(newPassword);
+      users[userIndex].password = newPassword;
       delete users[userIndex].resetToken;
       delete users[userIndex].resetTokenExpiry;
 
