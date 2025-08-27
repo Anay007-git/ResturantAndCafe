@@ -1,5 +1,5 @@
 import { list, put } from '@vercel/blob';
-import { generate_reset_token, hash_token, is_token_expired, hash_password } from '../src/utils/passwordSecurity.js';
+import { generate_reset_token, hash_token, is_token_expired, hash_password } from './passwordSecurity.js';
 
 const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || 'vercel_blob_rw_nAPRe8maBjE2wTQ0_Ygyy750hVQ2AMm8y4UzdNB0NfyGuYO';
 
