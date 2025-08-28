@@ -303,9 +303,9 @@ const Community = () => {
     };
     
     try {
-      await apiService.createPost(postData);
-      const updatedPosts = await apiService.getPosts();
-      setPosts(updatedPosts);
+      const newPostResponse = await apiService.createPost(postData);
+      // Add new post to current posts immediately
+      setPosts(prevPosts => [newPostResponse, ...prevPosts]);
       setNewPost({ title: '', content: '', category: 'Doubt', tags: '' });
       setShowNewPost(false);
     } catch (error) {
@@ -347,9 +347,14 @@ const Community = () => {
       // Refresh comments for this post
       const comments = await apiService.getComments(postId);
       setPostComments(prev => ({ ...prev, [postId]: comments }));
-      // Refresh posts to show updated comment count
-      const updatedPosts = await apiService.getPosts();
-      setPosts(updatedPosts);
+      // Update comment count immediately in posts
+      setPosts(prevPosts => 
+        prevPosts.map(post => 
+          post.id === postId 
+            ? { ...post, comments: comments.length }
+            : post
+        )
+      );
     } catch (error) {
       console.error('Comment failed:', error);
     }
