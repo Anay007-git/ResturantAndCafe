@@ -321,6 +321,7 @@ const Community = () => {
     
     try {
       await apiService.vote(postId, voteType, currentUser.id);
+      // Refresh posts to show updated vote counts
       const updatedPosts = await apiService.getPosts();
       setPosts(updatedPosts);
     } catch (error) {
@@ -343,8 +344,12 @@ const Community = () => {
     try {
       await apiService.addComment(postId, newComment, currentUser.id, currentUser.username);
       setNewComment('');
+      // Refresh comments for this post
       const comments = await apiService.getComments(postId);
       setPostComments(prev => ({ ...prev, [postId]: comments }));
+      // Refresh posts to show updated comment count
+      const updatedPosts = await apiService.getPosts();
+      setPosts(updatedPosts);
     } catch (error) {
       console.error('Comment failed:', error);
     }
