@@ -49,8 +49,18 @@ export const apiService = {
   },
 
   async getPosts() {
-    const response = await fetch(`${API_BASE_URL}/posts`);
-    return response.json();
+    try {
+      const response = await fetch(`${API_BASE_URL}/posts`);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const data = await response.json();
+      console.log('API getPosts response:', data);
+      return data;
+    } catch (error) {
+      console.error('getPosts error:', error);
+      throw error;
+    }
   },
 
   async checkUsername(username) {
