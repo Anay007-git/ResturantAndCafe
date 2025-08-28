@@ -335,9 +335,18 @@ const Community = () => {
       try {
         // Load posts from backend
         const posts = await apiService.getPosts();
-        setPosts(posts);
+        console.log('Loaded posts:', posts);
+        setPosts(posts || []);
       } catch (error) {
-        console.log('Failed to load posts from server');
+        console.log('Failed to load posts from server:', error);
+        // Initialize posts if API fails
+        try {
+          await fetch('/api/init-posts', { method: 'POST' });
+          const posts = await apiService.getPosts();
+          setPosts(posts || []);
+        } catch (initError) {
+          console.log('Failed to initialize posts:', initError);
+        }
       }
       
       // Check if user is already logged in
