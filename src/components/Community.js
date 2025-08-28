@@ -308,6 +308,7 @@ const Community = () => {
       setPosts(prevPosts => [newPostResponse, ...prevPosts]);
       setNewPost({ title: '', content: '', category: 'Doubt', tags: '' });
       setShowNewPost(false);
+      alert('✅ Post published successfully!');
     } catch (error) {
       alert('Failed to create post. Please try again.');
     }
@@ -350,11 +351,12 @@ const Community = () => {
       // Update comment count immediately in posts
       setPosts(prevPosts => 
         prevPosts.map(post => 
-          post.id === postId 
+          post.id == postId 
             ? { ...post, comments: comments.length }
             : post
         )
       );
+      alert('✅ Comment added successfully!');
     } catch (error) {
       console.error('Comment failed:', error);
     }
@@ -1469,11 +1471,13 @@ const Community = () => {
         }
         
         .vote-btn.active.upvote {
-          color: #ff4500;
+          color: #3b82f6;
+          background: rgba(59, 130, 246, 0.1);
         }
         
         .vote-btn.active.downvote {
-          color: #7193ff;
+          color: #ef4444;
+          background: rgba(239, 68, 68, 0.1);
         }
         
         .vote-count {
