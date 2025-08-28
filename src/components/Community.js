@@ -33,53 +33,7 @@ const Community = () => {
   const [newComment, setNewComment] = useState('');
   const [postComments, setPostComments] = useState({});
   
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      author: 'GuitarMaster92',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=GuitarMaster92',
-      time: '2h ago',
-      category: 'Doubt',
-      title: 'Struggling with F chord transition - Need help!',
-      content: 'I\'ve been practicing for weeks but still can\'t get smooth transitions from C to F chord. My fingers keep muting strings. Any tips from experienced players?',
-      upvotes: 24,
-      downvotes: 2,
-      comments: 12,
-      tags: ['beginner', 'chords', 'technique'],
-      userBadge: 'Beginner',
-      verified: true
-    },
-    {
-      id: 2,
-      author: 'StrumQueen',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=StrumQueen',
-      time: '4h ago',
-      category: 'Solution',
-      title: 'How I mastered barre chords in 30 days',
-      content: 'After struggling with barre chords for months, I found a practice routine that worked:\n\n1. Start with partial barre (2-3 strings)\n2. Practice 5 minutes daily\n3. Focus on thumb position\n4. Use lighter gauge strings initially\n\nNow I can play F, Bm, and other barre chords cleanly!',
-      upvotes: 67,
-      downvotes: 1,
-      comments: 23,
-      tags: ['technique', 'practice', 'barre-chords'],
-      userBadge: 'Expert',
-      verified: true
-    },
-    {
-      id: 3,
-      author: 'BluesLover88',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=BluesLover88',
-      time: '6h ago',
-      category: 'Confession',
-      title: 'I\'ve been playing for 5 years and still can\'t play Wonderwall properly',
-      content: 'Everyone expects me to know it since I play guitar, but I never actually learned it properly. The strumming pattern always trips me up. Anyone else have songs they "should" know but don\'t?',
-      upvotes: 156,
-      downvotes: 8,
-      comments: 45,
-      tags: ['confession', 'strumming', 'popular-songs'],
-      userBadge: 'Intermediate',
-      verified: false
-    }
-  ]);
+  const [posts, setPosts] = useState([]);
   
   const [newPost, setNewPost] = useState({ title: '', content: '', category: 'Doubt', tags: '' });
 
