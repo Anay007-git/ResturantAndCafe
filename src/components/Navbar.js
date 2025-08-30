@@ -144,17 +144,17 @@ const Navbar = ({ theme, setTheme }) => {
         .contact-info {
           display: flex;
           align-items: center;
-          margin-right: auto;
-          margin-left: 2rem;
+          flex: 1;
+          justify-content: center;
         }
         
         .phone-link {
           color: #667eea;
           text-decoration: none;
           font-weight: 600;
-          font-size: 1rem;
-          padding: 0.5rem 1rem;
-          border-radius: 20px;
+          font-size: 0.9rem;
+          padding: 0.4rem 0.8rem;
+          border-radius: 15px;
           background: rgba(102, 126, 234, 0.1);
           border: 1px solid rgba(102, 126, 234, 0.3);
           transition: all 0.3s ease;
@@ -292,13 +292,15 @@ const Navbar = ({ theme, setTheme }) => {
         .hamburger:hover {
           background: rgba(102, 126, 234, 0.1);
         }
+        @media (max-width: 1024px) {
+          .contact-info {
+            display: none;
+          }
+        }
+        
         @media (max-width: 768px) {
           .nav-container {
             padding: 0 1rem;
-          }
-          
-          .contact-info {
-            display: none;
           }
           
           .logo {
