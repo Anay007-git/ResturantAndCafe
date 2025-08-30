@@ -1,0 +1,5 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://www.prestoguitaracademy.com/sitemap.xml
+Host: https://www.prestoguitaracademy.com/
