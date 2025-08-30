@@ -297,7 +297,7 @@ const Navbar = ({ theme, setTheme }) => {
         .hamburger:hover {
           background: rgba(102, 126, 234, 0.1);
         }
-        @media (max-width: 1100px) {
+        @media (max-width: 1300px) {
           .desktop-menu {
             display: none;
           }
@@ -307,7 +307,7 @@ const Navbar = ({ theme, setTheme }) => {
           }
         }
         
-        @media (max-width: 1100px) {
+        @media (max-width: 1000px) {
           .phone-link {
             display: none;
           }
