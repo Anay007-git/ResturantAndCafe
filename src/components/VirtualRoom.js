@@ -168,7 +168,7 @@ export default function VirtualRoom() {
 
     gain.gain.exponentialRampToValueAtTime(1.0, now + A);
     gain.gain.exponentialRampToValueAtTime(S, now + A + D);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + A + D + (sustain ? 1.5 : R));
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + A + D + R);
 
     noiseSrc.connect(band);
     band.connect(gain);
@@ -207,7 +207,7 @@ export default function VirtualRoom() {
     g.gain.setValueAtTime(0.0001, now);
     g.gain.exponentialRampToValueAtTime(1.0, now + A);
     g.gain.exponentialRampToValueAtTime(S, now + A + D);
-    g.gain.exponentialRampToValueAtTime(0.0001, now + A + D + (sustain ? 1.5 : R));
+    g.gain.exponentialRampToValueAtTime(0.0001, now + A + D + R);
 
     osc1.connect(g); osc2.connect(g);
     // effects
@@ -217,8 +217,8 @@ export default function VirtualRoom() {
     convolverRef.current.disconnect(); convolverRef.current.connect(masterGainRef.current);
 
     osc1.start(now); osc2.start(now);
-    osc1.stop(now + A + D + (sustain ? 1.5 : R) + 0.05);
-    osc2.stop(now + A + D + (sustain ? 1.5 : R) + 0.05);
+    osc1.stop(now + A + D + R + 0.05);
+    osc2.stop(now + A + D + R + 0.05);
   };
 
   const playDrum = (type) => {
@@ -411,37 +411,4 @@ export default function VirtualRoom() {
       </div>
     </section>
   );
-
-  // --- Local functions declared after return to keep code organized ---
-  function playPiano(freq) {
-    const ctx = audioCtxRef.current; if (!ctx) return;
-    const now = ctx.currentTime;
-    const o1 = ctx.createOscillator(); const o2 = ctx.createOscillator(); const g = ctx.createGain();
-    o1.type = 'triangle'; o2.type = 'sine'; o1.frequency.value = freq; o2.frequency.value = freq*1.002;
-    const A = Math.max(0.001, adsr.attack); const D = Math.max(0.001, adsr.decay); const S = Math.max(0, adsr.sustain); const R = Math.max(0.01, adsr.release);
-    g.gain.setValueAtTime(0.0001, now); g.gain.exponentialRampToValueAtTime(1.0, now + A); g.gain.exponentialRampToValueAtTime(S, now + A + D); g.gain.exponentialRampToValueAtTime(0.0001, now + A + D + (sustain?1.5:R));
-    o1.connect(g); o2.connect(g);
-    if (distortionOn) { g.connect(distortionRef.current); if (reverbOn) distortionRef.current.connect(convolverRef.current); else distortionRef.current.connect(masterGainRef.current); }
-    else { if (reverbOn) g.connect(convolverRef.current); else g.connect(masterGainRef.current); }
-    convolverRef.current.disconnect(); convolverRef.current.connect(masterGainRef.current);
-    o1.start(now); o2.start(now); o1.stop(now + A + D + (sustain?1.5:R) + 0.05); o2.stop(now + A + D + (sustain?1.5:R) + 0.05);
-  }
-
-  function pluckString(freq) {
-    const ctx = audioCtxRef.current; if (!ctx) return; const now = ctx.currentTime;
-    const buffer = ctx.createBuffer(1, ctx.sampleRate*0.2, ctx.sampleRate); const data = buffer.getChannelData(0); for (let i=0;i<data.length;i++) data[i] = (Math.random()*2-1)*Math.pow(1-i/data.length,1.5);
-    const src = ctx.createBufferSource(); src.buffer = buffer; const bp = ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value = freq*1.5; bp.Q.value = 1.5; const g = ctx.createGain();
-    const A = Math.max(0.001, adsr.attack); const D = Math.max(0.001, adsr.decay); const S = Math.max(0, adsr.sustain); const R = Math.max(0.01, adsr.release);
-    g.gain.exponentialRampToValueAtTime(1.0, now + A); g.gain.exponentialRampToValueAtTime(S, now + A + D); g.gain.exponentialRampToValueAtTime(0.0001, now + A + D + (sustain?1.5:R));
-    src.connect(bp); bp.connect(g);
-    if (distortionOn) { g.connect(distortionRef.current); if (reverbOn) distortionRef.current.connect(convolverRef.current); else distortionRef.current.connect(masterGainRef.current); } else { if (reverbOn) g.connect(convolverRef.current); else g.connect(masterGainRef.current); }
-    convolverRef.current.disconnect(); convolverRef.current.connect(masterGainRef.current);
-    src.start(now); src.stop(now + 1.2);
-  }
-
-  function playDrum(id) {
-    const ctx = audioCtxRef.current; if (!ctx) return; const now = ctx.currentTime;
-    if (id === 'kick') { const o = ctx.createOscillator(); const g = ctx.createGain(); o.type='sine'; o.frequency.setValueAtTime(150, now); o.frequency.exponentialRampToValueAtTime(50, now+0.4); g.gain.setValueAtTime(1, now); g.gain.exponentialRampToValueAtTime(0.0001, now+0.5); o.connect(g); if(distortionOn){g.connect(distortionRef.current); if(reverbOn)distortionRef.current.connect(convolverRef.current); else distortionRef.current.connect(masterGainRef.current);} else { if(reverbOn) g.connect(convolverRef.current); else g.connect(masterGainRef.current);} convolverRef.current.disconnect(); convolverRef.current.connect(masterGainRef.current); o.start(now); o.stop(now+0.5);} else { const buffer = ctx.createBuffer(1, ctx.sampleRate*0.2, ctx.sampleRate); const data = buffer.getChannelData(0); for(let i=0;i<data.length;i++) data[i]=(Math.random()*2-1)*Math.pow(1-i/data.length,1.5); const src = ctx.createBufferSource(); src.buffer=buffer; const f = ctx.createBiquadFilter(); if(id==='snare'){ f.type='highpass'; f.frequency.value=1200; } else { f.type='bandpass'; f.frequency.value=4000; } const g = ctx.createGain(); g.gain.setValueAtTime(1, now); g.gain.exponentialRampToValueAtTime(0.0001, now+0.25); src.connect(f); f.connect(g); if(distortionOn){ g.connect(distortionRef.current); if(reverbOn) distortionRef.current.connect(convolverRef.current); else distortionRef.current.connect(masterGainRef.current); } else { if(reverbOn) g.connect(convolverRef.current); else g.connect(masterGainRef.current); } convolverRef.current.disconnect(); convolverRef.current.connect(masterGainRef.current); src.start(now); src.stop(now+0.25); }
-  }
-
 }
