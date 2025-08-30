@@ -36,15 +36,15 @@ const Navbar = ({ theme, setTheme }) => {
       <div className="nav-container">
         <div className="logo">
           <Music size={32} />
-          <span>Presto Guitar Academy</span>
-        </div>
-        
-        <div className="nav-right">
-          <div className="contact-info">
+          <div className="logo-text">
+            <span>Presto Guitar Academy</span>
             <a href="tel:+919836441807" className="phone-link">
               📞 +91 9836441807
             </a>
           </div>
+        </div>
+        
+        <div className="nav-right">
           <div className="theme-switcher">
             <button 
               className="theme-btn"
@@ -149,14 +149,15 @@ const Navbar = ({ theme, setTheme }) => {
         .phone-link {
           color: #667eea;
           text-decoration: none;
-          font-weight: 600;
-          font-size: 0.9rem;
-          padding: 0.4rem 0.8rem;
-          border-radius: 15px;
+          font-weight: 500;
+          font-size: 0.8rem;
+          padding: 0.2rem 0.5rem;
+          border-radius: 10px;
           background: rgba(102, 126, 234, 0.1);
           border: 1px solid rgba(102, 126, 234, 0.3);
           transition: all 0.3s ease;
           white-space: nowrap;
+          align-self: flex-start;
         }
         
         .phone-link:hover {
@@ -181,6 +182,12 @@ const Navbar = ({ theme, setTheme }) => {
           font-weight: 700;
           text-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
           flex-shrink: 0;
+        }
+        
+        .logo-text {
+          display: flex;
+          flex-direction: column;
+          gap: 0.2rem;
         }
         .nav-menu {
           list-style: none;
@@ -290,8 +297,8 @@ const Navbar = ({ theme, setTheme }) => {
         .hamburger:hover {
           background: rgba(102, 126, 234, 0.1);
         }
-        @media (max-width: 1024px) {
-          .contact-info {
+        @media (max-width: 768px) {
+          .phone-link {
             display: none;
           }
         }
