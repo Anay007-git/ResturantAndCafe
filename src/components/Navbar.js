@@ -39,13 +39,12 @@ const Navbar = ({ theme, setTheme }) => {
           <span>Presto Guitar Academy</span>
         </div>
         
-        <div className="contact-info">
-          <a href="tel:+919836441807" className="phone-link">
-            📞 +91 9836441807
-          </a>
-        </div>
-        
         <div className="nav-right">
+          <div className="contact-info">
+            <a href="tel:+919836441807" className="phone-link">
+              📞 +91 9836441807
+            </a>
+          </div>
           <div className="theme-switcher">
             <button 
               className="theme-btn"
@@ -144,8 +143,7 @@ const Navbar = ({ theme, setTheme }) => {
         .contact-info {
           display: flex;
           align-items: center;
-          flex: 1;
-          justify-content: center;
+          margin-right: 1rem;
         }
         
         .phone-link {
