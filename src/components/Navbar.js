@@ -88,7 +88,7 @@ const Navbar = ({ theme, setTheme }) => {
               <li><a href="#gallery" onClick={() => setMobileMenuOpen(false)}>Gallery</a></li>
               <li><a href="#community" onClick={() => setMobileMenuOpen(false)}>Community</a></li>
               <li><a href="#demo-booking" onClick={() => setMobileMenuOpen(false)}>Book Demo</a></li>
-              <li><a href="#virtual-room" onClick={() => setMobileMenuOpen(false)}>Virtual Room</a></li>
+              <li><a href="#virtual-room" onClick={() => setMobileMenuOpen(false)}>Virtual Music Room</a></li>
               <li><a href="#contact" onClick={() => setMobileMenuOpen(false)}>Contact</a></li>
             </motion.ul>
           )}
@@ -101,7 +101,7 @@ const Navbar = ({ theme, setTheme }) => {
           <li><a href="#gallery">Gallery</a></li>
           <li><a href="#community">Community</a></li>
           <li><a href="#demo-booking">Book Demo</a></li>
-          <li><a href="#virtual-room">Virtual Room</a></li>
+          <li><a href="#virtual-room">Virtual Music Room</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
