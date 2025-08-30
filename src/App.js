@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 // Import components with error handling
-let Navbar, Hero, StudentZone, ChordLibrary, Classes, StudentsGallery, Community, MusicNotations, DemoBooking, Contact, Footer, FloatingChatBot;
+let Navbar, Hero, StudentZone, ChordLibrary, Classes, StudentsGallery, Community, VirtualRoom, MusicNotations, DemoBooking, Contact, Footer, FloatingChatBot;
 
 try {
   Navbar = require('./components/Navbar').default;
@@ -12,6 +12,7 @@ try {
   Classes = require('./components/Classes').default;
   StudentsGallery = require('./components/StudentsGallery').default;
   Community = require('./components/Community').default;
+  VirtualRoom = require('./components/VirtualRoom').default;
   MusicNotations = require('./components/MusicNotations').default;
   DemoBooking = require('./components/DemoBooking').default;
   Contact = require('./components/Contact').default;
@@ -64,6 +65,7 @@ function App() {
       {Classes ? <Classes /> : <FallbackComponent name="Classes" />}
       {StudentsGallery ? <StudentsGallery /> : <FallbackComponent name="Gallery" />}
       {Community ? <Community /> : <FallbackComponent name="Community" />}
+      {VirtualRoom ? <VirtualRoom /> : <FallbackComponent name="Virtual Room" />}
       {MusicNotations ? <MusicNotations /> : <FallbackComponent name="Music Notations" />}
       {DemoBooking ? <DemoBooking /> : <FallbackComponent name="Demo Booking" />}
       {Contact ? <Contact /> : <FallbackComponent name="Contact" />}
