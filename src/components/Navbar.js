@@ -297,13 +297,21 @@ const Navbar = ({ theme, setTheme }) => {
         .hamburger:hover {
           background: rgba(102, 126, 234, 0.1);
         }
-        @media (max-width: 768px) {
-          .phone-link {
+        @media (max-width: 1200px) {
+          .desktop-menu {
             display: none;
+          }
+          
+          .hamburger {
+            display: block;
           }
         }
         
         @media (max-width: 768px) {
+          .phone-link {
+            display: none;
+          }
+          
           .nav-container {
             padding: 0 1rem;
           }
