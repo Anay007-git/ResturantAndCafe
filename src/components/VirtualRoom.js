@@ -36,6 +36,10 @@ export default function VirtualRoom() {
   const [adsr, setAdsr] = useState({ attack: 0.01, decay: 0.2, sustain: 0.5, release: 0.6 });
   const [reverbOn, setReverbOn] = useState(true);
   const [distortionOn, setDistortionOn] = useState(false);
+  // holdSustain controls whether notes hold longer (acts as previous 'sustain' boolean)
+  const [holdSustain, setHoldSustain] = useState(false);
+  // alias used throughout audio functions to preserve previous code references
+  const sustain = holdSustain;
   const [active, setActive] = useState({});
   const [bpm, setBpm] = useState(90);
   const [metronomeOn, setMetronomeOn] = useState(false);
@@ -250,6 +254,11 @@ export default function VirtualRoom() {
           <label style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
             <input type="checkbox" checked={distortionOn} onChange={() => setDistortionOn(d => !d)} />
             <span style={{ color: 'var(--vr-text)' }}>Distortion</span>
+          </label>
+
+          <label style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            <input type="checkbox" checked={holdSustain} onChange={() => setHoldSustain(s => !s)} />
+            <span style={{ color: 'var(--vr-text)' }}>Sustain</span>
           </label>
 
           <label style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
