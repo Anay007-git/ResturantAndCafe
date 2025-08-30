@@ -39,6 +39,12 @@ const Navbar = ({ theme, setTheme }) => {
           <span>Presto Guitar Academy</span>
         </div>
         
+        <div className="contact-info">
+          <a href="tel:+919836441807" className="phone-link">
+            📞 +91 9836441807
+          </a>
+        </div>
+        
         <div className="nav-right">
           <div className="theme-switcher">
             <button 
@@ -133,6 +139,33 @@ const Navbar = ({ theme, setTheme }) => {
           padding: 0 2rem;
           position: relative;
           width: 100%;
+        }
+        
+        .contact-info {
+          display: flex;
+          align-items: center;
+          margin-right: auto;
+          margin-left: 2rem;
+        }
+        
+        .phone-link {
+          color: #667eea;
+          text-decoration: none;
+          font-weight: 600;
+          font-size: 1rem;
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+          background: rgba(102, 126, 234, 0.1);
+          border: 1px solid rgba(102, 126, 234, 0.3);
+          transition: all 0.3s ease;
+          white-space: nowrap;
+        }
+        
+        .phone-link:hover {
+          background: rgba(102, 126, 234, 0.2);
+          border-color: #667eea;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
         
         .nav-right {
@@ -262,6 +295,10 @@ const Navbar = ({ theme, setTheme }) => {
         @media (max-width: 768px) {
           .nav-container {
             padding: 0 1rem;
+          }
+          
+          .contact-info {
+            display: none;
           }
           
           .logo {
@@ -445,6 +482,18 @@ const Navbar = ({ theme, setTheme }) => {
         
         [data-theme="light"] .nav-menu a {
           border-right: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        [data-theme="light"] .phone-link {
+          background: rgba(14, 165, 233, 0.1);
+          border: 1px solid rgba(14, 165, 233, 0.3);
+          color: #0ea5e9;
+        }
+        
+        [data-theme="light"] .phone-link:hover {
+          background: rgba(14, 165, 233, 0.2);
+          border-color: #0ea5e9;
+          box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
         }
         
         /* Mobile menu backdrop */
