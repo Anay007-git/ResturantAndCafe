@@ -45,6 +45,18 @@ db.serialize(() => {
     timestamp TEXT NOT NULL,
     FOREIGN KEY (authorId) REFERENCES users (id)
   )`);
+
+  // Add comments table to store post comments
+  db.run(`CREATE TABLE IF NOT EXISTS comments (
+    id TEXT PRIMARY KEY,
+    postId TEXT NOT NULL,
+    userId TEXT NOT NULL,
+    username TEXT NOT NULL,
+    content TEXT NOT NULL,
+    timestamp TEXT NOT NULL,
+    FOREIGN KEY (postId) REFERENCES posts (id),
+    FOREIGN KEY (userId) REFERENCES users (id)
+  )`);
 });
 
 // User registration
@@ -165,13 +177,72 @@ app.get('/api/posts', (req, res) => {
     if (err) {
       return res.status(500).json({ error: 'Failed to fetch posts' });
     }
-    
     const formattedPosts = posts.map(post => ({
       ...post,
-      tags: JSON.parse(post.tags || '[]')
+      tags: JSON.parse(post.tags || '[]'),
+      upvotes: Number(post.upvotes || 0),
+      downvotes: Number(post.downvotes || 0),
+      comments: Number(post.comments || 0)
     }));
-    
     res.json(formattedPosts);
+  });
+});
+
+// Get comments for a post
+app.get('/api/comments/:postId', (req, res) => {
+  const { postId } = req.params;
+  db.all('SELECT * FROM comments WHERE postId = ? ORDER BY timestamp ASC', [postId], (err, rows) => {
+    if (err) return res.status(500).json({ error: 'Failed to fetch comments' });
+    res.json(rows || []);
+  });
+});
+
+// Add a comment to a post
+app.post('/api/comments', (req, res) => {
+  const { postId, userId, username, content } = req.body;
+  if (!postId || !userId || !username || !content) {
+    return res.status(400).json({ error: 'Missing fields' });
+  }
+  const commentId = uuidv4();
+  const timestamp = new Date().toISOString();
+
+  db.run(
+    'INSERT INTO comments (id, postId, userId, username, content, timestamp) VALUES (?, ?, ?, ?, ?, ?)',
+    [commentId, postId, userId, username, content, timestamp],
+    function(err) {
+      if (err) return res.status(500).json({ error: 'Failed to add comment' });
+
+      // Increment comment count on the post
+      db.run('UPDATE posts SET comments = comments + 1 WHERE id = ?', [postId], function(updateErr) {
+        if (updateErr) console.error('Failed to update post comment count', updateErr);
+
+        // Return the created comment and updated comment count
+        db.get('SELECT comments FROM posts WHERE id = ?', [postId], (getErr, row) => {
+          if (getErr) return res.status(500).json({ error: 'Failed to fetch updated post' });
+          res.json({ id: commentId, postId, userId, username, content, timestamp, comments: row?.comments || 0 });
+        });
+      });
+    }
+  );
+});
+
+// Vote endpoint
+app.post('/api/vote', (req, res) => {
+  const { postId, voteType } = req.body;
+  if (!postId || !['up', 'down'].includes(voteType)) {
+    return res.status(400).json({ error: 'Invalid vote request' });
+  }
+
+  const field = voteType === 'up' ? 'upvotes' : 'downvotes';
+  db.run(`UPDATE posts SET ${field} = ${field} + 1 WHERE id = ?`, [postId], function(err) {
+    if (err) return res.status(500).json({ error: 'Failed to register vote' });
+
+    // Return updated post
+    db.get('SELECT * FROM posts WHERE id = ?', [postId], (getErr, post) => {
+      if (getErr || !post) return res.status(500).json({ error: 'Failed to fetch post' });
+      const formatted = { ...post, tags: JSON.parse(post.tags || '[]'), upvotes: Number(post.upvotes||0), downvotes: Number(post.downvotes||0), comments: Number(post.comments||0) };
+      res.json(formatted);
+    });
   });
 });
 
