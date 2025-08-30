@@ -292,8 +292,13 @@ const Navbar = ({ theme, setTheme }) => {
           .nav-container {
             padding: 0 0.7rem;
           }
+          /* Show phone number on smaller screens and make it compact */
           .phone-link {
-            display: none;
+            display: inline-block;
+            margin-top: 4px;
+            font-size: 0.78rem;
+            padding: 0.12rem 0.5rem;
+            border-radius: 6px;
           }
         }
         @media (max-width: 700px) {
