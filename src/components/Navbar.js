@@ -412,6 +412,19 @@ const Navbar = ({ theme, setTheme }) => {
           --brand: #9fb0ff;
         }
 
+        /* Improve font rendering and legibility */
+        body {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          text-rendering: optimizeLegibility;
+          -webkit-text-size-adjust: 100%;
+        }
+        
+        [data-theme="dark"] body {
+          /* subtle text shadow to avoid banding on dark backgrounds */
+          text-shadow: 0 1px 1px rgba(0,0,0,0.45);
+        }
+
         .navbar {
           background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.85));
           color: var(--text-primary);
