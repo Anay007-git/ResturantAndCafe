@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 // Import components with error handling
-let Navbar, Hero, StudentZone, ChordLibrary, Classes, StudentsGallery, Community, VirtualRoom, MusicNotations, DemoBooking, Contact, Footer, FloatingChatBot;
+let Navbar, Hero, StudentZone, ChordLibrary, Classes, StudentsGallery, Community, VirtualRoom, MusicNotations, DemoBooking, Contact, Footer, FloatingChatBot, AITutor, AudioPlayer, SEO, SmokeCanvas, LazyImage;
 
 try {
   Navbar = require('./components/Navbar').default;
@@ -18,6 +18,11 @@ try {
   Contact = require('./components/Contact').default;
   Footer = require('./components/Footer').default;
   FloatingChatBot = require('./components/FloatingChatBot').default;
+  AITutor = require('./components/AITutor').default;
+  AudioPlayer = require('./components/AudioPlayer').default;
+  SEO = require('./components/SEO').default;
+  SmokeCanvas = require('./components/SmokeCanvas').default;
+  LazyImage = require('./components/LazyImage').default;
 } catch (error) {
   console.error('Component import error:', error);
 }
