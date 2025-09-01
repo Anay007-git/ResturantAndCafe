@@ -432,9 +432,9 @@ const Community = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="community-header">
-            <h2><Users size={32} /> Presto Guitar Community</h2>
-            <p>Share doubts, solutions, and confessions with fellow guitarists</p>
+          <div className="community-header" style={{ textAlign: 'center', marginBottom: '1.8rem' }}>
+            <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", color: '#1f2a44', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}><Users size={32} /> Presto Guitar Community</h2>
+            <p style={{ color: '#6b7280' }}>Share doubts, solutions, and confessions with fellow guitarists</p>
           </div>
 
           {!isSignedUp ? (
@@ -620,7 +620,7 @@ const Community = () => {
           </div>
         </motion.div>
       </div>
-
+ 
       {/* Sign Up Modal */}
       <AnimatePresence>
         {showSignUp && (
@@ -1241,19 +1241,23 @@ const Community = () => {
         }
         
         h2 {
-          font-size: 2.5rem;
+          font-size: 2.2rem;
           margin-bottom: 0.5rem;
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 1rem;
-          color: #667eea;
+          color: #1f2a44;
+          font-family: 'Playfair Display', Georgia, serif;
         }
         
         .community-cta {
           text-align: center;
-          padding: 3rem 2rem;
-          margin-bottom: 3rem;
+          padding: 2.2rem 1.6rem;
+          margin-bottom: 2.6rem;
+          background: #fff;
+          border-radius: 12px;
+          box-shadow: 0 10px 28px rgba(15,20,30,0.04);
         }
         
         .community-cta h3 {
@@ -1265,8 +1269,8 @@ const Community = () => {
         .community-stats {
           display: flex;
           justify-content: center;
-          gap: 3rem;
-          margin: 2rem 0;
+          gap: 2rem;
+          margin: 1.5rem 0;
         }
         
         .auth-buttons {
@@ -1451,11 +1455,16 @@ const Community = () => {
           gap: 1rem;
           padding: 1.5rem;
           border-left: 3px solid transparent;
-          transition: border-color 0.3s ease;
+          transition: transform 180ms ease, box-shadow 220ms ease;
+          background: #fff;
+          border-radius: 10px;
+          box-shadow: 0 10px 30px rgba(15,20,30,0.04);
         }
         
         .post-card:hover {
-          border-left-color: #667eea;
+          transform: translateY(-6px);
+          box-shadow: 0 20px 40px rgba(15,20,30,0.06);
+          border-left-color: #c69c4a;
         }
         
         .post-voting {
@@ -1554,8 +1563,9 @@ const Community = () => {
         .post-category.confession { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
         
         .post-content h3 {
-          color: #667eea;
+          color: #1f2a44;
           margin-bottom: 1rem;
+          font-family: 'Playfair Display', Georgia, serif;
         }
         
         .post-content p {
@@ -2014,7 +2024,7 @@ const Community = () => {
           padding: 12px;
           background: rgba(34, 197, 94, 0.1);
           border-radius: 8px;
-          border: 1px solid rgba(34, 197, 94, 0.2);
+          border: 1px solid rgba(34, 197, 94, 0.3);
         }
         
         .recovery-info p {
@@ -2261,9 +2271,9 @@ const Community = () => {
         .comment-item {
           padding: 0.8rem;
           margin-bottom: 0.5rem;
-          background: rgba(255, 255, 255, 0.03);
+          background: #faf9f8;
           border-radius: 8px;
-          border-left: 3px solid #667eea;
+          border-left: 3px solid #c69c4a;
         }
         
         .comment-item strong {
@@ -2415,8 +2425,8 @@ const Community = () => {
         }
         
         [data-theme="light"] .comment-item {
-          background: rgba(14, 165, 233, 0.03) !important;
-          border-left: 3px solid #0ea5e9 !important;
+          background: #fff !important;
+          border-left: 3px solid #c69c4a !important;
         }
         
         [data-theme="light"] .comment-item strong {

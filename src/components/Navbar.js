@@ -152,6 +152,11 @@ const Navbar = ({ theme, setTheme }) => {
           font-weight: 600;
           color: var(--accent);
           letter-spacing: 0.5px;
+          font-family: 'Playfair Display', Georgia, serif;
+          font-weight: 700;
+          font-size: 1.05rem;
+          color: var(--brand);
+          letter-spacing: 0.6px;
         }
         .phone-link {
           color: var(--accent);
@@ -165,6 +170,11 @@ const Navbar = ({ theme, setTheme }) => {
           transition: background 0.2s, border 0.2s, box-shadow 0.2s;
           white-space: nowrap;
           align-self: flex-start;
+          background: transparent;
+          border: 1px dashed rgba(0,0,0,0.04);
+          padding: 0.12rem 0.5rem;
+          font-size: 0.82rem;
+          color: var(--text-secondary);
         }
         .phone-link:hover {
           background: rgba(102, 126, 234, 0.18);
@@ -194,6 +204,7 @@ const Navbar = ({ theme, setTheme }) => {
         }
         .theme-btn:hover {
           background: rgba(102, 126, 234, 0.10);
+          transform: translateY(-2px);
         }
         .theme-menu {
           position: absolute;
@@ -265,11 +276,19 @@ const Navbar = ({ theme, setTheme }) => {
           letter-spacing: 0.2px;
           display: inline-flex;
           align-items: center;
+          background: transparent;
+          color: var(--text-primary);
+          padding: 0.45rem 0.75rem;
+          border-radius: 6px;
+          transition: background 220ms ease, color 180ms ease, transform 160ms ease;
         }
         .nav-menu a:hover {
           color: var(--accent);
           background: rgba(102, 126, 234, 0.06);
           transform: translateY(-2px);
+          background: rgba(198,156,74,0.06);
+          color: var(--accent);
+          transform: translateY(-3px);
         }
         .desktop-menu li {
           flex-shrink: 0; /* prevent items from wrapping/shrinking into each other */
@@ -376,19 +395,30 @@ const Navbar = ({ theme, setTheme }) => {
           }
         }
         :root {
-          --bg-primary: #f8f9fa;
+          --bg-primary: #f7f6f4; /* soft off-white */
           --bg-secondary: #ffffff;
-          --text-primary: #22223b;
-          --text-secondary: #4a4e69;
-          --accent: #667eea;
+          --text-primary: #0b1220;
+          --text-secondary: #6b7280;
+          --accent: #c69c4a; /* warm gold accent */
+          --brand: #1f2a44; /* deep indigo for headings */
         }
+
         [data-theme="dark"] {
-          --bg-primary: #18181b;
-          --bg-secondary: #232336;
-          --text-primary: #f8f9fa;
-          --text-secondary: #b0b0b0;
-          --accent: #667eea;
+          --bg-primary: #0b0f1a;
+          --bg-secondary: #0f1724;
+          --text-primary: #e6eef8;
+          --text-secondary: #9aa3c7;
+          --accent: #d6b37e;
+          --brand: #9fb0ff;
         }
+
+        .navbar {
+          background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.85));
+          color: var(--text-primary);
+          backdrop-filter: blur(6px);
+          border-bottom: 1px solid rgba(15,20,30,0.04);
+        }
+
         [data-theme="dark"] .navbar {
           background: var(--bg-secondary);
           border-bottom: 1px solid rgba(102, 126, 234, 0.12);
