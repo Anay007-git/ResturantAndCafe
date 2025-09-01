@@ -12,7 +12,14 @@ const Home = () => {
       />
 
       <main>
-        <header style={{ padding: '6rem 1rem 3rem', textAlign: 'center', background: 'linear-gradient(180deg, #faf7f2 0%, transparent 60%)' }}>
+        <header style={{
+          padding: '6rem 1rem 3rem',
+          textAlign: 'center',
+          backgroundImage: `linear-gradient(180deg, rgba(247,246,244,0.95), rgba(247,246,244,0.5)), url('/images/bg-music.svg'), url('/images/bg-guitar.svg')`,
+          backgroundRepeat: 'repeat-x, no-repeat, no-repeat',
+          backgroundPosition: 'center 30px, right 20px',
+          backgroundSize: 'auto, 60%, 45%'
+        }}>
           <h1 style={{ fontSize: '3rem', color: '#1f2a44', fontFamily: "'Playfair Display', Georgia, serif", marginBottom: 8 }}>Presto Guitar Academy</h1>
           <p style={{ maxWidth: 900, margin: '0.6rem auto', color: '#6b7280', fontSize: '1.05rem' }}>Master guitar with expert instructors, structured courses, and an active community. Acoustic, electric, bass — lessons for all levels.</p>
           <div style={{ marginTop: 20, display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap' }}>
