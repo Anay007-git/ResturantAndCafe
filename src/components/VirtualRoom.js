@@ -214,14 +214,30 @@ export default function VirtualRoom() {
         .vr-controls { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
         .vr-panel { display:flex; gap:16px; margin-top:14px; align-items:flex-start; flex-wrap:wrap; }
         .vr-card { background: var(--vr-panel); padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.06); }
-        .vr-main { flex:1; min-width:300px; }
-        .vr-canvas { width:100%; height:80px; border-radius:6px; background: var(--vr-bg); }
-        .vr-pad { padding:18px; border-radius:8px; background:transparent; color:var(--vr-text); font-weight:700; border:1px solid rgba(255,255,255,0.04); }
+        /* New UI/UX improvements */
+        .piano-container { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 6px; }
+        .piano-key {
+          transition: transform 120ms ease, background 120ms ease, box-shadow 180ms ease;
+          min-width: 34px;
+          padding: 12px 8px;
+          cursor: pointer;
+        }
+        .piano-key:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(110,160,255,0.08); }
+        .piano-key:active, .piano-key.active { transform: translateY(2px) scale(0.98); box-shadow: 0 6px 18px rgba(0,0,0,0.18); }
+
+        .vr-pad { transition: transform 120ms ease, box-shadow 180ms ease; }
+        .vr-pad:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(15,45,80,0.16); }
+
+        .vr-card { transition: transform 180ms cubic-bezier(.2,.9,.2,1), box-shadow 180ms; }
+        .vr-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(2,6,23,0.6); }
+
+        /* Tighter layout for controls on small screens */
         @media (max-width: 760px) {
-          .vr-panel { flex-direction:column; }
-          .vr-controls { width:100%; justify-content:flex-start; }
-          .vr-card { width:100% !important; }
-          .piano-key { flex: 1 0 auto; min-width: 36px; }
+          .vr-panel { flex-direction: column; }
+          .vr-controls { width: 100%; justify-content: flex-start; }
+          .vr-card { width: 100% !important; padding: 10px; }
+          .piano-key { min-width: 28px; padding: 10px 6px; }
+          .vr-controls select, .vr-controls input[type="number"], .vr-controls input[type="range"] { width: 100%; }
         }
       `}</style>
 
