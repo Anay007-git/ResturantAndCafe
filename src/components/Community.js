@@ -3,8 +3,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Users, ArrowUp, ArrowDown, MessageCircle, Share2, Plus, Mail, Shield, Award, Clock, Tag, X } from 'lucide-react';
 import { sendOTP, generateOTP, validateEmail, validateOTP } from '../utils/emailService';
 import { apiService } from '../utils/apiService';
+import SEO from './SEO';
 
 const Community = () => {
+  // Page SEO
+  const meta = {
+    title: 'Presto Guitar Community — Connect, Share, Learn',
+    description: 'Join the Presto Guitar Community to ask doubts, share solutions, and connect with fellow guitarists. Participate in discussions and get feedback from experienced players.',
+    url: 'https://www.prestoguitaracademy.com/#community',
+    image: '/images/community-og.jpg'
+  };
+
   const [isSignedUp, setIsSignedUp] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
@@ -416,6 +425,7 @@ const Community = () => {
 
   return (
     <section id="community" className="section">
+      <SEO title={meta.title} description={meta.description} url={meta.url} image={meta.image} />
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -2472,8 +2482,8 @@ const Community = () => {
         }
         
         [data-theme="light"] .modal-content input,
-        [data-theme="light"] .modal-content select,
-        [data-theme="light"] .modal-content textarea {
+        .modal-content select,
+        .modal-content textarea {
           background: #ffffff !important;
           border: 2px solid #0ea5e9 !important;
           color: #0f172a !important;
