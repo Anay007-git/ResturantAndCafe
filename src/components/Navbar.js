@@ -110,13 +110,13 @@ const Navbar = ({ theme, setTheme }) => {
           position: fixed;
           top: 0;
           width: 100%;
-          z-index: 1000;
-          padding: 0.8rem 0;
+          z-index: 1100; /* raised to stay above content */
+          padding: 0.6rem 0; /* slightly tighter */
           background: var(--bg-secondary);
-          backdrop-filter: blur(16px);
-          border-bottom: 1px solid rgba(102, 126, 234, 0.12);
-          box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-          transition: background 0.3s, box-shadow 0.3s;
+          backdrop-filter: blur(10px);
+          border-bottom: 1px solid rgba(102, 126, 234, 0.06);
+          box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+          transition: background 0.25s, box-shadow 0.25s, padding 0.2s;
           font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
         }
         .navbar.scrolled {
@@ -125,23 +125,22 @@ const Navbar = ({ theme, setTheme }) => {
           border-bottom: 1px solid var(--accent);
         }
         .nav-container {
-          max-width: 1100px;
+          max-width: 1200px;
           margin: 0 auto;
           display: flex;
-          justify-content: space-between;
           align-items: center;
-          padding: 0 1.5rem;
+          gap: 1rem;
+          padding: 0 1.25rem;
           width: 100%;
         }
         .logo {
           display: flex;
           align-items: center;
-          gap: 0.7rem;
+          gap: 0.6rem;
           color: var(--accent);
-          font-size: 1.4rem;
+          font-size: 1.12rem;
           font-weight: 700;
-          letter-spacing: 0.5px;
-          text-shadow: 0 2px 8px rgba(102, 126, 234, 0.10);
+          flex: 0 0 auto; /* don't shrink */
         }
         .logo-text {
           display: flex;
@@ -175,7 +174,8 @@ const Navbar = ({ theme, setTheme }) => {
         .nav-right {
           display: flex;
           align-items: center;
-          gap: 1.2rem;
+          gap: 1rem;
+          margin-left: auto; /* push to the right */
         }
         .theme-switcher {
           position: relative;
@@ -246,41 +246,33 @@ const Navbar = ({ theme, setTheme }) => {
         }
         .desktop-menu {
           display: flex;
-          gap: 0.1rem;
+          gap: 0.25rem;
           align-items: center;
+          justify-content: flex-end;
+          flex: 1 1 auto; /* allow to grow/shrink without overlapping logo */
+          overflow: visible;
         }
         .nav-menu a {
           color: var(--text-primary);
           text-decoration: none;
-          font-weight: 500;
-          font-size: 1.02rem;
-          padding: 0.7rem 1.2rem;
+          font-weight: 600;
+          font-size: 0.95rem; /* slightly smaller */
+          padding: 0.5rem 0.9rem; /* tighter padding */
           border-radius: 6px;
-          transition: background 0.2s, color 0.2s;
+          transition: background 0.18s, color 0.18s, transform 0.12s;
           position: relative;
           white-space: nowrap;
-          border-right: 1px solid rgba(102, 126, 234, 0.08);
           letter-spacing: 0.2px;
-        }
-        .nav-menu li:last-child a {
-          border-right: none;
+          display: inline-flex;
+          align-items: center;
         }
         .nav-menu a:hover {
           color: var(--accent);
-          background: rgba(102, 126, 234, 0.08);
+          background: rgba(102, 126, 234, 0.06);
+          transform: translateY(-2px);
         }
-        .nav-menu a::after {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 0;
-          height: 2px;
-          background: linear-gradient(90deg, #667eea, #764ba2);
-          transition: width 0.2s;
-        }
-        .nav-menu a:hover::after {
-          width: 100%;
+        .desktop-menu li {
+          flex-shrink: 0; /* prevent items from wrapping/shrinking into each other */
         }
         @media (max-width: 1200px) {
           .desktop-menu {
@@ -292,23 +284,22 @@ const Navbar = ({ theme, setTheme }) => {
         }
         @media (max-width: 900px) {
           .nav-container {
-            padding: 0 0.7rem;
+            padding: 0 0.6rem;
           }
-          /* Show phone number on smaller screens and make it compact */
           .phone-link {
             display: inline-block;
             margin-top: 4px;
-            font-size: 0.78rem;
+            font-size: 0.82rem;
             padding: 0.12rem 0.5rem;
             border-radius: 6px;
           }
         }
         @media (max-width: 700px) {
           .logo {
-            font-size: 1.1rem;
+            font-size: 1rem;
           }
           .logo-text span {
-            font-size: 0.95rem;
+            font-size: 0.92rem;
           }
           .nav-menu.mobile-open {
             position: fixed;
@@ -324,8 +315,8 @@ const Navbar = ({ theme, setTheme }) => {
             align-items: stretch;
             padding: 1.2rem 0;
             border-left: 1px solid rgba(102, 126, 234, 0.10);
-            box-shadow: -8px 0 24px rgba(102, 126, 234, 0.10);
-            z-index: 999;
+            box-shadow: -8px 0 24px rgba(0,0,0,0.12);
+            z-index: 1200;
           }
           .nav-menu.mobile-open li {
             width: 100%;
