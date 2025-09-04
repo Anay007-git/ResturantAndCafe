@@ -2843,13 +2843,38 @@ const Community = () => {
           color: #e6eef8 !important;
         }
 
-        [data-theme="dark"] .btn-secondary,
-        [data-theme="dark"] .btn-primary,
+        [data-theme="dark"] .btn-secondary {
+          background: rgba(102, 126, 234, 0.15) !important;
+          color: #ffffff !important;
+          border: 2px solid rgba(102, 126, 234, 0.4) !important;
+          font-weight: 700 !important;
+        }
+
+        [data-theme="dark"] .btn-secondary:hover {
+          background: rgba(102, 126, 234, 0.25) !important;
+          border-color: #667eea !important;
+          color: #ffffff !important;
+        }
+
+        [data-theme="dark"] .btn-primary {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+          color: #ffffff !important;
+          border: none !important;
+          font-weight: 700 !important;
+        }
+
+        [data-theme="dark"] .btn-primary:hover {
+          background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%) !important;
+          transform: translateY(-2px) !important;
+          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+        }
+
         [data-theme="dark"] .btn-submit,
         [data-theme="dark"] .comment-form button {
-          background: rgba(255,255,255,0.06) !important;
-          color: #0b1220 !important;
-          border-color: rgba(255,255,255,0.06) !important;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+          color: #ffffff !important;
+          border: none !important;
+          font-weight: 700 !important;
         }
 
         /* Slight increase contrast for small meta text */
