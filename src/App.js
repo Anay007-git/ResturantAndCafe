@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 // Import components with error handling
-let Navbar, Hero, StudentZone, ChordLibrary, Classes, StudentsGallery, Community, VirtualRoom, MusicNotations, DemoBooking, Contact, Footer, FloatingChatBot, AITutor, AudioPlayer, SEO, SmokeCanvas, LazyImage;
+let Navbar, Hero, StudentZone, ChordLibrary, Classes, StudentsGallery, Community, VirtualRoom, MusicNotations, DemoBooking, Contact, Footer, FloatingChatBot, AITutor, AudioPlayer, SEO, SmokeCanvas, LazyImage, TeachersDay;
 
 try {
   Navbar = require('./components/Navbar').default;
@@ -23,6 +23,7 @@ try {
   SEO = require('./components/SEO').default;
   SmokeCanvas = require('./components/SmokeCanvas').default;
   LazyImage = require('./components/LazyImage').default;
+  TeachersDay = require('./components/TeachersDay').default;
 } catch (error) {
   console.error('Component import error:', error);
 }
@@ -63,6 +64,7 @@ function App() {
 
   return (
     <div className="App">
+      {TeachersDay ? <TeachersDay /> : null}
       {Navbar ? <Navbar theme={theme} setTheme={setTheme} /> : <FallbackComponent name="Navigation" />}
       {Hero ? <Hero /> : <FallbackComponent name="Hero" />}
       {StudentZone ? <StudentZone /> : <FallbackComponent name="Student Zone" />}
