@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 // Import components with error handling
-let Navbar, Hero, StudentZone, ChordLibrary, Classes, StudentsGallery, Community, VirtualRoom, MusicNotations, DemoBooking, Contact, Footer, FloatingChatBot, AITutor, AudioPlayer, SEO, SmokeCanvas, LazyImage, TeachersDay, NarutoTheme;
+let Navbar, Hero, StudentZone, ChordLibrary, Classes, StudentsGallery, Community, VirtualRoom, MusicNotations, DemoBooking, Contact, Footer, FloatingChatBot, AITutor, AudioPlayer, SEO, SmokeCanvas, LazyImage, TeachersDay, NarutoTheme, NarutoCharacters;
 
 try {
   Navbar = require('./components/Navbar').default;
@@ -25,6 +25,7 @@ try {
   LazyImage = require('./components/LazyImage').default;
   TeachersDay = require('./components/TeachersDay').default;
   NarutoTheme = require('./components/NarutoTheme').default;
+  NarutoCharacters = require('./components/NarutoCharacters').default;
 } catch (error) {
   console.error('Component import error:', error);
 }
@@ -66,6 +67,7 @@ function App() {
   return (
     <div className="App">
       {NarutoTheme ? <NarutoTheme /> : null}
+      {NarutoCharacters ? <NarutoCharacters /> : null}
       {TeachersDay ? <TeachersDay /> : null}
       {Navbar ? <Navbar theme={theme} setTheme={setTheme} /> : <FallbackComponent name="Navigation" />}
       {Hero ? <Hero /> : <FallbackComponent name="Hero" />}

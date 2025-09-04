@@ -208,7 +208,7 @@ const NarutoTheme = () => {
         animation: narutoFloat 2s ease-in-out infinite;
       }
       
-      /* Professional Naruto SVG Decorations */
+      /* Enhanced Professional Decorations */
       body::after {
         content: '';
         position: fixed;
@@ -216,12 +216,12 @@ const NarutoTheme = () => {
         right: 0;
         width: 200px;
         height: 100vh;
-        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 800"><defs><linearGradient id="swordGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23c0c0c0" stop-opacity="0.3"/><stop offset="100%" stop-color="%23808080" stop-opacity="0.1"/></linearGradient><radialGradient id="sharingan" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="%23ff0000" stop-opacity="0.4"/><stop offset="70%" stop-color="%23cc0000" stop-opacity="0.2"/><stop offset="100%" stop-color="%23990000" stop-opacity="0.1"/></radialGradient></defs><g opacity="0.6"><rect x="95" y="50" width="10" height="80" fill="url(%23swordGrad)" rx="5"/><circle cx="100" cy="40" r="8" fill="%23d4af37" opacity="0.4"/><circle cx="100" cy="200" r="15" fill="url(%23sharingan)"/><circle cx="100" cy="200" r="3" fill="%23000" opacity="0.8"/><rect x="95" y="350" width="10" height="60" fill="url(%23swordGrad)" rx="5" transform="rotate(45 100 380)"/><circle cx="100" cy="500" r="12" fill="url(%23sharingan)"/><circle cx="100" cy="500" r="2" fill="%23000" opacity="0.8"/><rect x="95" y="650" width="10" height="70" fill="url(%23swordGrad)" rx="5" transform="rotate(-30 100 685)"/></g></svg>');
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 800"><defs><linearGradient id="swordGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23c0c0c0" stop-opacity="0.4"/><stop offset="100%" stop-color="%23808080" stop-opacity="0.2"/></linearGradient><radialGradient id="sharingan" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="%23ff0000" stop-opacity="0.5"/><stop offset="70%" stop-color="%23cc0000" stop-opacity="0.3"/><stop offset="100%" stop-color="%23990000" stop-opacity="0.1"/></radialGradient><linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23228b22" stop-opacity="0.4"/><stop offset="100%" stop-color="%2332cd32" stop-opacity="0.2"/></linearGradient></defs><g opacity="0.7"><rect x="95" y="50" width="10" height="80" fill="url(%23swordGrad)" rx="5"/><circle cx="100" cy="40" r="8" fill="%23d4af37" opacity="0.5"/><circle cx="100" cy="200" r="15" fill="url(%23sharingan)"/><circle cx="100" cy="200" r="3" fill="%23000" opacity="0.9"/><path d="M95 195 L105 195 M95 205 L105 205 M100 190 L100 210" stroke="%23000" stroke-width="1" opacity="0.8"/><rect x="95" y="350" width="10" height="60" fill="url(%23swordGrad)" rx="5" transform="rotate(45 100 380)"/><path d="M80 300 Q100 280 120 300 Q100 320 80 300" fill="url(%23leafGrad)"/><circle cx="100" cy="500" r="12" fill="url(%23sharingan)"/><circle cx="100" cy="500" r="2" fill="%23000" opacity="0.9"/><rect x="95" y="650" width="10" height="70" fill="url(%23swordGrad)" rx="5" transform="rotate(-30 100 685)"/><path d="M70 600 Q100 580 130 600 Q100 620 70 600" fill="url(%23leafGrad)"/></g></svg>');
         background-repeat: repeat-y;
         pointer-events: none;
         z-index: -1;
-        opacity: 0.3;
-        animation: weaponFloat 12s ease-in-out infinite;
+        opacity: 0.4;
+        animation: weaponFloat 15s ease-in-out infinite;
       }
       
       @keyframes weaponFloat {
