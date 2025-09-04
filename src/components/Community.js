@@ -435,10 +435,27 @@ const Community = () => {
           <div className="community-header" style={{ textAlign: 'center', marginBottom: '1.8rem' }}>
             <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", color: 'var(--naruto-orange)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}><Users size={32} /> 🍃 Ninja Guitar Dojo 🍃</h2>
             <p style={{ color: 'var(--text-secondary)' }}>Train with fellow guitar ninjas - Share techniques, master skills, and grow stronger together</p>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1rem', fontSize: '0.9rem', color: 'var(--naruto-gold)' }}>
-              <span>🎯 Iruka-sensei: Emotional Foundation</span>
-              <span>⚡ Kakashi-sensei: Tactical Skills</span>
-              <span>🔥 Jiraiya-sensei: Power & Mastery</span>
+            <div className="sensei-gallery" style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginTop: '2rem', flexWrap: 'wrap' }}>
+              <div className="sensei-card iruka">
+                <div className="sensei-avatar">👨‍🏫</div>
+                <span>Iruka-sensei</span>
+                <small>Emotional Foundation</small>
+              </div>
+              <div className="sensei-card kakashi">
+                <div className="sensei-avatar sharingan">👁️</div>
+                <span>Kakashi-sensei</span>
+                <small>Tactical/Teamwork</small>
+              </div>
+              <div className="sensei-card jiraiya">
+                <div className="sensei-avatar">🐸</div>
+                <span>Jiraiya-sensei</span>
+                <small>Power & Skills</small>
+              </div>
+              <div className="sensei-card hagoromo">
+                <div className="sensei-avatar">🌟</div>
+                <span>Hagoromo-sensei</span>
+                <small>Wisdom & Legacy</small>
+              </div>
             </div>
           </div>
 
@@ -2885,6 +2902,76 @@ const Community = () => {
         /* Slight increase contrast for small meta text */
         [data-theme="dark"] .stat-label,
         [data-theme="dark"] .post-time { color: #9fb0d9 !important; font-weight: 600; }
+        
+        /* Sensei Gallery Styling */
+        .sensei-gallery {
+          padding: 1rem;
+          background: rgba(255, 107, 53, 0.05);
+          border-radius: 15px;
+          border: 2px solid var(--naruto-gold);
+        }
+        
+        .sensei-card {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 1rem;
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 10px;
+          border: 1px solid var(--naruto-gold);
+          transition: all 0.3s ease;
+          min-width: 120px;
+        }
+        
+        .sensei-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
+        }
+        
+        .sensei-avatar {
+          font-size: 2rem;
+          margin-bottom: 0.5rem;
+          filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+        
+        .sensei-avatar.sharingan {
+          animation: sharinganSpin 3s linear infinite;
+          color: #ff0000;
+        }
+        
+        @keyframes sharinganSpin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        
+        .sensei-card span {
+          font-weight: 700;
+          color: var(--naruto-orange);
+          font-size: 0.9rem;
+        }
+        
+        .sensei-card small {
+          color: var(--naruto-gold);
+          font-size: 0.7rem;
+          text-align: center;
+          margin-top: 0.2rem;
+        }
+        
+        .sensei-card.iruka {
+          border-color: #22c55e;
+        }
+        
+        .sensei-card.kakashi {
+          border-color: #3b82f6;
+        }
+        
+        .sensei-card.jiraiya {
+          border-color: #f59e0b;
+        }
+        
+        .sensei-card.hagoromo {
+          border-color: #8b5cf6;
+        }
       `}</style>
     </section>
   );

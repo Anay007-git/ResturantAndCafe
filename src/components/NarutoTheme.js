@@ -203,6 +203,79 @@ const NarutoTheme = () => {
         animation: narutoFloat 2s ease-in-out infinite;
       }
       
+      /* Ninja Weapons and Symbols */
+      body::after {
+        content: '⚔️ 🗡️ 👁️ ⚔️';
+        position: fixed;
+        top: 20%;
+        right: -50px;
+        font-size: 1.5rem;
+        opacity: 0.1;
+        transform: rotate(90deg);
+        pointer-events: none;
+        z-index: -1;
+        animation: weaponFloat 8s ease-in-out infinite;
+      }
+      
+      @keyframes weaponFloat {
+        0%, 100% { transform: rotate(90deg) translateY(0px); }
+        50% { transform: rotate(90deg) translateY(-20px); }
+      }
+      
+      /* Sharingan cursor effect */
+      .glass-card:hover {
+        cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="%23ff0000" stroke="%23000" stroke-width="2"/><circle cx="16" cy="16" r="3" fill="%23000"/></svg>'), auto;
+      }
+      
+      /* Sword decorations */
+      .modal-content::before {
+        content: '⚔️';
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 2rem;
+        z-index: 10;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+      }
+      
+      /* Ninja scroll effect for buttons */
+      .btn-primary::after, .btn-secondary::after {
+        content: '📜';
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.7;
+      }
+      
+      /* Kunai decorations */
+      .post-card::after {
+        content: '🗡️';
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        font-size: 1rem;
+        opacity: 0.2;
+        transform: rotate(45deg);
+      }
+      
+      /* Sharingan pattern background */
+      .category-btn.active::before {
+        content: '👁️';
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+        font-size: 1rem;
+        animation: sharinganPulse 2s ease-in-out infinite;
+      }
+      
+      @keyframes sharinganPulse {
+        0%, 100% { opacity: 0.5; transform: translateY(-50%) scale(1); }
+        50% { opacity: 1; transform: translateY(-50%) scale(1.1); }
+      }
+      
       /* Ninja-themed text colors */
       .stat-number {
         color: var(--naruto-orange) !important;

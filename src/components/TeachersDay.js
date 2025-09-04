@@ -24,11 +24,16 @@ const TeachersDay = () => {
                 >
                   🍃
                 </motion.div>
-                <h2>🎌 Teacher's Day Tribute 🎌</h2>
-                <p className="naruto-quote">"A teacher affects eternity; they can never tell where their influence stops."</p>
+                <div className="ninja-symbols">
+                  <span className="sharingan-eye">👁️</span>
+                  <span className="ninja-sword">⚔️</span>
+                  <span className="kunai">🗡️</span>
+                </div>
+                <h2>🎌 Sensei Tribute - Way of the Guitar Ninja 🎌</h2>
+                <p className="naruto-quote">"Those who break the rules are scum, but those who abandon their students are worse than scum." - Kakashi</p>
                 <div className="sensei-message">
                   <BookOpen size={20} />
-                  <span>Dedicated to all the senseis who guide us on our path to mastery</span>
+                  <span>Honoring the senseis who taught us the true way of mastery</span>
                 </div>
               </div>
               <button 
@@ -157,6 +162,48 @@ const TeachersDay = () => {
         .close-banner:hover {
           background: rgba(255, 255, 255, 0.3);
           transform: scale(1.1);
+        }
+        
+        .ninja-symbols {
+          display: flex;
+          gap: 1rem;
+          justify-content: center;
+          margin: 0.5rem 0;
+        }
+        
+        .sharingan-eye {
+          font-size: 1.5rem;
+          animation: sharinganSpin 3s linear infinite;
+          filter: drop-shadow(0 0 10px #ff0000);
+        }
+        
+        .ninja-sword {
+          font-size: 1.5rem;
+          animation: swordGlint 2s ease-in-out infinite;
+          filter: drop-shadow(0 0 5px #silver);
+        }
+        
+        .kunai {
+          font-size: 1.5rem;
+          animation: kunaiSpin 4s ease-in-out infinite;
+          filter: drop-shadow(0 0 5px #gold);
+        }
+        
+        @keyframes sharinganSpin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes swordGlint {
+          0%, 100% { transform: rotate(-10deg); }
+          50% { transform: rotate(10deg); }
+        }
+        
+        @keyframes kunaiSpin {
+          0%, 100% { transform: rotate(0deg) scale(1); }
+          25% { transform: rotate(90deg) scale(1.1); }
+          50% { transform: rotate(180deg) scale(1); }
+          75% { transform: rotate(270deg) scale(1.1); }
         }
 
         @media (max-width: 768px) {
