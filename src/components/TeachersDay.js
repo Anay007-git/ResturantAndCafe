@@ -61,9 +61,11 @@ const TeachersDay = () => {
 
         .naruto-bg {
           background: 
+            url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 200"><defs><linearGradient id="spiralGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23ffffff" stop-opacity="0.2"/><stop offset="100%" stop-color="%23ffffff" stop-opacity="0.05"/></linearGradient></defs><g opacity="0.6"><circle cx="100" cy="100" r="30" fill="none" stroke="url(%23spiralGrad)" stroke-width="2"/><circle cx="100" cy="100" r="20" fill="none" stroke="url(%23spiralGrad)" stroke-width="1.5"/><circle cx="100" cy="100" r="10" fill="url(%23spiralGrad)"/><circle cx="300" cy="50" r="25" fill="none" stroke="url(%23spiralGrad)" stroke-width="2"/><circle cx="300" cy="50" r="15" fill="none" stroke="url(%23spiralGrad)" stroke-width="1.5"/><circle cx="500" cy="150" r="35" fill="none" stroke="url(%23spiralGrad)" stroke-width="2"/><circle cx="500" cy="150" r="25" fill="none" stroke="url(%23spiralGrad)" stroke-width="1.5"/><circle cx="500" cy="150" r="15" fill="url(%23spiralGrad)"/><circle cx="800" cy="80" r="20" fill="none" stroke="url(%23spiralGrad)" stroke-width="2"/><circle cx="1000" cy="120" r="28" fill="none" stroke="url(%23spiralGrad)" stroke-width="2"/></g></svg>'),
             radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
             radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
             linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+          background-size: 1200px 200px, 100% 100%, 100% 100%, 100% 100%;
           position: relative;
           overflow: hidden;
         }

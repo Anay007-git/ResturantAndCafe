@@ -158,10 +158,20 @@ const globalStyles = `
     width: 100%;
     height: 100%;
     background: 
+      url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><radialGradient id="leaf" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="%23228b22" stop-opacity="0.3"/><stop offset="100%" stop-color="%23228b22" stop-opacity="0.1"/></radialGradient></defs><g opacity="0.4"><path d="M100 200 Q150 150 200 200 Q150 250 100 200" fill="url(%23leaf)" transform="rotate(45 150 200)"/><path d="M300 100 Q350 50 400 100 Q350 150 300 100" fill="url(%23leaf)" transform="rotate(-30 350 100)"/><path d="M800 300 Q850 250 900 300 Q850 350 800 300" fill="url(%23leaf)" transform="rotate(60 850 300)"/><path d="M1000 150 Q1050 100 1100 150 Q1050 200 1000 150" fill="url(%23leaf)" transform="rotate(-45 1050 150)"/><path d="M200 600 Q250 550 300 600 Q250 650 200 600" fill="url(%23leaf)" transform="rotate(30 250 600)"/><path d="M700 700 Q750 650 800 700 Q750 750 700 700" fill="url(%23leaf)" transform="rotate(-60 750 700)"/></g></svg>'),
       radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
       radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+    background-size: 1200px 800px, 100% 100%, 100% 100%;
     pointer-events: none;
     z-index: -1;
+    animation: leafDrift 20s ease-in-out infinite;
+  }
+  
+  @keyframes leafDrift {
+    0%, 100% { transform: translateX(0px) translateY(0px); }
+    25% { transform: translateX(10px) translateY(-5px); }
+    50% { transform: translateX(-5px) translateY(10px); }
+    75% { transform: translateX(-10px) translateY(-5px); }
   }
   
   .App {
