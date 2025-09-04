@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 // Import components with error handling
-let Navbar, Hero, StudentZone, ChordLibrary, Classes, StudentsGallery, Community, VirtualRoom, MusicNotations, DemoBooking, Contact, Footer, FloatingChatBot, AITutor, AudioPlayer, SEO, SmokeCanvas, LazyImage, TeachersDay;
+let Navbar, Hero, StudentZone, ChordLibrary, Classes, StudentsGallery, Community, VirtualRoom, MusicNotations, DemoBooking, Contact, Footer, FloatingChatBot, AITutor, AudioPlayer, SEO, SmokeCanvas, LazyImage, TeachersDay, NarutoTheme;
 
 try {
   Navbar = require('./components/Navbar').default;
@@ -24,6 +24,7 @@ try {
   SmokeCanvas = require('./components/SmokeCanvas').default;
   LazyImage = require('./components/LazyImage').default;
   TeachersDay = require('./components/TeachersDay').default;
+  NarutoTheme = require('./components/NarutoTheme').default;
 } catch (error) {
   console.error('Component import error:', error);
 }
@@ -64,6 +65,7 @@ function App() {
 
   return (
     <div className="App">
+      {NarutoTheme ? <NarutoTheme /> : null}
       {TeachersDay ? <TeachersDay /> : null}
       {Navbar ? <Navbar theme={theme} setTheme={setTheme} /> : <FallbackComponent name="Navigation" />}
       {Hero ? <Hero /> : <FallbackComponent name="Hero" />}
@@ -84,26 +86,34 @@ function App() {
 
 export default App;
 
-// Global theme styles
+// Global theme styles with Naruto theme
 const globalStyles = `
   :root {
-    --bg-primary: #0a0a0a;
-    --bg-secondary: #1a1a2e;
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #16213e;
     --text-primary: #ffffff;
-    --text-secondary: #b0b0b0;
-    --accent: #667eea;
-    --border: rgba(255, 255, 255, 0.1);
-    --glass: rgba(255, 255, 255, 0.05);
+    --text-secondary: #d4af37;
+    --accent: #ff6b35;
+    --border: rgba(255, 107, 53, 0.3);
+    --glass: rgba(255, 107, 53, 0.1);
+    --naruto-orange: #ff6b35;
+    --naruto-blue: #003d82;
+    --naruto-gold: #d4af37;
+    --leaf-green: #228b22;
   }
   
   [data-theme="light"] {
-    --bg-primary: #ffffff;
-    --bg-secondary: #e0f2fe;
-    --text-primary: #0f172a;
-    --text-secondary: #334155;
-    --accent: #0ea5e9;
-    --border: rgba(14, 165, 233, 0.3);
-    --glass: rgba(14, 165, 233, 0.1);
+    --bg-primary: #fff8f0;
+    --bg-secondary: #ffeaa7;
+    --text-primary: #2d3436;
+    --text-secondary: #636e72;
+    --accent: #ff6b35;
+    --border: rgba(255, 107, 53, 0.4);
+    --glass: rgba(255, 107, 53, 0.15);
+    --naruto-orange: #ff6b35;
+    --naruto-blue: #0984e3;
+    --naruto-gold: #d4af37;
+    --leaf-green: #00b894;
   }
   
   [data-theme="light"] .tab-btn {
@@ -132,15 +142,44 @@ const globalStyles = `
   }
   
   body {
-    background: var(--bg-primary) !important;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%) !important;
     color: var(--text-primary) !important;
     transition: background-color 0.3s ease, color 0.3s ease;
     margin: 0;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    position: relative;
+  }
+  
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
   }
   
   .App {
     min-height: 100vh;
+    position: relative;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, var(--naruto-orange), var(--naruto-gold));
+    border-radius: 6px;
   }
 `;
 

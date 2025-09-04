@@ -433,36 +433,41 @@ const Community = () => {
           transition={{ duration: 0.6 }}
         >
           <div className="community-header" style={{ textAlign: 'center', marginBottom: '1.8rem' }}>
-            <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", color: '#1f2a44', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}><Users size={32} /> Presto Guitar Community</h2>
-            <p style={{ color: '#6b7280' }}>Share doubts, solutions, and confessions with fellow guitarists</p>
+            <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", color: 'var(--naruto-orange)', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}><Users size={32} /> 🍃 Ninja Guitar Dojo 🍃</h2>
+            <p style={{ color: 'var(--text-secondary)' }}>Train with fellow guitar ninjas - Share techniques, master skills, and grow stronger together</p>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginTop: '1rem', fontSize: '0.9rem', color: 'var(--naruto-gold)' }}>
+              <span>🎯 Iruka-sensei: Emotional Foundation</span>
+              <span>⚡ Kakashi-sensei: Tactical Skills</span>
+              <span>🔥 Jiraiya-sensei: Power & Mastery</span>
+            </div>
           </div>
 
           {!isSignedUp ? (
             <div className="community-cta glass-card">
-              <h3>🎸 Join Our Guitar Community</h3>
-              <p>Connect with guitarists worldwide. Share your journey, get help, and help others.</p>
+              <h3>🍃 Join the Ninja Guitar Academy 🍃</h3>
+              <p>Train alongside guitar ninjas from all villages. Master techniques, share wisdom, and become a true guitar shinobi.</p>
               <div className="community-stats">
                 <div className="stat">
                   <span className="stat-number">12.5k</span>
-                  <span className="stat-label">Members</span>
+                  <span className="stat-label">🥷 Ninja Students</span>
                 </div>
                 <div className="stat">
                   <span className="stat-number">2.1k</span>
-                  <span className="stat-label">Online</span>
+                  <span className="stat-label">⚡ Active Shinobi</span>
                 </div>
                 <div className="stat">
                   <span className="stat-number">80+</span>
-                  <span className="stat-label">Daily Posts</span>
+                  <span className="stat-label">📜 Daily Jutsu</span>
                 </div>
               </div>
               <div className="auth-buttons">
                 <button className="btn-primary" onClick={() => setShowSignUp(true)}>
                   <Mail size={20} />
-                  Join Community
+                  🍃 Become a Ninja
                 </button>
                 <button className="btn-secondary" onClick={() => setShowSignIn(true)}>
                   <Shield size={20} />
-                  Sign In
+                  ⚡ Enter Dojo
                 </button>
               </div>
             </div>
