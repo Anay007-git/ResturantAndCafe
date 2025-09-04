@@ -2794,6 +2794,67 @@ const Community = () => {
             gap: 1.5rem;
           }
         }
+        
+        /* DARK THEME OVERRIDES: improve contrast & legibility */
+        [data-theme="dark"] .community-cta,
+        [data-theme="dark"] .post-card,
+        [data-theme="dark"] .user-dashboard,
+        [data-theme="dark"] .comments-section,
+        [data-theme="dark"] .modal-content {
+          background: rgba(8,10,14,0.78) !important;
+          border: 1px solid rgba(255,255,255,0.04) !important;
+          color: #e6eef8 !important;
+        }
+
+        [data-theme="dark"] h2,
+        [data-theme="dark"] h3 {
+          color: #e6eef8 !important;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+        }
+
+        [data-theme="dark"] .post-content p,
+        [data-theme="dark"] .post-author,
+        [data-theme="dark"] .vote-count,
+        [data-theme="dark"] .stat-number,
+        [data-theme="dark"] .stat-label,
+        [data-theme="dark"] .post-time,
+        [data-theme="dark"] .action-btn {
+          color: #dbeeff !important;
+        }
+
+        [data-theme="dark"] .comment-item {
+          background: rgba(12,14,18,0.82) !important;
+          border-left-color: #c69c4a !important;
+          color: #e6eef8 !important;
+        }
+
+        [data-theme="dark"] .comment-item strong { color: #ffffff !important; }
+        [data-theme="dark"] .comment-item span { color: #dbeeff !important; }
+        [data-theme="dark"] .comment-item small { color: #9fb0d9 !important; }
+
+        [data-theme="dark"] .form-group input,
+        [data-theme="dark"] .form-group textarea,
+        [data-theme="dark"] .category-select,
+        [data-theme="dark"] .comment-form input {
+          background: rgba(255,255,255,0.03) !important;
+          border: 1px solid rgba(255,255,255,0.06) !important;
+          color: #e6eef8 !important;
+        }
+
+        [data-theme="dark"] .btn-secondary,
+        [data-theme="dark"] .btn-primary,
+        [data-theme="dark"] .btn-submit,
+        [data-theme="dark"] .comment-form button {
+          background: rgba(255,255,255,0.06) !important;
+          color: #0b1220 !important;
+          border-color: rgba(255,255,255,0.06) !important;
+        }
+
+        /* Slight increase contrast for small meta text */
+        [data-theme="dark"] .stat-label,
+        [data-theme="dark"] .post-time { color: #9fb0d9 !important; font-weight: 600; }
       `}</style>
     </section>
   );
