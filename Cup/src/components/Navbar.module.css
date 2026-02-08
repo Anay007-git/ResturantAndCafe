@@ -1,0 +1,131 @@
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--bg-primary);
+    /* Ensuring cream background */
+    padding: 1rem 0;
+    transition: all 0.3s ease;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.5rem;
+    max-width: var(--container-width);
+    margin: 0 auto;
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--coffee-brown);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.nav {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+}
+
+.link {
+    font-family: var(--font-body);
+    font-weight: 600;
+    /* Bold links */
+    color: var(--dark-text);
+    /* Ensuring visibility */
+    font-size: 1rem;
+    transition: color 0.2s;
+    cursor: pointer;
+}
+
+.link:hover {
+    color: #FDC55E;
+    /* Yellow/Orange accent on hover */
+}
+
+/* Cart / Reserve Button Style Container */
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cartBtn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #E0E0E0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cartBtn:hover {
+    background-color: #FDC55E;
+    border-color: #FDC55E;
+    color: white;
+}
+
+.reserveBtn {
+    background-color: #FDC55E;
+    color: var(--dark-text);
+    font-weight: 700;
+    padding: 0.6rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    transition: transform 0.2s;
+}
+
+.reserveBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(253, 197, 94, 0.4);
+}
+
+.mobileMenuBtn {
+    display: none;
+    font-size: 1.5rem;
+    color: var(--coffee-brown);
+    background: none;
+}
+
+@media (max-width: 900px) {
+    .nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        background-color: var(--bg-primary);
+        padding: 2rem 1rem;
+        box-shadow: var(--shadow-md);
+        gap: 1.5rem;
+    }
+
+    .nav.open {
+        display: flex;
+    }
+
+    .mobileMenuBtn {
+        display: block;
+    }
+
+    .actions {
+        display: none;
+        /* Hide desktop actions on mobile for simplicity, or move into menu */
+    }
+
+    .nav.open .actions {
+        display: flex;
+        flex-direction: column;
+    }
+}

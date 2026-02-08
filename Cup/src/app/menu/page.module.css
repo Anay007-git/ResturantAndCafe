@@ -1,0 +1,81 @@
+.menuHeader {
+    background-color: var(--coffee-brown);
+    color: white;
+    padding: 4rem 1rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.categoryGroup {
+    margin-bottom: 4rem;
+}
+
+.categoryTitle {
+    font-size: 2rem;
+    color: var(--coffee-brown);
+    border-bottom: 2px solid var(--forest-green);
+    display: inline-block;
+    margin-bottom: 2rem;
+    padding-bottom: 0.5rem;
+}
+
+.menuGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.menuItem {
+    background: white;
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.menuItem:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.itemName {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.itemDesc {
+    color: var(--soft-text);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+}
+
+.itemFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.price {
+    font-weight: 700;
+    color: var(--coffee-brown);
+    font-size: 1.1rem;
+}
+
+.topBadge {
+    background-color: var(--forest-green);
+    color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}

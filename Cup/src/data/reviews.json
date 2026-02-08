@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "Ananya Sen",
+        "avatar": "https://api.dicebear.com/7.x/micah/svg?seed=Ananya",
+        "rating": 5,
+        "comment": "Absolutely love the pet friendly vibe! My dog Bruno had a blast. The pork platter is a must-try.",
+        "source": "Google"
+    },
+    {
+        "id": 2,
+        "name": "Rohan Das",
+        "avatar": "https://api.dicebear.com/7.x/micah/svg?seed=Rohan",
+        "rating": 4.5,
+        "comment": "Great cozy ambience. Perfect for a date night. Food is premium but totally worth it.",
+        "source": "Zomato"
+    },
+    {
+        "id": 3,
+        "name": "Priyanka Roy",
+        "avatar": "https://api.dicebear.com/7.x/micah/svg?seed=Priyanka",
+        "rating": 5,
+        "comment": "Best place for pork lovers in Kolkata. The staff is so warm and welcoming to pets.",
+        "source": "Instagram"
+    }
+]

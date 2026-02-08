@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "src": "/images/gallery/pet-1.png",
+        "alt": "Happy Golden Retriever at Cup eBong",
+        "category": "Pets"
+    },
+    {
+        "id": 2,
+        "src": "/images/gallery/food-1.png",
+        "alt": "Delicious Pork Platter",
+        "category": "Food"
+    },
+    {
+        "id": 3,
+        "src": "/images/gallery/interior-1.png",
+        "alt": "Cozy cafe interior with books",
+        "category": "Ambience"
+    },
+    {
+        "id": 4,
+        "src": "/images/gallery/event-1.png",
+        "alt": "Founders and pets enjoying the cafe",
+        "category": "Events"
+    },
+    {
+        "id": 5,
+        "src": "/images/gallery/pet-2.png",
+        "alt": "Pet friendly vibes in Kolkata",
+        "category": "Pets"
+    },
+    {
+        "id": 6,
+        "src": "/images/gallery/food-2.png",
+        "alt": "Signature Chicken Platter",
+        "category": "Food"
+    }
+]

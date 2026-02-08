@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "title": "Paw-some Weekend",
+        "date": "2024-03-10",
+        "time": "4:00 PM",
+        "description": "Bring your furry friends for a special treat tasting session!",
+        "image": "/images/events/paw-some.jpg"
+    },
+    {
+        "id": 2,
+        "title": "Live Acoustic Night",
+        "date": "2024-03-15",
+        "time": "7:00 PM",
+        "description": "Enjoy soulful tunes with your favorite coffee and snacks.",
+        "image": "/images/events/acoustic.jpg"
+    }
+]

@@ -1,0 +1,165 @@
+{
+  "featured": [
+    {
+      "id": "f16",
+      "name": "Brownie Sizzler",
+      "price": 220,
+      "image": "/images/menu/brownie-sizzler.png",
+      "description": "Hot brownie with ice cream on a sizzling plate."
+    },
+    {
+      "id": "f1",
+      "name": "Darjeeling Maharaja Chicken Platter",
+      "price": 450,
+      "image": "/images/menu/chicken-platter.png",
+      "description": "A royal feast direct from the hills."
+    },
+    {
+      "id": "f2",
+      "name": "Darjeeling Maharaja Pork Platter",
+      "price": 550,
+      "image": "/images/menu/pork-platter.png",
+      "description": "Authentic pork platter with Darjeeling spices."
+    },
+    {
+      "id": "f3",
+      "name": "Heavenly Pork Platter",
+      "price": 600,
+      "image": "/images/menu/pork-platter.png",
+      "description": "A divine selection of our finest pork cuts."
+    },
+    {
+      "id": "f4",
+      "name": "English Breakfast Pork with Baked Beans",
+      "price": 350,
+      "image": "/images/menu/english-breakfast.png",
+      "description": "Classic English breakfast to start your day right."
+    },
+    {
+      "id": "f5",
+      "name": "Pork Chops",
+      "price": 420,
+      "image": "/images/menu/pork-chops.jpg",
+      "description": "Succulent pork chops grilled to perfection."
+    },
+    {
+      "id": "f6",
+      "name": "Bacon Wrapped Chicken Drumstick",
+      "price": 280,
+      "image": "/images/menu/bacon-chicken.jpg",
+      "description": "Juicy chicken drumsticks wrapped in crispy bacon."
+    },
+    {
+      "id": "f7",
+      "name": "Chicken Ham Burger",
+      "price": 220,
+      "image": "/images/menu/chicken-ham-burger.jpg",
+      "description": "Savory chicken ham burger with fresh veggies."
+    },
+    {
+      "id": "f8",
+      "name": "Pork Vindaloo",
+      "price": 380,
+      "image": "/images/menu/pork-vindaloo.jpg",
+      "description": "Spicy and tangy Goan pork curry."
+    },
+    {
+      "id": "f9",
+      "name": "Pork Ribs",
+      "price": 480,
+      "image": "/images/menu/pork-ribs.jpg",
+      "description": "Tender pork ribs glazed in BBQ sauce."
+    },
+    {
+      "id": "f10",
+      "name": "Chili Pork",
+      "price": 320,
+      "image": "/images/menu/chili-pork.jpg",
+      "description": "Spicy stir-fried pork with peppers."
+    },
+    {
+      "id": "f11",
+      "name": "Momo",
+      "price": 150,
+      "image": "/images/menu/momo.jpg",
+      "description": "Steamed or fried dumplings, a classic favourite."
+    },
+    {
+      "id": "f12",
+      "name": "White Sauce Penne Pasta",
+      "price": 250,
+      "image": "/images/menu/white-pasta.jpg",
+      "description": "Creamy white sauce pasta with herbs."
+    },
+    {
+      "id": "f13",
+      "name": "Eggs in Hell",
+      "price": 200,
+      "image": "/images/menu/eggs-in-hell.jpg",
+      "description": "Eggs poached in a spicy tomato sauce."
+    },
+    {
+      "id": "f14",
+      "name": "Filter Coffee",
+      "price": 80,
+      "image": "/images/menu/filter-coffee.jpg",
+      "description": "Strong South Indian filter coffee."
+    },
+    {
+      "id": "f15",
+      "name": "Earl Grey Tea",
+      "price": 100,
+      "image": "/images/menu/earl-grey.jpg",
+      "description": "Aromatic tea with bergamot notes."
+    }
+  ],
+  "categories": {
+    "Breakfast": [
+      {
+        "id": "b1",
+        "name": "English Breakfast",
+        "price": 350
+      },
+      {
+        "id": "b2",
+        "name": "Pancakes",
+        "price": 180
+      }
+    ],
+    "Platters": [
+      {
+        "id": "p1",
+        "name": "Maharaja Platter",
+        "price": 550
+      }
+    ],
+    "Pork Specials": [
+      {
+        "id": "ps1",
+        "name": "Pork Ribs",
+        "price": 480
+      }
+    ],
+    "Chicken Specials": [
+      {
+        "id": "cs1",
+        "name": "Chicken Stroganoff",
+        "price": 320
+      }
+    ],
+    "Beverages": [
+      {
+        "id": "bev1",
+        "name": "Cold Coffee",
+        "price": 120
+      }
+    ],
+    "Desserts": [
+      {
+        "id": "d1",
+        "name": "Cheesecake",
+        "price": 200
+      }
+    ]
+  }
+}
